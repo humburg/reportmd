@@ -1,0 +1,17 @@
+Package: reportMD
+Title: Scientific reports with RMarkdown
+Version: 0.0.0.9000
+Authors@R: person("Peter", "Humburg", email = "p.humburg@garvan.org.au", role = c("aut", "cre"))
+Description: Utilities designed to facilitate the creation of scientific reports
+    with RMarkdown. The package builds on knitrBootstrap and rmarkdown to generate
+    html documents that are well suited to document and present the results of
+    scientific analysies.
+Depends:
+    R (>= 3.2.3),
+    ggplot2,
+    plotly
+Imports:
+    knitrBootstrap
+License: What license is it under?
+LazyData: true
+RoxygenNote: 5.0.1

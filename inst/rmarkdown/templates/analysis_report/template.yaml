@@ -1,0 +1,4 @@
+name: Analysis Report
+description: >
+  Template for a scientific report documenting a data analysis.
+create_dir: true

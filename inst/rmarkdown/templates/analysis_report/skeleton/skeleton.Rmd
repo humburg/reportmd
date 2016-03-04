@@ -1,0 +1,182 @@
+---
+title: "Untitled"
+author: "Author Name"
+date: "`r format(Sys.time(), '%a %d %b %Y')`"
+output:
+  knitrBootstrap::simple_document:
+    toc: true
+    fig_caption: true
+    highlight: zenburn
+params:
+  version: !r system("git describe --long --dirty --abbrev=10 --tags --always", intern=TRUE)
+  format: !r if(opts_knit$get("rmarkdown.pandoc.to") == 'html') 'interactive' else 'print'
+---
+
+```{r loadPackages, include=FALSE}
+## load additional packages in this chunk
+library(reportMD)
+library(knitr)
+library(pander)
+```
+
+
+```{r setup, include=FALSE}
+## This chunk should contain global configuration commands.
+## Use this to set knitr options and related things. Everything
+## in this chunk will be included in an appendix to document the
+## configuration used.
+output <- opts_knit$get("rmarkdown.pandoc.to")
+
+## By default R code is only included in HTML versions of the report
+## (where it can be collapsed). You can generate a PDF version
+## using rmarkdown::pdf_document to get a copy for print. Extensive
+## chunks of R code may or may not be desired in that setting. If you
+## want them simply change the following arguments to `echo = TRUE`.
+opts_chunk$set(echo = output=="html")
+opts_chunk$set(warning = output=="html")
+opts_chunk$set(message = output=="html")
+
+## Cache options
+opts_chunk$set(cache=TRUE)
+
+## The following lines cause static plots (either for HTML or PDF) 
+## to be generated at higher resolution. The static HTML version
+## of the report will include smaller thumbnails as well as this high
+## resolution version.
+if(params$format == 'interactive') {
+  opts_chunk$set(fig.width=8, fig.height=6, out.width='800px', out.height='600px')
+} else {
+  opts_chunk$set(fig.width=8, fig.height=8, dpi=300)
+}
+
+## Figure options
+## Set 'hide.fig.code' to FALSE to include code chunks that
+## produce Figures in the output. Note that this affects all chunks
+## that provide a figure caption.
+opts_chunk$set(hold=TRUE, hide.fig.code=TRUE)
+
+## Pander options
+panderOptions("digits", 3)
+panderOptions("table.split.table", 160)
+
+## Configure Figure and Table lables
+options(figcap.prefix = "Figure", figcap.sep = ":", figcap.prefix.highlight = "**")
+options(tabcap.prefix = "Table", tabcap.sep = ":", tabcap.prefix.highlight = "**")
+
+## Decorate figure captions
+opts_hooks$set(fig.cap = function(options){
+  options$fig.cap = figRef(options$label, options$fig.cap)
+  if(options$hide.fig.code){
+    options$echo <- FALSE
+    options$warning <- FALSE
+  }
+  options
+})
+```
+
+```{r functions, include=FALSE}
+## Custom functions used in the analysis should go into this chunk.
+## They will be listed in their own section of the appendix.
+
+figRef <- local({
+    tag <- numeric()
+    created <- logical()
+    used <- logical()
+    function(label, caption, prefix = options("figcap.prefix"),
+        sep = options("figcap.sep"), prefix.highlight = options("figcap.prefix.highlight")) {
+        i <- which(names(tag) == label)
+        if (length(i) == 0) {
+            i <- length(tag) + 1
+            tag <<- c(tag, i)
+            names(tag)[length(tag)] <<- label
+            used <<- c(used, FALSE)
+            names(used)[length(used)] <<- label
+            created <<- c(created, FALSE)
+            names(created)[length(created)] <<- label
+        }
+        if (!missing(caption)) {
+            created[label] <<- TRUE
+            paste0(prefix.highlight, prefix, " ", i, sep, prefix.highlight,
+                " ", caption)
+        } else {
+            used[label] <<- TRUE
+            paste(prefix, tag[label])
+        }
+    }
+})
+
+tabRef <- local({
+    tag <- numeric()
+    created <- logical()
+    used <- logical()
+    function(label, caption, prefix = options("tabcap.prefix"),
+        sep = options("tabcap.sep"), prefix.highlight = options("tabcap.prefix.highlight")) {
+        i <- which(names(tag) == label)
+        if (length(i) == 0) {
+            i <- length(tag) + 1
+            tag <<- c(tag, i)
+            names(tag)[length(tag)] <<- label
+            used <<- c(used, FALSE)
+            names(used)[length(used)] <<- label
+            created <<- c(created, FALSE)
+            names(created)[length(created)] <<- label
+        }
+        if (!missing(caption)) {
+            created[label] <<- TRUE
+            paste0(prefix.highlight, prefix, " ", i, sep, prefix.highlight,
+                " ", caption)
+        } else {
+            used[label] <<- TRUE
+            paste(prefix, tag[label])
+        }
+    }
+})
+```
+
+
+# Introduction
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+```{r}
+summary(cars)
+```
+
+You can also embed plots, for example:
+
+```{r examplePlot, fig.cap="An example plot"}
+plot(cars)
+```
+
+Note that a figure label (by default this is *Figure 1*) is added to the figure caption when the plot is included in the output.
+This plot can be referenced in the text including a call to the `figRef` function using the the chunk label as its only
+argument. This is a reference to `r figRef('examplePlot')`.
+
+# Materials and Methods
+
+# Results
+
+# Discussion
+
+# Appendix {.tabset}
+## Custom Functions
+```{r functions, eval=FALSE, include=TRUE}
+```
+
+## Configuration
+```{r setup, eval=FALSE}
+```
+
+## Version
+### Document version
+```{r docVersion, echo=FALSE, results='asis'}
+cat(params$version)
+```
+
+### Session Info
+```{r sessionInfo, echo=FALSE, results='asis', class='text', warning=FALSE}
+pander(devtools::session_info())
+```
+

@@ -1,3 +1,6 @@
 .Rproj.user
 .Rhistory
 .RData
+inst/rmarkdown/templates/analysis_report/skeleton/skeleton.html
+inst/rmarkdown/templates/analysis_report/skeleton/skeleton_cache/
+inst/rmarkdown/templates/analysis_report/skeleton/skeleton_files/

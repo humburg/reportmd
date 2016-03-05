@@ -5,12 +5,14 @@
 #'    output format.
 #' @return Depending on the value of \code{format} either a ggplot2 object
 #'  (possibly the same as \code{fig}) or, if \code{format = 'interactive'}
-#'  a \code{\link[plotly]{plotly-package}} plot.
+#'  a \code{plotly} plot.
+#' @seealso \code{\link[plotly]{ggplotly}}
 #' @author Peter Humburg
+#' @importFrom plotly ggplotly
 #' @export
 plotMD <- function(fig, format = c('screen', 'interactive', 'print')){
   if(format == 'interactive') {
-    ggplotly(fig)
+    plotly::ggplotly(fig)
   }else {
     fig
   }

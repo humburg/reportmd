@@ -15,12 +15,15 @@ output format.}
 \value{
 Depending on the value of \code{format} either a ggplot2 object
  (possibly the same as \code{fig}) or, if \code{format = 'interactive'}
- a \code{\link[plotly]{plotly-package}} plot.
+ a \code{plotly} plot.
 }
 \description{
 Create plots for inclusion in RMarkdown reports
 }
 \author{
 Peter Humburg
+}
+\seealso{
+\code{\link[plotly]{ggplotly}}
 }
 

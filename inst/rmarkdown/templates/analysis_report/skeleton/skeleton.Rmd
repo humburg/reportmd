@@ -66,6 +66,7 @@ options(tabcap.prefix = "Table", tabcap.sep = ":", tabcap.prefix.highlight = "**
 ## Decorate figure captions
 opts_hooks$set(fig.cap = function(options){
   options$fig.cap = figRef(options$label, options$fig.cap)
+  options$cache <- FALSE
   if(options$hide.fig.code){
     options$echo <- FALSE
     options$warning <- FALSE

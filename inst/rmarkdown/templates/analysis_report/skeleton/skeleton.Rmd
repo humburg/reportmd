@@ -73,6 +73,17 @@ opts_hooks$set(fig.cap = function(options){
   }
   options
 })
+
+## Add figure captions to interactive plots
+if(params$format == 'interactive'){
+  knit_hooks$set(fig.cap = function(before, options, envir) {
+    if(before){
+      paste0('<div id="', options$label, '" class="figure">')
+    } else{
+      paste0('<p class="caption">', options$fig.cap,"</p></div>")
+    }
+  })
+}
 ```
 
 ```{r functions, include=FALSE}

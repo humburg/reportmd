@@ -80,7 +80,7 @@ if(params$format == 'interactive'){
     if(before){
       paste0('<div id="', options$label, '" class="figure">')
     } else{
-      paste0('<p class="caption">', options$fig.cap,"</p></div>")
+      paste0('<p class="caption text-center">', options$fig.cap,"</p></div>")
     }
   })
 }

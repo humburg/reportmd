@@ -141,14 +141,15 @@ This is an R Markdown document. Markdown is a simple formatting syntax for autho
 
 When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
 
-```{r}
-summary(cars)
+```{r, results='asis'}
+pander(mtcars[1:5, 1:3])
 ```
 
 You can also embed plots, for example:
 
 ```{r examplePlot, fig.cap="An example plot"}
-plot(cars)
+carFig <- ggplot(mtcars, aes(x=hp, y=mpg, colour=cyl, text=rownames(mtcars))) + geom_point() + theme_bw()
+plotMD(carFig, format=params$format)
 ```
 
 Note that a figure label (by default this is *Figure 1*) is added to the figure caption when the plot is included in the output.

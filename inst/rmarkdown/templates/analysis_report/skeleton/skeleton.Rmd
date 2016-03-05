@@ -17,6 +17,8 @@ params:
 library(reportMD)
 library(knitr)
 library(pander)
+library(ggplot2)
+library(plotly)
 ```
 
 

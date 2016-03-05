@@ -152,7 +152,7 @@ carFig <- ggplot(mtcars, aes(x=hp, y=mpg, colour=cyl, text=rownames(mtcars))) + 
 plotMD(carFig, format=params$format)
 ```
 
-Note that a figure label (by default this is *Figure 1*) is added to the figure caption when the plot is included in the output.
+Note that a figure label (by default this is *Figure N*) is added to the figure caption when the plot is included in the output.
 This plot can be referenced in the text including a call to the `figRef` function using the the chunk label as its only
 argument. This is a reference to `r figRef('examplePlot')`.
 

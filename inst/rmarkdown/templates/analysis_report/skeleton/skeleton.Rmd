@@ -108,12 +108,19 @@ figRef <- local({
         }
         if (!missing(caption)) {
             created[label] <<- TRUE
-            paste0(prefix.highlight, prefix, " ", i, sep, prefix.highlight,
+            result <- paste0(prefix.highlight, prefix, " ", i, sep, prefix.highlight,
                 " ", caption)
+            if(output == 'html'){
+              result <- paste0('<a name=#"', label, '"></a>', result)
+            }
         } else {
             used[label] <<- TRUE
-            paste(prefix, tag[label])
+            result <- paste(prefix, tag[label])
+            if(output == 'html'){
+              result <- paste0('<a href="#', label, '">', result, '</a>')
+            }
         }
+        result
     }
 })
 

@@ -6,6 +6,14 @@
 #' @return Depending on the value of \code{format} either a ggplot2 object
 #'  (possibly the same as \code{fig}) or, if \code{format = 'interactive'}
 #'  a \code{plotly} plot.
+#' @examples \dontrun{
+#'  library(ggplot2)
+#'  library(plotly)
+#'  fig <- ggplot(cars, aes(x=speed, y=dist)) + geom_point()
+#'  plotMD(fig, format='s') ## uses ggplot2
+#'  plotMD(fig, format='i') ## uses plotly
+#'
+#' }
 #' @seealso \code{\link[plotly]{ggplotly}}
 #' @author Peter Humburg
 #' @importFrom plotly ggplotly

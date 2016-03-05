@@ -20,6 +20,16 @@ Depending on the value of \code{format} either a ggplot2 object
 \description{
 Create plots for inclusion in RMarkdown reports
 }
+\examples{
+\dontrun{
+ library(ggplot2)
+ library(plotly)
+ fig <- ggplot(cars, aes(x=speed, y=dist)) + geom_point()
+ plotMD(fig, format='s') ## uses ggplot2
+ plotMD(fig, format='i') ## uses plotly
+
+}
+}
 \author{
 Peter Humburg
 }

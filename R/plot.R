@@ -11,6 +11,7 @@
 #' @importFrom plotly ggplotly
 #' @export
 plotMD <- function(fig, format = c('screen', 'interactive', 'print')){
+  format <- match.arg(format)
   if(format == 'interactive') {
     plotly::ggplotly(fig)
   }else {

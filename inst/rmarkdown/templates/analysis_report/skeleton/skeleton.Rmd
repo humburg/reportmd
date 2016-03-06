@@ -80,7 +80,7 @@ opts_hooks$set(fig.cap = function(options){
 if(params$format == 'interactive'){
   knit_hooks$set(fig.cap = function(before, options, envir) {
     if(before){
-      paste0('<div id="', options$label, '" class="figure">')
+      paste0('<div id="', options$label, '_figure" class="figure">')
     } else{
       paste0('<p class="caption text-center">', options$fig.cap,"</p></div>")
     }
@@ -112,14 +112,11 @@ figRef <- local({
             created[label] <<- TRUE
             result <- paste0(prefix.highlight, prefix, " ", i, sep, prefix.highlight,
                 " ", caption)
-            if(output == 'html'){
-              result <- paste0('<a name=#"', label, '"></a>', result)
-            }
         } else {
             used[label] <<- TRUE
             result <- paste(prefix, tag[label])
             if(output == 'html'){
-              result <- paste0('<a href="#', label, '">', result, '</a>')
+              result <- paste0('[', result, '](#', label, '_figure)')
             }
         }
         result

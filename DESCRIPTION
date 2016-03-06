@@ -12,7 +12,7 @@ Imports:
     plotly
 Suggests:
     devtools,
-    knitrBootstrap,
+    knitrBootstrap (>= 1.0.0),
     ggplot2,
 License: What license is it under?
 LazyData: true

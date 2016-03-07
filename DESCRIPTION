@@ -9,7 +9,8 @@ Description: Utilities designed to facilitate the creation of scientific reports
 Depends:
     R (>= 3.2.3)
 Imports:
-    plotly
+    plotly,
+    pander
 Suggests:
     devtools,
     knitrBootstrap (>= 1.0.0),

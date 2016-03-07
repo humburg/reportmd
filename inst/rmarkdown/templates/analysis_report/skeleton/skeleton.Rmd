@@ -12,7 +12,7 @@ params:
   format: !r if(opts_knit$get("rmarkdown.pandoc.to") == 'html') 'interactive' else 'print'
 ---
 
-```{r loadPackages, include=FALSE}
+```{r loadPackages, include=FALSE, cache=FALSE}
 ## load additional packages in this chunk
 library(reportMD)
 library(knitr)
@@ -22,7 +22,7 @@ library(plotly)
 ```
 
 
-```{r setup, include=FALSE}
+```{r setup, include=FALSE, cache=FALSE}
 ## This chunk should contain global configuration commands.
 ## Use this to set knitr options and related things. Everything
 ## in this chunk will be included in an appendix to document the

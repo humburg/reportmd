@@ -4,7 +4,7 @@
 \alias{plotMD}
 \title{Create plots for inclusion in RMarkdown reports}
 \usage{
-plotMD(fig, format = c("screen", "interactive", "print"))
+plotMD(fig, format = options("reportmd.figure.current"))
 }
 \arguments{
 \item{fig}{A ggplot2 plot for processing.}

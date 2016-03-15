@@ -124,7 +124,7 @@ figRef <- local({
             used[label] <<- TRUE
             result <- paste(prefix, tag[label])
             if(output == 'html'){
-              result <- paste0('[', result, '](#', label, '_figure)')
+              result <- paste0('[', result, '](#', knitr::opts_chunk$get('fig.lp'), label, ')')
             }
         }
         result

@@ -34,6 +34,7 @@ output <- opts_knit$get("rmarkdown.pandoc.to")
 ## using rmarkdown::pdf_document to get a copy for print. Extensive
 ## chunks of R code may or may not be desired in that setting. If you
 ## want them simply change the following arguments to `echo = TRUE`.
+## In either case the default can be overwritten for individual chunks.
 opts_chunk$set(echo = output=="html")
 opts_chunk$set(warning = output=="html")
 opts_chunk$set(message = output=="html")

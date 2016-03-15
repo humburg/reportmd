@@ -10,7 +10,8 @@ Depends:
     R (>= 3.2.3)
 Imports:
     plotly,
-    pander
+    pander,
+    knitr
 Suggests:
     devtools,
     knitrBootstrap (>= 1.0.0),

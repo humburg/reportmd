@@ -87,7 +87,7 @@ knit_hooks$set(fig.cap = function(before, options, envir) {
   fmt <- options$format %||% global_fmt[[1]]
   if(fmt == 'interactive'){
     if(before){
-      paste0('<div id="', options$label, '_figure" class="figure">')
+      paste0('<div id="', knitr::opts_chunk$get('fig.lp'), options$label, '" class="figure">')
     } else{
       options(reportmd.figure.current=NULL)
       paste0('<p class="caption text-center">', options$fig.cap,"</p></div>")
@@ -100,63 +100,6 @@ knit_hooks$set(fig.cap = function(before, options, envir) {
 ## Custom functions used in the analysis should go into this chunk.
 ## They will be listed in their own section of the appendix.
 
-figRef <- local({
-    tag <- numeric()
-    created <- logical()
-    used <- logical()
-    function(label, caption, prefix = options("figcap.prefix"),
-        sep = options("figcap.sep"), prefix.highlight = options("figcap.prefix.highlight")) {
-        i <- which(names(tag) == label)
-        if (length(i) == 0) {
-            i <- length(tag) + 1
-            tag <<- c(tag, i)
-            names(tag)[length(tag)] <<- label
-            used <<- c(used, FALSE)
-            names(used)[length(used)] <<- label
-            created <<- c(created, FALSE)
-            names(created)[length(created)] <<- label
-        }
-        if (!missing(caption)) {
-            created[label] <<- TRUE
-            result <- paste0(prefix.highlight, prefix, " ", i, sep, prefix.highlight,
-                " ", caption)
-        } else {
-            used[label] <<- TRUE
-            result <- paste(prefix, tag[label])
-            if(output == 'html'){
-              result <- paste0('[', result, '](#', knitr::opts_chunk$get('fig.lp'), label, ')')
-            }
-        }
-        result
-    }
-})
-
-tabRef <- local({
-    tag <- numeric()
-    created <- logical()
-    used <- logical()
-    function(label, caption, prefix = options("tabcap.prefix"),
-        sep = options("tabcap.sep"), prefix.highlight = options("tabcap.prefix.highlight")) {
-        i <- which(names(tag) == label)
-        if (length(i) == 0) {
-            i <- length(tag) + 1
-            tag <<- c(tag, i)
-            names(tag)[length(tag)] <<- label
-            used <<- c(used, FALSE)
-            names(used)[length(used)] <<- label
-            created <<- c(created, FALSE)
-            names(created)[length(created)] <<- label
-        }
-        if (!missing(caption)) {
-            created[label] <<- TRUE
-            paste0(prefix.highlight, prefix, " ", i, sep, prefix.highlight,
-                " ", caption)
-        } else {
-            used[label] <<- TRUE
-            paste(prefix, tag[label])
-        }
-    }
-})
 ```
 
 

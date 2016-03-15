@@ -63,37 +63,8 @@ panderOptions("table.split.table", 160)
 options(figcap.prefix = "Figure", figcap.sep = ":", figcap.prefix.highlight = "**")
 options(tabcap.prefix = "Table", tabcap.sep = ":", tabcap.prefix.highlight = "**")
 
-## Add figure options for chosen format and 
-## decorate figure captions
-opts_hooks$set(fig.cap = function(options){
-  global_fmt <- options('reportmd.figure.format')[[1]]
-  fmt <- options$format %||% global_fmt
-  options(reportmd.figure.current=fmt)
-  
-  options$fig.cap = figRef(options$label, options$fig.cap)
-  options$cache <- FALSE
-  if(options$hide.fig.code){
-    options$echo <- FALSE
-    options$warning <- FALSE
-  }
-  opts <- options(paste('reportmd', 'figure', fmt, sep='.'))[[1]]
-  opts <- merge_list(opts, options)
-  opts
-})
-
-## Add figure captions to interactive plots
-knit_hooks$set(fig.cap = function(before, options, envir) {
-  global_fmt <- options('reportmd.figure.format') %||% list('screen')
-  fmt <- options$format %||% global_fmt[[1]]
-  if(fmt == 'interactive'){
-    if(before){
-      paste0('<div id="', knitr::opts_chunk$get('fig.lp'), options$label, '" class="figure">')
-    } else{
-      options(reportmd.figure.current=NULL)
-      paste0('<p class="caption text-center">', options$fig.cap,"</p></div>")
-    }
-  }
-})
+## Install required knitr hooks
+installHooks()
 ```
 
 ```{r functions, include=FALSE}

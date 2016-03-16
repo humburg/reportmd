@@ -119,7 +119,7 @@ plotMD(carFig)
 
 ## Version
 ### Document version
-```{r docVersion, echo=FALSE, results='asis'}
+```{r docVersion, echo=FALSE, results='asis', cache=FALSE}
 cat(params$version)
 ```
 

@@ -4,7 +4,7 @@
 \alias{plotMD}
 \title{Create plots for inclusion in RMarkdown reports}
 \usage{
-plotMD(fig, format = c("screen", "interactive", "print"))
+plotMD(fig, format = options("reportmd.figure.current"))
 }
 \arguments{
 \item{fig}{A ggplot2 plot for processing.}
@@ -19,6 +19,16 @@ Depending on the value of \code{format} either a ggplot2 object
 }
 \description{
 Create plots for inclusion in RMarkdown reports
+}
+\examples{
+\dontrun{
+ library(ggplot2)
+ library(plotly)
+ fig <- ggplot(cars, aes(x=speed, y=dist)) + geom_point()
+ plotMD(fig, format='s') ## uses ggplot2
+ plotMD(fig, format='i') ## uses plotly
+
+}
 }
 \author{
 Peter Humburg

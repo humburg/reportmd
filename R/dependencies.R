@@ -12,29 +12,42 @@
 load_dependencies <- function(deps, opts){
   started <- Sys.time()
   out_ext <- c(latex='pdf', html='html', markdown='md', jerkyll='html')
-  docs <- lapply(deps, function(x){
+  docs <- sapply(deps, function(x){
     if(is.character(x)) x else names(x)
   })
   chunks <- lapply(deps, function(x) {
     if(is.list(x)) x[[1]] else list()
   })
+  out <- character(length(docs))
+  prefix <- character(length(docs))
+  tag_dir <- character(length(docs))
+
   for(i in 1:length(docs)){
     format <- opts$get('rmarkdown.pandoc.to')
     child_path <- opts$get('child.path')
     if(child_path == '') child_path <- getwd()
-    input <- file.path(child_path, docs[i])
-    prefix <- sub("\\.[^.]+$", "", input)
-    out <- paste(prefix, out_ext[format], sep='.')
-    cache <- file.path(paste0(prefix, '_cache'), format)
-    if(!file.exists(out) || file.mtime(out) < started){
-      wrapper <- paste0("render_", basename(prefix), '.R')
-      cat("rmarkdown::render('", input, "', quiet=TRUE)",
+    docs[i] <- file.path(child_path, docs[i])
+    prefix[i] <- sub("\\.[^.]+$", "", docs[i])
+    out[i] <- paste(prefix[i], out_ext[format], sep='.')
+    tag_dir[i] <- file.path(dirname(docs[i]), '.processing')
+    if(!file.exists(tag_dir[i])){
+      dir.create(tag_dir[i])
+      on.exit(unlink(tag_dir[i], recursive=TRUE))
+    }
+  }
+  for(i in 1:length(docs)){
+    cache <- file.path(paste0(prefix[i], '_cache'), format)
+    tag <- file.path(tag_dir[i], paste0(basename(prefix[i]), '.complete'))
+    if(!file.exists(tag)){
+      wrapper <- paste0("render_", basename(prefix[i]), '.R')
+      on.exit(unlink(wrapper))
+      cat("rmarkdown::render('", docs[i], "', quiet=TRUE)",
           file=wrapper, sep='')
       devtools::clean_source(wrapper, quiet=TRUE)
-      unlink(wrapper)
+      file.create(tag)
     }
-    if(!file.exists(out)){
-      stop("Unable to locate output of child document: ", out)
+    if(!file.exists(out[i])){
+      stop("Unable to locate output of child document: ", out[i])
     }
 
     ## identify files to load

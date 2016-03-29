@@ -51,7 +51,7 @@ load_dependencies <- function(deps, opts){
       missing <- cache[i][!grepl(found_pattern, cache[i])]
       stop("Unable to locate output for chunks ", paste(missing, collpse=', '), " from document ", docs[i], ".")
     }
-    lapply(cached, lazyLoad)
+    lapply(cached, lazyLoad, parent.frame(1))
   }
   invisible(NULL)
 }

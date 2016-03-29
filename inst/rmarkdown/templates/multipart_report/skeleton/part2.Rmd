@@ -10,8 +10,9 @@ output:
 params:
   version: !r system("git describe --long --dirty --abbrev=10 --tags --always", intern=TRUE)
   format: !r if(opts_knit$get("rmarkdown.pandoc.to") == 'html') 'interactive' else 'print'
-  depends: 
-    part1: part1.Rmd
+  depends:
+    value:
+      part1: part1.Rmd
 ---
 
 ```{r loadPackages, include=FALSE, cache=FALSE}

@@ -23,6 +23,10 @@ library(ggplot2)
 library(plotly)
 ```
 
+```{r dependencies, include=FALSE, cache=FALSE}
+## Ensure required results from child documents are availsble
+load_dependencies(params$depends, opts_knit)
+```
 
 ```{r setup, include=FALSE, cache=FALSE}
 ## This chunk should contain global configuration commands.

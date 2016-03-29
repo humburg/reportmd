@@ -31,8 +31,8 @@ load_dependencies <- function(deps, opts){
     out[i] <- paste(prefix[i], out_ext[format], sep='.')
     tag_dir[i] <- file.path(dirname(docs[i]), '.processing')
     if(!file.exists(tag_dir[i])){
+      on.exit(unlink(tag_dir[i], recursive=TRUE), add=TRUE)
       dir.create(tag_dir[i])
-      on.exit(unlink(tag_dir[i], recursive=TRUE))
     }
   }
   for(i in 1:length(docs)){

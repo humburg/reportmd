@@ -39,9 +39,8 @@ load_dependencies <- function(deps, opts){
     cache <- file.path(paste0(prefix[i], '_cache'), format)
     tag <- file.path(tag_dir[i], paste0(basename(prefix[i]), '.complete'))
     if(!file.exists(tag)){
-      wrapper <- paste0("render_", basename(prefix[i]), '.R')
-      on.exit(unlink(wrapper))
-      cat("rmarkdown::render('", docs[i], "', quiet=TRUE)",
+      wrapper <- file.path(tag_dir[i], paste0("render_", basename(prefix[i]), '.R'))
+      cat("setwd('..')\n", "rmarkdown::render('", docs[i], "', quiet=TRUE)",
           file=wrapper, sep='')
       devtools::clean_source(wrapper, quiet=TRUE)
       file.create(tag)

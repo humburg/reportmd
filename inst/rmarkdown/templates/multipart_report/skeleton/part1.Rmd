@@ -93,9 +93,9 @@ column to indicate whether the car was build in the US or elsewhere.
 
 ```{r origin}
 international <- c(1:3, 8:14, 18:21, 26:28, 30:32)
-cars <- mtcars
-cars$origin <- 'US'
-cars$origin[international] <- 'international'
+ext_cars <- mtcars
+ext_cars$origin <- 'US'
+ext_cars$origin[international] <- 'international'
 ```
 
 

@@ -82,7 +82,7 @@ This is the second part of the multi-part data analysis document. Here we'll use
 the pre-processed dataset produced in Part 1 for a basic analysis.
 
 ```{r prepBoxplot}
-box_fig <- ggplot(cars, aes(x=origin, y=mpg)) + geom_boxplot() + theme_bw()
+box_fig <- ggplot(ext_cars, aes(x=origin, y=mpg)) + geom_boxplot() + theme_bw()
 ```
 
 An initial look at the data suggests that there is a pronounced difference
@@ -95,13 +95,13 @@ box_fig
 An reasonable initial hypothesis for why this might be the case is that US built
 cars may tend to be larger (and therefore heavier) and have larger engines.
 As it turns out car weight and engine displacement are highly correlated 
-($\rho$ = `r printMD(cor(cars$disp, cars$wt), digits=2)`), so we'll
+($\rho$ = `r printMD(cor(mtcars$disp, mtcars$wt), digits=2)`), so we'll
 investigate this by fitting a linear regression model with just weight as
 an explanatory variable.
 
 ```{r regression}
-fit <- lm(mpg ~ wt, data=cars)
-cars$fitted <- fit$fitted.values
+fit <- lm(mpg ~ wt, data=ext_cars)
+ext_cars$fitted <- fit$fitted.values
 ```
 
 This appears to explain the difference in MPG reasonably well, although
@@ -114,7 +114,7 @@ printMD(fit)
 We'll also prepare a plot visualising the result for inclusion in the main document.
 
 ```{r prepRegPlot}
-reg_fig <- ggplot(cars, aes(x=wt, y=mpg, colour=origin, text=rownames(cars))) + geom_point(size=2) +
+reg_fig <- ggplot(ext_cars, aes(x=wt, y=mpg, colour=origin, text=rownames(ext_cars))) + geom_point(size=2) +
   geom_abline(slope=fit$coefficients['wt'], intercept=fit$coefficients[1], linetype='dashed', colour='darkgrey') +
   geom_segment(aes(yend=fitted, xend=(fitted-fit$coefficients[1])/fit$coefficients['wt'])) +
   theme_bw()

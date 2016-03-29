@@ -53,7 +53,6 @@ fig.cap_opts_hook <- function(options){
   opts
 }
 
-
 #' Set knitr hooks
 #'
 #' Installs all required knitr hooks.

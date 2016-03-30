@@ -1,0 +1,11 @@
+language: r
+cache: packages
+r:
+  - oldrel
+  - release
+  - devel
+r_github_packages:
+  - ropensci/plotly
+  - jimhester/knitrBootstrap@rmarkdown_template
+pandoc_version: 1.17.0.2
+warnings_are_errors: false

@@ -93,8 +93,8 @@ box_fig <- ggplot(ext_cars, aes(x=origin, y=mpg)) + geom_boxplot() + theme_bw()
 An initial look at the data suggests that there is a pronounced difference
 in the miles per gallon achieved by US and international cars (`r figRef("boxplot")`). 
 
-```{r boxplot, fig.cap="Boxplot of MPG for US and internationally build cars."}
-box_fig
+```{r boxplot, fig.cap="Boxplot of MPG for US and internationally build cars.", format='screen'}
+plotMD(box_fig)
 ```
 
 An reasonable initial hypothesis for why this might be the case is that US built

@@ -7,7 +7,7 @@ Description: Utilities designed to facilitate the creation of scientific reports
     html documents that are well suited to document and present the results of
     scientific analysies.
 Depends:
-    R (>= 3.2.3)
+    R (>= 3.2.0)
 Imports:
     plotly,
     pander,

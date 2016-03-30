@@ -11,11 +11,12 @@ Depends:
 Imports:
     plotly,
     pander,
-    knitr
-Suggests:
+    knitr,
     devtools,
+    rmarkdown
+Suggests:
     knitrBootstrap (>= 1.0.0),
-    ggplot2,
+    ggplot2
 License: MIT
 LazyData: true
 RoxygenNote: 5.0.1

@@ -138,6 +138,7 @@ figRef <- local({
   }
 })
 
+#' @export
 tabRef <- local({
   tag <- numeric()
   created <- logical()

@@ -1,5 +1,5 @@
 ---
-title: "Untitled"
+title: "Part 2"
 author: "Author Name"
 date: "`r format(Sys.time(), '%a %d %b %Y')`"
 output:
@@ -10,6 +10,9 @@ output:
 params:
   version: !r system("git describe --long --dirty --abbrev=10 --tags --always", intern=TRUE)
   format: !r if(opts_knit$get("rmarkdown.pandoc.to") == 'html') 'interactive' else 'print'
+  depends:
+    value:
+      part1: part1.Rmd
 ---
 
 ```{r loadPackages, include=FALSE, cache=FALSE}
@@ -21,6 +24,10 @@ library(ggplot2)
 library(plotly)
 ```
 
+```{r dependencies, include=FALSE, cache=FALSE}
+## Ensure required results from child documents are availsble
+load_dependencies(params$depends, opts_knit)
+```
 
 ```{r setup, include=FALSE, cache=FALSE}
 ## This chunk should contain global configuration commands.
@@ -75,38 +82,48 @@ installHooks()
 ```
 
 
-# Introduction
+# Analysis
+This is the second part of the multi-part data analysis document. Here we'll use
+the pre-processed dataset produced in Part 1 for a basic analysis.
 
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
-
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
-
-```{r, results='asis'}
-pander(mtcars[1:5, c('mpg', 'hp', 'cyl')])
+```{r prepBoxplot}
+box_fig <- ggplot(ext_cars, aes(x=origin, y=mpg)) + geom_boxplot() + theme_bw()
 ```
 
-You can also embed plots, for example:
+An initial look at the data suggests that there is a pronounced difference
+in the miles per gallon achieved by US and international cars (`r figRef("boxplot")`). 
 
-```{r examplePlot, fig.cap="An example plot"}
-carFig <- ggplot(mtcars, aes(x=hp, y=mpg, colour=cyl, text=rownames(mtcars))) + geom_point() + theme_bw()
-plotMD(carFig)
+```{r boxplot, fig.cap="Boxplot of MPG for US and internationally build cars.", format='screen'}
+plotMD(box_fig)
 ```
 
-Note that a figure label (by default this is *Figure N*) is added to the figure caption when the plot is included in the output.
-This plot can be referenced in the text including a call to the `figRef` function using the the chunk label as its only
-argument. This is a reference to `r figRef('examplePlot')`.
+An reasonable initial hypothesis for why this might be the case is that US built
+cars may tend to be larger (and therefore heavier) and have larger engines.
+As it turns out car weight and engine displacement are highly correlated 
+($\rho$ = `r printMD(cor(mtcars$disp, mtcars$wt), digits=2)`), so we'll
+investigate this by fitting a linear regression model with just weight as
+an explanatory variable.
 
-```{r staticPlot, fig.cap="Static version of the plot above", format='screen'}
-carFig <- ggplot(mtcars, aes(x=hp, y=mpg, colour=cyl, text=rownames(mtcars))) + geom_point() + theme_bw()
-plotMD(carFig)
+```{r regression}
+fit <- lm(mpg ~ wt, data=ext_cars)
+ext_cars$fitted <- fit$fitted.values
 ```
 
+This appears to explain the difference in MPG reasonably well, although
+it is clearly not the only relevant factor:
 
-# Materials and Methods
+```{r reg_table}
+printMD(fit)
+```
 
-# Results
+We'll also prepare a plot visualising the result for inclusion in the main document.
 
-# Discussion
+```{r prepRegPlot}
+reg_fig <- ggplot(ext_cars, aes(x=wt, y=mpg, colour=origin, text=rownames(ext_cars))) + geom_point(size=2) +
+  geom_abline(slope=fit$coefficients['wt'], intercept=fit$coefficients[1], linetype='dashed', colour='darkgrey') +
+  geom_segment(aes(yend=fitted, xend=(fitted-fit$coefficients[1])/fit$coefficients['wt'])) +
+  theme_bw()
+```
 
 # Appendix {.tabset}
 ## Custom Functions

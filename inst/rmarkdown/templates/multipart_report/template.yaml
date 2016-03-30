@@ -1,0 +1,4 @@
+name: Multi-part Report
+description: >
+  Template for a report documenting a complex data analysis with several documents.
+create_dir: true

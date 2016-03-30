@@ -1,5 +1,5 @@
 ---
-title: "Untitled"
+title: "Part 1"
 author: "Author Name"
 date: "`r format(Sys.time(), '%a %d %b %Y')`"
 output:
@@ -77,36 +77,27 @@ installHooks()
 
 # Introduction
 
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+This is the first part of an example data analysis. In this example we'll do some basic
+data pre-processing and then export the dataset for use in the downstream analysis.
 
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+We'll use the (outdated and not very exciting) *mtcars* dataset for this analysis.
+This consists of `r ncol(mtcars)` variables for `r nrow(mtcars)` car models build
+in 1973 and 1974. It looks something like this:
 
-```{r, results='asis'}
-pander(mtcars[1:5, c('mpg', 'hp', 'cyl')])
+```{r mtcarsHead}
+printMD(head(mtcars))
 ```
 
-You can also embed plots, for example:
+The only thing we'll do for the purpose of this example is to add an additional 
+column to indicate whether the car was build in the US or elsewhere.
 
-```{r examplePlot, fig.cap="An example plot"}
-carFig <- ggplot(mtcars, aes(x=hp, y=mpg, colour=cyl, text=rownames(mtcars))) + geom_point() + theme_bw()
-plotMD(carFig)
+```{r origin}
+international <- c(1:3, 8:14, 18:21, 26:28, 30:32)
+ext_cars <- mtcars
+ext_cars$origin <- 'US'
+ext_cars$origin[international] <- 'international'
 ```
 
-Note that a figure label (by default this is *Figure N*) is added to the figure caption when the plot is included in the output.
-This plot can be referenced in the text including a call to the `figRef` function using the the chunk label as its only
-argument. This is a reference to `r figRef('examplePlot')`.
-
-```{r staticPlot, fig.cap="Static version of the plot above", format='screen'}
-carFig <- ggplot(mtcars, aes(x=hp, y=mpg, colour=cyl, text=rownames(mtcars))) + geom_point() + theme_bw()
-plotMD(carFig)
-```
-
-
-# Materials and Methods
-
-# Results
-
-# Discussion
 
 # Appendix {.tabset}
 ## Custom Functions

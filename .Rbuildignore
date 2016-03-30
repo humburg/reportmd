@@ -1,4 +1,5 @@
 ^.*\.Rproj$
 ^\.Rproj\.user$
-.*skeleton_cache.*
-.*skeleton_files.*
+.*_cache.*
+.*_files.*
+.*\.gitignore

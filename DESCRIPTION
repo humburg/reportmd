@@ -16,6 +16,6 @@ Suggests:
     devtools,
     knitrBootstrap (>= 1.0.0),
     ggplot2,
-License: What license is it under?
+License: MIT
 LazyData: true
 RoxygenNote: 5.0.1

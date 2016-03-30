@@ -20,6 +20,10 @@ This R package aims to provide a number of features to support analyses
 that are split across multiple RMarkdown files with cross-file dependencies
 and enables multi-page HTML output.
 
+See the [Multi-document Rmarkdown template](inst/rmarkdown/templates/multipart_report/skeleton/main.Rmd)
+included in this package for usage instructions and examples.
+
+Current and planned features include:
 - [ ] Ability to declare required RMarkdown documents in yaml header;
     - [x] Dependencies are resolved and rendered to the requested output
       format when the parent document is rendered.

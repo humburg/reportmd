@@ -1,0 +1,147 @@
+---
+title: "Part 2"
+author: "Author Name"
+date: "`r format(Sys.time(), '%a %d %b %Y')`"
+output:
+  knitrBootstrap::simple_document:
+    toc: true
+    fig_caption: true
+    highlight: zenburn
+params:
+  version: !r system("git describe --long --dirty --abbrev=10 --tags --always", intern=TRUE)
+  format: !r if(opts_knit$get("rmarkdown.pandoc.to") == 'html') 'interactive' else 'print'
+  depends:
+    value:
+      part1: part1.Rmd
+---
+
+```{r loadPackages, include=FALSE, cache=FALSE}
+## load additional packages in this chunk
+library(reportMD)
+library(knitr)
+library(pander)
+library(ggplot2)
+library(plotly)
+```
+
+```{r dependencies, include=FALSE, cache=FALSE}
+## Ensure required results from child documents are availsble
+load_dependencies(params$depends, opts_knit)
+```
+
+```{r setup, include=FALSE, cache=FALSE}
+## This chunk should contain global configuration commands.
+## Use this to set knitr options and related things. Everything
+## in this chunk will be included in an appendix to document the
+## configuration used.
+output <- opts_knit$get("rmarkdown.pandoc.to")
+
+## By default R code is only included in HTML versions of the report
+## (where it can be collapsed). You can generate a PDF version
+## using rmarkdown::pdf_document to get a copy for print. Extensive
+## chunks of R code may or may not be desired in that setting. If you
+## want them simply change the following arguments to `echo = TRUE`.
+## In either case the default can be overwritten for individual chunks.
+opts_chunk$set(echo = output=="html")
+opts_chunk$set(warning = output=="html")
+opts_chunk$set(message = output=="html")
+
+## Cache options
+opts_chunk$set(cache=TRUE)
+
+## Figure options
+## Set default figure format
+options(reportmd.figure.format=params$format)
+
+## Set 'hide.fig.code' to FALSE to include code chunks that
+## produce Figures in the output. Note that this affects all chunks
+## that provide a figure caption.
+opts_chunk$set(hold=TRUE, hide.fig.code=TRUE)
+
+## Set up default plotting options for different formats.
+## These can be overwritten for individual chunks
+interactiveFig()
+screenFig()
+
+## Pander options
+panderOptions("digits", 3)
+panderOptions("table.split.table", 160)
+
+## Configure Figure and Table lables
+options(figcap.prefix = "Figure", figcap.sep = ":", figcap.prefix.highlight = "**")
+options(tabcap.prefix = "Table", tabcap.sep = ":", tabcap.prefix.highlight = "**")
+
+## Install required knitr hooks
+installHooks()
+```
+
+```{r functions, include=FALSE}
+## Custom functions used in the analysis should go into this chunk.
+## They will be listed in their own section of the appendix.
+
+```
+
+
+# Analysis
+This is the second part of the multi-part data analysis document. Here we'll use
+the pre-processed dataset produced in Part 1 for a basic analysis.
+
+```{r prepBoxplot}
+box_fig <- ggplot(ext_cars, aes(x=origin, y=mpg)) + geom_boxplot() + theme_bw()
+```
+
+An initial look at the data suggests that there is a pronounced difference
+in the miles per gallon achieved by US and international cars (`r figRef("boxplot")`). 
+
+```{r boxplot, fig.cap="Boxplot of MPG for US and internationally build cars.", format='screen'}
+plotMD(box_fig)
+```
+
+An reasonable initial hypothesis for why this might be the case is that US built
+cars may tend to be larger (and therefore heavier) and have larger engines.
+As it turns out car weight and engine displacement are highly correlated 
+($\rho$ = `r printMD(cor(mtcars$disp, mtcars$wt), digits=2)`), so we'll
+investigate this by fitting a linear regression model with just weight as
+an explanatory variable.
+
+```{r regression}
+fit <- lm(mpg ~ wt, data=ext_cars)
+ext_cars$fitted <- fit$fitted.values
+```
+
+This appears to explain the difference in MPG reasonably well, although
+it is clearly not the only relevant factor:
+
+```{r reg_table}
+printMD(fit)
+```
+
+We'll also prepare a plot visualising the result for inclusion in the main document.
+
+```{r prepRegPlot}
+reg_fig <- ggplot(ext_cars, aes(x=wt, y=mpg, colour=origin, text=rownames(ext_cars))) + geom_point(size=2) +
+  geom_abline(slope=fit$coefficients['wt'], intercept=fit$coefficients[1], linetype='dashed', colour='darkgrey') +
+  geom_segment(aes(yend=fitted, xend=(fitted-fit$coefficients[1])/fit$coefficients['wt'])) +
+  theme_bw()
+```
+
+# Appendix {.tabset}
+## Custom Functions
+```{r functions, eval=FALSE, include=TRUE}
+```
+
+## Configuration
+```{r setup, eval=FALSE}
+```
+
+## Version
+### Document version
+```{r docVersion, echo=FALSE, results='asis', cache=FALSE}
+cat(params$version)
+```
+
+### Session Info
+```{r sessionInfo, echo=FALSE, results='asis', class='text', warning=FALSE}
+pander(devtools::session_info())
+```
+

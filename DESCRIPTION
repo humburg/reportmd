@@ -7,7 +7,7 @@ Description: Utilities designed to facilitate the creation of scientific reports
     html documents that are well suited to document and present the results of
     scientific analysies.
 Depends:
-    R (>= 3.2.3)
+    R (>= 3.2.0)
 Imports:
     plotly,
     pander,
@@ -16,6 +16,6 @@ Suggests:
     devtools,
     knitrBootstrap (>= 1.0.0),
     ggplot2,
-License: What license is it under?
+License: MIT
 LazyData: true
 RoxygenNote: 5.0.1

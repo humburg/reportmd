@@ -84,8 +84,8 @@ installHooks()
 ```
 
 
-# Introduction
-
+# Using this template
+## Basics
 This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
 
 When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
@@ -94,6 +94,7 @@ When you click the **Knit** button a document will be generated that includes bo
 pander(mtcars[1:5, c('mpg', 'hp', 'cyl')])
 ```
 
+## Figures and Figure labels
 You can also embed plots, for example:
 
 ```{r examplePlot, fig.cap="An example plot"}
@@ -103,13 +104,18 @@ plotMD(carFig)
 
 Note that a figure label (by default this is *Figure N*) is added to the figure caption when the plot is included in the output.
 This plot can be referenced in the text including a call to the `figRef` function using the the chunk label as its only
-argument. This is a reference to `r figRef('examplePlot')`.
+argument. This is a reference to `r figRef('examplePlot')`. The *reportMD* package supports the use of interactive plots 
+in HTML pages (generated with [*plotly*](https://github.com/ropensci/plotly)) as well static versions. This feature relies on
+the use of *ggplot2* for plotting. Using the *plotMD* function to produce the plot from a *grob* prepared earlier allows
+seamless switching between the two by setting the `format` option, either globally (in the YAML frontmatter or in the 
+call to *render*) or for an individual chunk.
 
-```{r staticPlot, fig.cap="Static version of the plot above", format='screen'}
+```{r staticPlot, fig.cap=paste("Static version of", figRef('examplePlot')), format='screen'}
 carFig <- ggplot(mtcars, aes(x=hp, y=mpg, colour=cyl, text=rownames(mtcars))) + geom_point() + theme_bw()
 plotMD(carFig)
 ```
 
+## Using R objects from child documents
 Your R chunks may use objects created by a chunk in a different (child) document, provided the generating chunk is cached 
 and the cache is available when this document is knitted. To do this simply list the path to the child document in the
 YAML header under `params: depends`:
@@ -127,12 +133,11 @@ document are evaluated. To only load a subset of chunks from the child document,
 params: 
   depends: 
     part2: 
-      part2.Rmd:
-        - result
+        part2.Rmd: [regression, prepRegPlot]
 ```
 
 As a result we have direct access to the R objects created in the child documents and can use them in the main
-document in whatever order is most useful to explain the analysis and discuss the results. In the second child document
+document in whatever order is most useful to explain the analysis and discuss the results. In *part2.Rmd*
 we constructed a ggplot and cached the resulting object. This can now be used to produce the plot here.
 
 ```{r regression, fig.cap="Linear regression result. Car weight is a good predictor for MPG and the US built cars in the dataset tend to be heavier."}

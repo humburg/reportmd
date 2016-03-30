@@ -1,4 +1,7 @@
 # ReportMD --- Writing Complex Scientific Reports in R
+Release: [![Build Status](https://travis-ci.org/humburg/reportmd.svg?branch=master)](https://travis-ci.org/humburg/reportmd) 
+Development: [![Build Status](https://travis-ci.org/humburg/reportmd.svg?branch=develop)](https://travis-ci.org/humburg/reportmd) 
+
 It is common for complex analyses to be carried out in R. To improve the
 reproducability of such analyses and provide the necessary documentation
 it is increasingly common to use literate programming techniques. Although

@@ -17,6 +17,6 @@ Imports:
 Suggests:
     knitrBootstrap (>= 1.0.0),
     ggplot2
-License: MIT
+License: MIT + file LICENSE
 LazyData: true
 RoxygenNote: 5.0.1

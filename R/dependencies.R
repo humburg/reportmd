@@ -26,7 +26,7 @@ load_dependencies <- function(deps, opts){
     format <- opts$get('rmarkdown.pandoc.to')
     child_path <- opts$get('child.path')
     if(child_path == '') child_path <- getwd()
-    docs[i] <- file.path(child_path, docs[i])
+    docs[i] <- normalizePath(file.path(child_path, docs[i]), winslash='/', mustWork=FALSE)
     prefix[i] <- sub("\\.[^.]+$", "", docs[i])
     out[i] <- paste(prefix[i], out_ext[format], sep='.')
     tag_dir[i] <- file.path(dirname(docs[i]), '.processing')
@@ -40,7 +40,7 @@ load_dependencies <- function(deps, opts){
     tag <- file.path(tag_dir[i], paste0(basename(prefix[i]), '.complete'))
     if(!file.exists(tag)){
       wrapper <- file.path(tag_dir[i], paste0("render_", basename(prefix[i]), '.R'))
-      cat("setwd('..')\n", "rmarkdown::render('", docs[i], "', quiet=TRUE)",
+      cat("setwd('..')\n", "rmarkdown::render(normalizePath('", docs[i], "'), quiet=TRUE)",
           file=wrapper, sep='')
       devtools::clean_source(wrapper, quiet=TRUE)
       file.create(tag)

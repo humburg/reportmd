@@ -1,21 +1,11 @@
 
-#' Load results from child documents
-#'
-#' @param deps List of dependencies
-#' @param opts \code{knitr} options
-#'
-#' @return Called for its side effect.
+#' @inheritParams load_dependencies
 #' @export
-#' @importFrom rmarkdown render
-#' @importFrom devtools clean_source
-#' @author Peter Humburg
-load_dependencies <- function(deps, opts){
+#' @rdname load_dependencies.Rd
+update_dependencies <- function(deps, opts){
   out_ext <- c(latex='pdf', html='html', markdown='md', jerkyll='html')
   docs <- sapply(deps, function(x){
     if(is.character(x)) x else names(x)
-  })
-  chunks <- lapply(deps, function(x) {
-    if(is.list(x)) x[[1]] else list()
   })
   out <- character(length(docs))
   prefix <- character(length(docs))
@@ -35,7 +25,6 @@ load_dependencies <- function(deps, opts){
     }
   }
   for(i in 1:length(docs)){
-    cache <- file.path(paste0(prefix[i], '_cache'), format)
     if(!file.exists(out[i]) || file.mtime(out[i]) < file.mtime(docs[i])){
       wrapper <- file.path(tag_dir[i], paste0("render_", basename(prefix[i]), '.R'))
       cat("setwd('..')\n", "rmarkdown::render(normalizePath('", docs[i], "'), quiet=TRUE)",
@@ -45,7 +34,34 @@ load_dependencies <- function(deps, opts){
     if(!file.exists(out[i])){
       stop("Unable to locate output of child document: ", out[i])
     }
+  }
+}
 
+
+#' Load results from child documents
+#'
+#' @param deps List of dependencies
+#' @param opts \code{knitr} options
+#'
+#' @return Called for its side effect.
+#' @export
+#' @importFrom rmarkdown render
+#' @importFrom devtools clean_source
+#' @author Peter Humburg
+load_dependencies <- function(deps, opts){
+  docs <- sapply(deps, function(x){
+    if(is.character(x)) x else names(x)
+  })
+  chunks <- lapply(deps, function(x) {
+    if(is.list(x)) x[[1]] else list()
+  })
+  out <- character(length(docs))
+  prefix <- character(length(docs))
+  for(i in 1:length(docs)){
+    cache <- file.path(paste0(prefix[i], '_cache'), format)
+    if(!dir.exists(cache)){
+      update_dependencies(deps, opts)
+    }
     ## identify files to load
     ## either data from all cached chunks or only the ones listed explicitly
     cache_pattern <- '^[^_]{2}'

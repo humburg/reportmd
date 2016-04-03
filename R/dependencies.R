@@ -10,7 +10,6 @@
 #' @importFrom devtools clean_source
 #' @author Peter Humburg
 load_dependencies <- function(deps, opts){
-  started <- Sys.time()
   out_ext <- c(latex='pdf', html='html', markdown='md', jerkyll='html')
   docs <- sapply(deps, function(x){
     if(is.character(x)) x else names(x)
@@ -37,13 +36,11 @@ load_dependencies <- function(deps, opts){
   }
   for(i in 1:length(docs)){
     cache <- file.path(paste0(prefix[i], '_cache'), format)
-    tag <- file.path(tag_dir[i], paste0(basename(prefix[i]), '.complete'))
-    if(!file.exists(tag)){
+    if(!file.exists(out[i]) || file.mtime(out[i]) < file.mtime(docs[i])){
       wrapper <- file.path(tag_dir[i], paste0("render_", basename(prefix[i]), '.R'))
       cat("setwd('..')\n", "rmarkdown::render(normalizePath('", docs[i], "'), quiet=TRUE)",
           file=wrapper, sep='')
       devtools::clean_source(wrapper, quiet=TRUE)
-      file.create(tag)
     }
     if(!file.exists(out[i])){
       stop("Unable to locate output of child document: ", out[i])

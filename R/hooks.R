@@ -53,6 +53,40 @@ fig.cap_opts_hook <- function(options){
   opts
 }
 
+#' Dependency processing
+#'
+#' Hooks for use with knitr to facilitate handling of inter-file dependencies.
+#' @param options List of chunk options
+#'
+#' @return Updated list of options
+#' @export
+#' @author Peter Humburg
+dependson_opts_hook <- function(options){
+  depends <- options$dependson
+  parse <- grepl("[\\S]+:\\S+", depends)
+  if(any(parse)){
+    if(is.null(options$dependencies)){
+      stop("Requested external dependency (", depends[parse][1],
+           ") but dependency information is missing. Did you list dependencies in the header?")
+    }
+    external <- strsplit(depends[parse], "[:/]")
+    external[1] <- options$dependencies[external[1]]
+    for(ext_dep in external){
+      arg <- list(list(ext_dep[2]))
+      names(arg) <- ext_dep[1]
+      names(arg[[1]]) <- options$dependencies[[arg[1]]]
+      load_dependencies(arg, knit_opts)
+      if(length(ext_dep) > 2){
+        options$ext.depends <- c(options$ext.depends, get(ext_dep[3]))
+      } else{
+        options$ext.depends <- c(options$ext.depends, file.mtime(ext_dep[1]))
+      }
+    }
+  }
+  options
+}
+
+
 #' Set knitr hooks
 #'
 #' Installs all required knitr hooks.
@@ -63,6 +97,7 @@ fig.cap_opts_hook <- function(options){
 #' @importFrom knitr knit_hooks
 #' @export
 installHooks <- function(){
-  knitr::opts_hooks$set(fig.cap = fig.cap_opts_hook)
-  knitr::knit_hooks$set(fig.cap = fig.cap_chunk_hook)
+  knitr::opts_hooks$set(fig.cap=fig.cap_opts_hook)
+  knitr::opts_hooks$set(dependson=dependson_opts_hook)
+  knitr::knit_hooks$set(fig.cap=fig.cap_chunk_hook)
 }

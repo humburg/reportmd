@@ -13,7 +13,9 @@ Imports:
     pander,
     knitr,
     devtools,
-    rmarkdown
+    rmarkdown,
+    stringr,
+    yaml
 Suggests:
     knitrBootstrap (>= 1.0.0),
     ggplot2

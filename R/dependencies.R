@@ -80,3 +80,42 @@ load_dependencies <- function(deps, opts){
   }
   invisible(NULL)
 }
+
+#' Copy dependencies to working directory
+#'
+#' Output of child documents is copied to the working directory of the main document and installs
+#' a \code{dependencies} package option.
+#'
+#' @param deps List of dependencies.
+#' @param opts Knitr options.
+#'
+#' @return Named vector with
+#' @export
+#'
+#' @author Peter Humburg
+copy_dependencies <- function(deps, opts){
+  out_ext <- c(latex='pdf', html='html', markdown='md', jerkyll='html')
+  docs <- sapply(deps, function(x){
+    if(is.character(x)) x else names(x)
+  })
+
+  out <- character(length(docs))
+  prefix <- character(length(docs))
+  format <- opts$get('rmarkdown.pandoc.to')
+  for(i in 1:length(docs)){
+    child_path <- opts$get('child.path')
+    if(child_path == '') child_path <- getwd()
+    docs[i] <- normalizePath(file.path(child_path, docs[i]), winslash='/', mustWork=FALSE)
+    prefix[i] <- sub("\\.[^.]+$", "", docs[i])
+    out[i] <- file.path(getwd(), basename(prefix[i]))
+    if(out[i] != prefix[i]){
+      file.copy(paste(prefix[i], out_ext[format], sep='.'), dirname(out[i]), overwrite=TRUE)
+      file.copy(paste(prefix[i], 'files', sep='_'), dirname(out[i]), recursive=TRUE, overwrite=TRUE)
+    }
+    out[i] <- basename(paste(out[i], out_ext[format], sep='.'))
+  }
+  names(out) <- names(docs)
+  opts$set(dependencies=deps)
+  out
+}
+

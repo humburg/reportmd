@@ -55,9 +55,11 @@ load_dependencies <- function(deps, opts){
   chunks <- lapply(deps, function(x) {
     if(is.list(x)) x[[1]] else list()
   })
-  out <- character(length(docs))
   prefix <- character(length(docs))
+  format <- opts$get('rmarkdown.pandoc.to')
+
   for(i in 1:length(docs)){
+    prefix[i] <- sub("\\.[^.]+$", "", docs[i])
     cache <- file.path(paste0(prefix[i], '_cache'), format)
     if(!dir.exists(cache)){
       update_dependencies(deps, opts)

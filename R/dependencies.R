@@ -10,9 +10,9 @@ update_dependencies <- function(deps, opts){
   out <- character(length(docs))
   prefix <- character(length(docs))
   tag_dir <- character(length(docs))
+  format <- opts$get('rmarkdown.pandoc.to')
 
   for(i in 1:length(docs)){
-    format <- opts$get('rmarkdown.pandoc.to')
     child_path <- opts$get('child.path')
     if(child_path == '') child_path <- getwd()
     docs[i] <- normalizePath(file.path(child_path, docs[i]), winslash='/', mustWork=FALSE)

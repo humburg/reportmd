@@ -1,7 +1,7 @@
 
 #' @inheritParams load_dependencies
 #' @export
-#' @rdname load_dependencies.Rd
+#' @rdname load_dependencies
 update_dependencies <- function(deps, opts){
   out_ext <- c(latex='pdf', html='html', markdown='md', jerkyll='html')
   docs <- sapply(deps, function(x){

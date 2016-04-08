@@ -12,7 +12,7 @@ copy_dependencies(deps, opts)
 \item{opts}{Knitr options.}
 }
 \value{
-Named vector with
+List of objects of class \link{Dependency}.
 }
 \description{
 Output of child documents is copied to the working directory of the main document and installs

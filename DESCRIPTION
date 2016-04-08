@@ -15,7 +15,8 @@ Imports:
     devtools,
     rmarkdown,
     stringr,
-    yaml
+    yaml,
+    xml2
 Suggests:
     knitrBootstrap (>= 1.0.0),
     ggplot2

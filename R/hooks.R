@@ -86,6 +86,19 @@ dependson_opts_hook <- function(options){
   options
 }
 
+## Output hooks
+
+document_hook <- function(x){
+  if(!is.null(opts_knit$get('dependencies'))){
+    deps <- opts_knit$get('dependencies')
+    link_section <- c('##Related Documents',
+                      sapply(deps, printMD, format='md reference'), '',
+                      sapply(deps, printMD, format='reference'))
+    x <- paste(c(x, link_section), collapse='  \n')
+  }
+  x
+}
+
 
 #' Set knitr hooks
 #'
@@ -100,4 +113,6 @@ installHooks <- function(){
   knitr::opts_hooks$set(fig.cap=fig.cap_opts_hook)
   knitr::opts_hooks$set(dependson=dependson_opts_hook)
   knitr::knit_hooks$set(fig.cap=fig.cap_chunk_hook)
+  knitr::knit_hooks$set(document=document_hook)
 }
+

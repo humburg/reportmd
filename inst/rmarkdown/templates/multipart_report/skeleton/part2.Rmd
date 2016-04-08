@@ -87,7 +87,7 @@ installHooks()
 This is the second part of the multi-part data analysis document. Here we'll use
 the pre-processed dataset produced in Part 1 for a basic analysis.
 
-```{r prepBoxplot}
+```{r prepBoxplot, dependson='part1:origin'}
 box_fig <- ggplot(ext_cars, aes(x=origin, y=mpg)) + geom_boxplot() + theme_bw()
 ```
 

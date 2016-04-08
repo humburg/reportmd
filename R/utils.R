@@ -37,8 +37,9 @@ extract_yaml <- function(input, ...){
   header <- stringr::str_extract_all(paste(contents, collapse="\n"),
                                      stringr::regex("^---.+?^(---|\\.\\.\\.)",
                                                     multiline=TRUE, dotall=TRUE))
-  header <- lapply(header, stringr::str_replace, '^(---+)|(\\.\\.\\.+)', '')
+  header <- lapply(header, stringr::str_replace_all, c('^---+$'='', '(\\.\\.\\.+$)|---+$'=''))
   header <- lapply(header, yaml::yaml.load)
+  header <- Reduce(merge_list, header)
   header
 }
 

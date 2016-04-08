@@ -91,7 +91,7 @@ load_dependencies <- function(deps, opts){
 #' @param deps List of dependencies.
 #' @param opts Knitr options.
 #'
-#' @return Named vector with
+#' @return List of objects of class \link{Dependency}.
 #' @export
 #'
 #' @author Peter Humburg
@@ -116,8 +116,8 @@ copy_dependencies <- function(deps, opts){
     }
     out[i] <- basename(paste(out[i], out_ext[format], sep='.'))
   }
-  names(out) <- names(docs)
+  deps <- mapply(Dependency, names(deps), out, docs, SIMPLIFY=FALSE)
   opts$set(dependencies=deps)
-  out
+  deps
 }
 

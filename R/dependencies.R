@@ -70,9 +70,9 @@ load_dependencies <- function(deps, opts){
     if(length(chunks[[i]])){
       cache_pattern <- paste(paste0('^', chunks[[i]], '_'), collapse='|')
     }
-    cached <- dir(cache, pattern=cache_pattern, full.names=TRUE)
+    cached <- dir(file.path(opts$get('child.path'), cache), pattern=cache_pattern, full.names=TRUE)
     cached <- unique(sub("\\.[^.]+$", "", cached))
-    if(length(cached) < length(chunks[i])){
+    if(length(cached) < length(chunks[[i]])){
       found <- sapply(strsplit(cached, '_'), '[[', 1)
       found_pattern <- paste(found, collapse='|')
       missing <- cache[i][!grepl(found_pattern, cache[i])]

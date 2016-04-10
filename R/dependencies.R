@@ -49,6 +49,7 @@ update_dependencies <- function(deps, opts){
 #' @importFrom devtools clean_source
 #' @author Peter Humburg
 load_dependencies <- function(deps, opts){
+  if(is.null(deps)) return(invisible(character(0)))
   docs <- sapply(deps, function(x){
     if(is.character(x)) x else names(x)
   })
@@ -96,6 +97,7 @@ load_dependencies <- function(deps, opts){
 #'
 #' @author Peter Humburg
 copy_dependencies <- function(deps, opts){
+  if(is.null(deps)) return(NULL)
   out_ext <- c(latex='pdf', html='html', markdown='md', jerkyll='html')
   docs <- sapply(deps, function(x){
     if(is.character(x)) x else names(x)

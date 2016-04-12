@@ -83,7 +83,7 @@ load_dependencies <- function(deps, opts){
     }
     lapply(cached, lazyLoad, parent.frame(1))
   }
-  invisible(NULL)
+  invisible(cached)
 }
 
 #' Copy dependencies to working directory

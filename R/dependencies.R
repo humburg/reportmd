@@ -72,6 +72,7 @@ load_dependencies <- function(deps, opts){
     if(length(chunks[[i]])){
       cache_pattern <- paste(paste0('^', chunks[[i]], '_'), collapse='|')
     }
+    if(opts$get('child.path') == '') opts$set(child.path='.')
     cached <- dir(file.path(opts$get('child.path'), cache), pattern=cache_pattern, full.names=TRUE)
     cached <- unique(sub("\\.[^.]+$", "", cached))
     if(length(cached) < length(chunks[[i]])){

@@ -1,4 +1,3 @@
-
 #' @inheritParams load_dependencies
 #' @export
 #' @rdname load_dependencies

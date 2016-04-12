@@ -25,7 +25,7 @@ update_dependencies <- function(deps, opts){
     }
   }
   for(i in 1:length(docs)){
-    if(!file.exists(out[i]) || file.mtime(out[i]) < file.mtime(docs[i])){
+    if(needs_update(prefix[i], stringr::str_extract(docs[i], '[^.]+$'), out_ext[format], opts$get('input.file'))){
       wrapper <- file.path(tag_dir[i], paste0("render_", basename(prefix[i]), '.R'))
       cat("setwd('..')\n", "rmarkdown::render(normalizePath('", docs[i], "'), quiet=TRUE)",
           file=wrapper, sep='')
@@ -58,11 +58,12 @@ load_dependencies <- function(deps, opts){
   })
   prefix <- character(length(docs))
   format <- opts$get('rmarkdown.pandoc.to')
+  out_ext <- c(latex='pdf', html='html', markdown='md', jerkyll='html')
 
   for(i in 1:length(docs)){
     prefix[i] <- sub("\\.[^.]+$", "", docs[i])
     cache <- file.path(paste0(prefix[i], '_cache'), format)
-    if(!dir.exists(cache)){
+    if(needs_update(prefix[i], stringr::str_extract(docs[i], '[^.]+$'), out_ext[format], opts$get('input.file'))){
       update_dependencies(deps, opts)
     }
     ## identify files to load
@@ -123,3 +124,42 @@ copy_dependencies <- function(deps, opts){
   deps
 }
 
+needs_update <- function(prefix, in_format, out_format, main_file){
+  update <- FALSE
+  in_doc <- paste(prefix, in_format, sep='.')
+  out_doc <- paste(prefix, out_format, sep='.')
+  main_out <- file.path(dirname(main_file), basename(sub("\\.[^.]+$", paste0(".", out_format), main_file)))
+  cache_dir <- file.path(paste(prefix, 'cache', sep='_'), out_format)
+  if(!file.exists(out_doc)){
+    update <- TRUE
+  } else if(file.mtime(out_doc) < file.mtime(in_doc)){
+    update <- TRUE
+  } else if(!file.exists(cache_dir)){
+    update <- TRUE
+  } else{
+    deps <- extract_yaml(in_doc)$params
+    if(!is.null(deps)){
+      deps <- deps$depends
+    }
+    if(!is.null(deps)){
+      deps <- sapply(deps$value, function(x){
+        if(is.character(x)) x else names(x)
+      })
+      cache_time <- sapply(deps, function(d, fmt)
+        max(file.mtime(dir(file.path(paste(sub("\\.[^.]+$", "", d), 'cache', sep='_'), fmt), full.names=TRUE))), out_format)
+      update <- any(cache_time > file.mtime(main_file))
+      if(!update){
+        update <- any(sapply(deps, function(d, output, main)
+          needs_update(sub("\\.[^.]+$", "", d), stringr::str_extract(d, '[^.]+$'), output, main),
+          out_format, main_file))
+      }
+      if(!update){
+        deps_out <- paste(sub("\\.[^.]+$", "", deps), out_format, sep='.')
+        times <- sapply(deps_out, file.mtime)
+        timestamp <- file.mtime(out_doc)
+        update <- any(times > timestamp)
+      }
+    }
+  }
+  update
+}

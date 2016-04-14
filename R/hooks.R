@@ -63,7 +63,7 @@ fig.cap_opts_hook <- function(options){
 #' @author Peter Humburg
 dependson_opts_hook <- function(options){
   depends <- options$dependson
-  parse <- grepl("[\\S]+:\\S+", depends)
+  parse <- grepl("\\S+:\\S+", depends)
   if(any(parse)){
     if(is.null(options$dependencies)){
       stop("Requested external dependency (", depends[parse][1],

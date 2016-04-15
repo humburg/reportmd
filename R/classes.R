@@ -22,14 +22,22 @@
 #'  \item{source}{The source document used to generate the output (may be \code{NULL}).}
 #'  \item{title}{The document title. If no title is available this will be 'Untitled'}
 #'  \item{cache}{Location of the cache directory.}
+#'  \item{files}{Path to directory containing additional files associated with the dependency.}
 #' @export
 #' @importFrom stringr str_extract
 Dependency <- function(label, document, source, title, cache, ...){
-  dep <- list(label=label, document=document)
-  doc_format <- tolower(stringr::str_extract(document, '[^.]+$'))
+  dep <- list(label=label)
   if(!missing(source)){
     dep$source <- source
   }
+  if(!missing(document)){
+    dep$document <- document
+  } else if(!is.null(dep$source)){
+    dep$document <- dependency_output(dep$source)
+  } else{
+    warning("Unable to determine path to output document for dependency ", label)
+  }
+  doc_format <- tolower(stringr::str_extract(dep$document, '[^.]+$'))
 
   if(!missing(title)){
     dep$title <- title
@@ -48,13 +56,14 @@ Dependency <- function(label, document, source, title, cache, ...){
 
   if(missing(cache)){
     if(!is.null(dep$source)){
-      prefix <- sub("\\.[^.]+$", "", dep$source)
-      cache <- file.path(paste(prefix, 'cache', sep="_"), opts_knit$get("rmarkdown.pandoc.to"))
+      cache <- file.path(dependency_subdir(dep$source, 'cache'), opts_knit$get("rmarkdown.pandoc.to"))
     } else{
       cache <- NULL
     }
   }
   dep$cache <- cache
+
+  dep$files <- dependency_subdir(dep$source, 'files')
 
   class(dep) <- 'Dependency'
   dep

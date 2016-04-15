@@ -70,16 +70,14 @@ dependson_opts_hook <- function(options){
            ") but dependency information is missing. Did you list dependencies in the header?")
     }
     external <- strsplit(depends[parse], "[:/]")
-    external[1] <- opts_knit$get('dependencies')[external[1]]
     for(ext_dep in external){
-      arg <- list(list(ext_dep[2]))
-      names(arg) <- ext_dep[1]
-      names(arg[[1]]) <- opts_knit$get('dependencies')[[arg[1]]]
-      load_dependencies(arg, knit_opts)
+      dep <- opts_knit$get('dependencies')[ext_dep[[1]]]
+      dep[[1]]$chunks <- ext_dep[[2]]
+      load_dependencies(dep, knit_opts)
       if(length(ext_dep) > 2){
         options$ext.depends <- c(options$ext.depends, get(ext_dep[3]))
       } else{
-        options$ext.depends <- c(options$ext.depends, file.mtime(ext_dep[1]))
+        options$ext.depends <- c(options$ext.depends, file.mtime(dep[[1]]$source))
       }
     }
   }

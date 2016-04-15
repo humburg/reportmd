@@ -1,20 +1,27 @@
+dependency_source <- function(deps, opts){
+  child_path <- opts$get('child.path')
+  if(child_path == '') child_path <- '.'
+  docs <- sapply(deps, function(x){
+    if(is.character(x)) x else names(x)
+  })
+  for(i in 1:length(docs)){
+    docs[i] <- normalizePath(file.path(child_path, docs[i]), winslash='/', mustWork=FALSE)
+  }
+  docs
+}
+
 #' @inheritParams load_dependencies
 #' @export
 #' @rdname load_dependencies
 update_dependencies <- function(deps, opts){
   out_ext <- c(latex='pdf', html='html', markdown='md', jerkyll='html')
-  docs <- sapply(deps, function(x){
-    if(is.character(x)) x else names(x)
-  })
+  docs <- dependency_source(deps, opts)
   out <- character(length(docs))
   prefix <- character(length(docs))
   tag_dir <- character(length(docs))
   format <- opts$get('rmarkdown.pandoc.to')
 
   for(i in 1:length(docs)){
-    child_path <- opts$get('child.path')
-    if(child_path == '') child_path <- getwd()
-    docs[i] <- normalizePath(file.path(child_path, docs[i]), winslash='/', mustWork=FALSE)
     prefix[i] <- sub("\\.[^.]+$", "", docs[i])
     out[i] <- paste(prefix[i], out_ext[format], sep='.')
     tag_dir[i] <- file.path(dirname(docs[i]), '.processing')
@@ -49,9 +56,7 @@ update_dependencies <- function(deps, opts){
 #' @author Peter Humburg
 load_dependencies <- function(deps, opts){
   if(is.null(deps)) return(invisible(character(0)))
-  docs <- sapply(deps, function(x){
-    if(is.character(x)) x else names(x)
-  })
+  docs <- dependency_source(deps, opts)
   chunks <- lapply(deps, function(x) {
     if(is.list(x)) x[[1]] else list()
   })
@@ -100,17 +105,12 @@ load_dependencies <- function(deps, opts){
 copy_dependencies <- function(deps, opts){
   if(is.null(deps)) return(NULL)
   out_ext <- c(latex='pdf', html='html', markdown='md', jerkyll='html')
-  docs <- sapply(deps, function(x){
-    if(is.character(x)) x else names(x)
-  })
+  docs <- dependency_source(deps, opts)
 
   out <- character(length(docs))
   prefix <- character(length(docs))
   format <- opts$get('rmarkdown.pandoc.to')
   for(i in 1:length(docs)){
-    child_path <- opts$get('child.path')
-    if(child_path == '') child_path <- getwd()
-    docs[i] <- normalizePath(file.path(child_path, docs[i]), winslash='/', mustWork=FALSE)
     prefix[i] <- sub("\\.[^.]+$", "", docs[i])
     out[i] <- file.path(getwd(), basename(prefix[i]))
     if(out[i] != prefix[i]){

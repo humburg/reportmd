@@ -65,16 +65,16 @@ dependson_opts_hook <- function(options){
   depends <- options$dependson
   parse <- grepl("\\S+:\\S+", depends)
   if(any(parse)){
-    if(is.null(options$dependencies)){
+    if(is.null(opts_knit$get('dependencies'))){
       stop("Requested external dependency (", depends[parse][1],
            ") but dependency information is missing. Did you list dependencies in the header?")
     }
     external <- strsplit(depends[parse], "[:/]")
-    external[1] <- options$dependencies[external[1]]
+    external[1] <- opts_knit$get('dependencies')[external[1]]
     for(ext_dep in external){
       arg <- list(list(ext_dep[2]))
       names(arg) <- ext_dep[1]
-      names(arg[[1]]) <- options$dependencies[[arg[1]]]
+      names(arg[[1]]) <- opts_knit$get('dependencies')[[arg[1]]]
       load_dependencies(arg, knit_opts)
       if(length(ext_dep) > 2){
         options$ext.depends <- c(options$ext.depends, get(ext_dep[3]))

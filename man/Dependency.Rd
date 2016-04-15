@@ -28,6 +28,7 @@ An object of class \code{Dependency}. Such objects have fields
  \item{source}{The source document used to generate the output (may be \code{NULL}).}
  \item{title}{The document title. If no title is available this will be 'Untitled'}
  \item{cache}{Location of the cache directory.}
+ \item{files}{Path to directory containing additional files associated with the dependency.}
 }
 \description{
 Objects of the class are used to store information

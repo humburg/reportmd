@@ -12,7 +12,7 @@ copy_dependencies(deps, opts)
 \item{opts}{Knitr options.}
 }
 \value{
-List of objects of class \link{Dependency}.
+Called for its side effect.
 }
 \description{
 Output of child documents is copied to the working directory of the main document and installs

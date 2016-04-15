@@ -132,6 +132,11 @@ needs_update <- function(dependency, main_file){
     if(!is.null(deps)){
       deps <- params2deps(list(depends=deps$value))
       update <- any(sapply(deps, needs_update, in_doc))
+      if(!update){
+        dep_times <- file.mtime(sapply(deps, '[[', 'source'))
+        my_time <- file.mtime(dependency_output(main_file))
+        update <- any(dep_times > my_time) && !is.na(my_time)
+      }
     }
   }
   update

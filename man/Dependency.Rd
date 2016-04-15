@@ -4,7 +4,7 @@
 \alias{Dependency}
 \title{Create objects of class \code{Dependency}}
 \usage{
-Dependency(label, document, source, title, cache, ...)
+Dependency(label, document, source, chunks, title, cache, ...)
 }
 \arguments{
 \item{label}{The label associated with the document.}
@@ -13,6 +13,8 @@ Dependency(label, document, source, title, cache, ...)
 relative to the location of the main document.}
 
 \item{source}{Path to source (i.e. RMarkdown) file used to generate \code{document}.}
+
+\item{chunks}{List of chunk labels indicating the code chunks required.}
 
 \item{title}{The title of the document.}
 

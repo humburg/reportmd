@@ -7,6 +7,7 @@
 #' @param document Path to the output document. This should be
 #' relative to the location of the main document.
 #' @param source Path to source (i.e. RMarkdown) file used to generate \code{document}.
+#' @param chunks List of chunk labels indicating the code chunks required.
 #' @param title The title of the document.
 #' @param cache Path to cache directory. If this is missing an attempt will be made to guess
 #' the location if \code{source} is present.
@@ -25,7 +26,7 @@
 #'  \item{files}{Path to directory containing additional files associated with the dependency.}
 #' @export
 #' @importFrom stringr str_extract
-Dependency <- function(label, document, source, title, cache, ...){
+Dependency <- function(label, document, source, chunks, title, cache, ...){
   dep <- list(label=label)
   if(!missing(source)){
     dep$source <- source
@@ -64,6 +65,10 @@ Dependency <- function(label, document, source, title, cache, ...){
   dep$cache <- cache
 
   dep$files <- dependency_subdir(dep$source, 'files')
+  dep$chunks <- list()
+  if(!missing(chunks)){
+    dep$chunks <- chunks
+  }
 
   class(dep) <- 'Dependency'
   dep

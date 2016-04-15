@@ -4,7 +4,7 @@
 \alias{Dependency}
 \title{Create objects of class \code{Dependency}}
 \usage{
-Dependency(label, document, source, title, ...)
+Dependency(label, document, source, title, cache, ...)
 }
 \arguments{
 \item{label}{The label associated with the document.}
@@ -16,6 +16,9 @@ relative to the location of the main document.}
 
 \item{title}{The title of the document.}
 
+\item{cache}{Path to cache directory. If this is missing an attempt will be made to guess
+the location if \code{source} is present.}
+
 \item{...}{Additional arguments are ignored.}
 }
 \value{
@@ -24,6 +27,7 @@ An object of class \code{Dependency}. Such objects have fields
  \item{document}{The path to the output document.}
  \item{source}{The source document used to generate the output (may be \code{NULL}).}
  \item{title}{The document title. If no title is available this will be 'Untitled'}
+ \item{cache}{Location of the cache directory.}
 }
 \description{
 Objects of the class are used to store information

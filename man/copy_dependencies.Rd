@@ -4,12 +4,10 @@
 \alias{copy_dependencies}
 \title{Copy dependencies to working directory}
 \usage{
-copy_dependencies(deps, opts)
+copy_dependencies(deps)
 }
 \arguments{
 \item{deps}{List of dependencies.}
-
-\item{opts}{Knitr options.}
 }
 \value{
 Called for its side effect.

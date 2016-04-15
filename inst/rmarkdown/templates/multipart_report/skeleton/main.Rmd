@@ -29,9 +29,9 @@ library(plotly)
 ```{r dependencies, include=FALSE, cache=FALSE}
 ## Ensure required results from child documents are availsble
 opts_knit$set(input.file=sys.frame(1)$original_input)
-deps <- params2deps(params, opts_knit)
-load_dependencies(deps, opts_knit)
-copy_dependencies(deps, opts_knit)
+deps <- params2deps(params)
+load_dependencies(deps)
+copy_dependencies(deps)
 opts_knit$set(dependencies=deps)
 ```
 

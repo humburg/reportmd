@@ -4,12 +4,10 @@
 \alias{params2deps}
 \title{Extract dependency information from YAML header}
 \usage{
-params2deps(params, opts)
+params2deps(params)
 }
 \arguments{
 \item{params}{List of document parameters}
-
-\item{\code{knitr}}{options to use}
 }
 \value{
 A list of \code{Dependency} objects

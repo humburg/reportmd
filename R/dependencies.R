@@ -1,5 +1,5 @@
-dependency_source <- function(deps, opts=opts_knit){
-  child_path <- opts$get('child.path')
+dependency_source <- function(deps){
+  child_path <- opts_knit$get('child.path')
   if(child_path == '') child_path <- '.'
   docs <- sapply(deps, function(x){
     if(is.character(x)) x else names(x)
@@ -10,14 +10,14 @@ dependency_source <- function(deps, opts=opts_knit){
   docs
 }
 
-dependency_output <- function(source, opts=opts_knit){
+dependency_output <- function(source){
   out_ext <- c(latex='pdf', html='html', markdown='md', jerkyll='html')
-  format <- opts$get('rmarkdown.pandoc.to')
+  format <- opts_knit$get('rmarkdown.pandoc.to')
   prefix <- sub("\\.[^.]+$", "", source)
   paste(prefix, out_ext[format], sep='.')
 }
 
-dependency_subdir <- function(source, type, opts=opts_knit){
+dependency_subdir <- function(source, type){
   prefix <- sub("\\.[^.]+$", "", source)
   paste(prefix, type, sep="_")
 }
@@ -25,30 +25,29 @@ dependency_subdir <- function(source, type, opts=opts_knit){
 #' Extract dependency information from YAML header
 #'
 #' @param params List of document parameters
-#' @param \code{knitr} options to use
 #'
 #' @return A list of \code{Dependency} objects
 #' @author Peter Humburg
 #' @export
-params2deps <- function(params, opts=opts_knit){
+params2deps <- function(params){
   if(is.null(params$depends)){
     return(list())
   }
   deps <- params$depends
-  docs <- dependency_source(deps, opts)
+  docs <- dependency_source(deps)
   mapply(Dependency, label=names(deps), source=docs, SIMPLIFY=FALSE)
 }
 
 #' @inheritParams load_dependencies
 #' @export
 #' @rdname load_dependencies
-update_dependency <- function(dep, opts){
+update_dependency <- function(dep){
   tag_dir <- file.path(dirname(dep$source), '.processing')
   if(!file.exists(tag_dir)){
     on.exit(unlink(tag_dir, recursive=TRUE), add=TRUE)
     dir.create(tag_dir)
   }
-  if(needs_update(dep, opts$get('input.file'))){
+  if(needs_update(dep, opts_knit$get('input.file'))){
     wrapper <- file.path(tag_dir, paste0("render_", dep$label, '.R'))
     cat("setwd('..')\n", "rmarkdown::render(normalizePath('", dep$source, "'), quiet=TRUE)",
         file=wrapper, sep='')
@@ -63,16 +62,15 @@ update_dependency <- function(dep, opts){
 #' Load results from child documents
 #'
 #' @param deps List of objects of class \code{Dependency}
-#' @param opts \code{knitr} options
 #'
 #' @return Called for its side effect.
 #' @export
 #' @importFrom rmarkdown render
 #' @importFrom devtools clean_source
 #' @author Peter Humburg
-load_dependencies <- function(deps, opts){
+load_dependencies <- function(deps){
   for(d in deps){
-    update_dependency(d, opts)
+    update_dependency(d)
 
     ## identify files to load
     ## either data from all cached chunks or only the ones listed explicitly
@@ -100,13 +98,12 @@ load_dependencies <- function(deps, opts){
 #' a \code{dependencies} package option.
 #'
 #' @param deps List of dependencies.
-#' @param opts Knitr options.
 #'
 #' @return Called for its side effect.
 #' @export
 #'
 #' @author Peter Humburg
-copy_dependencies <- function(deps, opts){
+copy_dependencies <- function(deps){
   for(d in deps){
     if(dirname(d$document) != getwd()){
       file.copy(d$document, getwd(), overwrite=TRUE)

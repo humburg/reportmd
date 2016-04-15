@@ -5,13 +5,11 @@
 \alias{update_dependency}
 \title{Load results from child documents}
 \usage{
-update_dependency(dep, opts)
+update_dependency(dep)
 
-load_dependencies(deps, opts)
+load_dependencies(deps)
 }
 \arguments{
-\item{opts}{\code{knitr} options}
-
 \item{deps}{List of objects of class \code{Dependency}}
 }
 \value{

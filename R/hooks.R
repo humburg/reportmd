@@ -73,7 +73,7 @@ dependson_opts_hook <- function(options){
     for(ext_dep in external){
       dep <- opts_knit$get('dependencies')[ext_dep[[1]]]
       dep[[1]]$chunks <- ext_dep[[2]]
-      load_dependencies(dep, knit_opts)
+      load_dependencies(dep)
       if(length(ext_dep) > 2){
         options$ext.depends <- c(options$ext.depends, get(ext_dep[3]))
       } else{

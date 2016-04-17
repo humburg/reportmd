@@ -2,6 +2,7 @@
 % Please edit documentation in R/generics.R
 \name{printMD}
 \alias{printMD}
+\alias{printMD.Dependency}
 \alias{printMD.default}
 \alias{printMD.double}
 \alias{printMD.integer}
@@ -14,6 +15,9 @@ printMD(x, ...)
 \method{printMD}{double}(x, big.mark = ",", ...)
 
 \method{printMD}{integer}(x, big.mark = ",", ...)
+
+\method{printMD}{Dependency}(x, format = c("markdown", "html", "reference",
+  "md reference"), ...)
 }
 \arguments{
 \item{x}{Object to be printed}
@@ -21,6 +25,8 @@ printMD(x, ...)
 \item{...}{Additional arguments}
 
 \item{big.mark}{Separator used to mark intervals before the decimal point.}
+
+\item{format}{Format type to use.}
 }
 \value{
 String representation of x formatted for printing.

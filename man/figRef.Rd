@@ -2,20 +2,26 @@
 % Please edit documentation in R/plot.R
 \name{figRef}
 \alias{figRef}
-\title{Figure cross-references}
+\alias{tabRef}
+\title{Figure and Table cross-references}
 \usage{
 figRef(label, caption, prefix = options("figcap.prefix"),
   sep = options("figcap.sep"),
   prefix.highlight = options("figcap.prefix.highlight"))
+
+tabRef(label, caption, prefix = options("tabcap.prefix"),
+  sep = options("tabcap.sep"),
+  prefix.highlight = options("tabcap.prefix.highlight"))
 }
 \arguments{
-\item{label}{Figure label.}
+\item{label}{Identifying label.}
 
-\item{caption}{Figure caption.}
+\item{caption}{Caption to display.}
 
-\item{prefix}{Fixed part of the printed figure label. Defaults to 'Figure'.}
+\item{prefix}{Fixed part of the printed label. Defaults to 'Figure' for figures and to
+'Table' for tables.}
 
-\item{sep}{Separator to use between printed figure label and caption.}
+\item{sep}{Separator to use between printed label and caption.}
 
 \item{prefix.highlight}{Markdown code the figure label should be wrapped in.
 Allows the label to be displayed in bold or italics.}
@@ -26,20 +32,21 @@ figure label with the caption. Otherwise a (markdown formatted) link to the
 figure is returned.
 }
 \description{
-Define figure labels and reference them in the text to reference the figure.
-Figures are numbered automatically.
+Define figure and table labels and reference them in the text to create automatic
+reference the corresponding table or figure. Numbers are assigned automatically.
 }
 \details{
-Typically this function only needs to be called explicitly to refer
-to figures in the text. The call to set the label and generate the appropriately
-modified caption is issued automatically when a code chunk with the \code{fig.cap}
-option is encountered. In that case the label used in the reference should be the
-label of the code chunk that generated the figure. Note that this means code chunks
-that generate figures have to be named.
+Typically \code{figRef} this function only needs to be called
+explicitly to refer to figures in the text. The call to set the label and generate
+the appropriately modified caption is issued automatically when a code chunk with
+the \code{fig.cap} option is encountered. In that case the label used in the reference
+should be the label of the code chunk that generated the figure. Note that this means
+code chunks that generate figures have to be named.
 
-Figure reference can occur at any point in the text. It is not strictly necessary to
-define a label before it is referenced. However, figures are numbered in the order
-they are first mentioned and this can lead to figures appearing to be out of order.
+Reference can occur at any point in the text. It is not strictly necessary to
+define a label before it is referenced. However, numbering is determined by the order
+in which labels are first encountered and this can lead to figures or tables appearing
+to be out of order.
 }
 \examples{
 options(figcap.prefix='Figure')
@@ -47,5 +54,8 @@ options(figcap.prefix.highlight='**')
 
 figRef('foo', 'A test caption')
 figRef('foo')
+}
+\author{
+Peter Humburg
 }
 

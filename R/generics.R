@@ -30,3 +30,26 @@ printMD.double <- function(x, big.mark=',', ...){
 printMD.integer <- function(x, big.mark=',', ...){
   base::prettyNum(x, big.mark=big.mark, ...)
 }
+
+#' @param format Format type to use.
+#' @method printMD Dependency
+#' @export
+#' @rdname printMD
+printMD.Dependency <- function(x, format=c('markdown', 'html', 'reference', 'md reference'), ...){
+  format <- tolower(format)
+  format <- match.arg(format)
+  rel_path <- basename(x$document)
+  if(format == 'markdown'){
+    link <- paste0('[', x$title, '](', rel_path, ')')
+  } else if(format == 'html'){
+    link <- paste0('<a href=', rel_path, '>', x$title, '</a>')
+  } else if(format == 'reference'){
+    link <- paste0('[', x$label, ']: ', rel_path)
+    if(x$title != 'Untitled'){
+      link <- paste0(link, ' (', x$title, ')')
+    }
+  } else if(format == 'md reference'){
+    link <- paste0('[', x$title, '][', x$label, ']')
+  }
+  link
+}

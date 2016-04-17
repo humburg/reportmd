@@ -1,0 +1,76 @@
+#' Create objects of class \code{Dependency}
+#'
+#' Objects of the class are used to store information
+#' about child docxuments.
+#'
+#' @param label The label associated with the document.
+#' @param document Path to the output document. This should be
+#' relative to the location of the main document.
+#' @param source Path to source (i.e. RMarkdown) file used to generate \code{document}.
+#' @param chunks List of chunk labels indicating the code chunks required.
+#' @param title The title of the document.
+#' @param cache Path to cache directory. If this is missing an attempt will be made to guess
+#' the location if \code{source} is present.
+#' @param ... Additional arguments are ignored.
+#'
+#' @details The \code{source} and \code{title} arguments may be omitted. If
+#' no \code{title} is provided an attempt is made to extract it from the header
+#' of the source file or, if that is unavailable (or no title was found),
+#' the output document (but currently only for html output).
+#' @return An object of class \code{Dependency}. Such objects have fields
+#'  \item{label}{The label used to refer to this document.}
+#'  \item{document}{The path to the output document.}
+#'  \item{source}{The source document used to generate the output (may be \code{NULL}).}
+#'  \item{title}{The document title. If no title is available this will be 'Untitled'}
+#'  \item{cache}{Location of the cache directory.}
+#'  \item{files}{Path to directory containing additional files associated with the dependency.}
+#' @export
+#' @importFrom stringr str_extract
+#' @importFrom knitr opts_knit
+Dependency <- function(label, document, source, chunks, title, cache, ...){
+  dep <- list(label=label)
+  if(!missing(source)){
+    dep$source <- source
+  }
+  if(!missing(document)){
+    dep$document <- document
+  } else if(!is.null(dep$source)){
+    dep$document <- dependency_output(dep$source)
+  } else{
+    warning("Unable to determine path to output document for dependency ", label)
+  }
+  doc_format <- tolower(stringr::str_extract(dep$document, '[^.]+$'))
+
+  if(!missing(title)){
+    dep$title <- title
+  } else {
+    extracted_title <- ''
+    if(!is.null(dep$source)){
+      extracted_title <- rmd_title(dep$source)
+    } else if(doc_format == 'html'){
+      extracted_title <- html_title(dep$document)
+    }
+    if(is.null(extracted_title) || extracted_title == ''){
+      extracted_title <- 'Untitled'
+    }
+    dep$title <- extracted_title
+  }
+
+  if(missing(cache)){
+    if(!is.null(dep$source)){
+      cache <- file.path(dependency_subdir(dep$source, 'cache'), opts_knit$get("rmarkdown.pandoc.to"))
+    } else{
+      cache <- NULL
+    }
+  }
+  dep$cache <- cache
+
+  dep$files <- dependency_subdir(dep$source, 'files')
+  dep$chunks <- list()
+  if(!missing(chunks)){
+    dep$chunks <- chunks
+  }
+
+  class(dep) <- 'Dependency'
+  dep
+}

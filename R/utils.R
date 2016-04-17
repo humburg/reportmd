@@ -25,3 +25,44 @@ merge_list <- function(x,y){
   }
   x
 }
+
+#' @importFrom stringr str_extract_all
+#' @importFrom stringr str_replace
+#' @importFrom stringr regex
+#' @importFrom yaml yaml.load
+#'
+#' @author Peter Humburg
+extract_yaml <- function(input, ...){
+  contents <- readLines(input, ...)
+  header <- stringr::str_extract_all(paste(contents, collapse="\n"),
+                                     stringr::regex("^---.+?^(---|\\.\\.\\.)",
+                                                    multiline=TRUE, dotall=TRUE))
+  header <- lapply(header, stringr::str_replace_all, c('^---+$'='', '(\\.\\.\\.+$)|---+$'=''))
+  header <- lapply(header, yaml::yaml.load)
+  header <- Reduce(merge_list, header)
+  header
+}
+
+#' Extract title from a Markdown document's yaml metadata
+#'
+#' @param input Name of input file.
+#' @param ... Additional arguments are ignored.
+#' @author Peter Humburg
+rmd_title <- function(input, ...){
+  metadata <- extract_yaml(input, ...)
+  metadata$title
+}
+
+#' Extract title from an HTML document
+#' @param input Name of input file.
+#' @param ... Additional arguments are ignored.
+#' @importFrom xml2 read_html
+#' @importFrom xml2 xml_find_one
+#' @importFrom xml2 xml_text
+#'
+#' @author Peter Humburg
+html_title <- function(input, ...){
+  contents <- xml2::read_html(input, ...)
+  title <- xml2::xml_find_one(contents, '//title')
+  xml2::xml_text(title)
+}

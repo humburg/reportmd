@@ -27,6 +27,7 @@ library(plotly)
 ```{r dependencies, include=FALSE, cache=FALSE}
 ## Ensure required results from child documents are availsble
 opts_knit$set(input.file=sys.frame(1)$original_input)
+opts_knit$set(loaded_chunks=list())
 deps <- params2deps(params)
 load_dependencies(deps)
 copy_dependencies(deps)
@@ -105,10 +106,10 @@ An reasonable initial hypothesis for why this might be the case is that US built
 cars may tend to be larger (and therefore heavier) and have larger engines.
 As it turns out car weight and engine displacement are highly correlated 
 ($\rho$ = `r printMD(cor(mtcars$disp, mtcars$wt), digits=2)`), so we'll
-investigate this by fitting a linear regression model with just weight as
-an explanatory variable.
+investigate this by fitting a linear regression model with weight as
+explanatory variable.
 
-```{r regression}
+```{r regression, dependson='part1:origin'}
 fit <- lm(mpg ~ wt, data=ext_cars)
 ext_cars$fitted <- fit$fitted.values
 ```

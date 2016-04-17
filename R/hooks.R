@@ -74,6 +74,9 @@ dependson_opts_hook <- function(options){
       dep <- opts_knit$get('dependencies')[ext_dep[[1]]]
       dep[[1]]$chunks <- ext_dep[[2]]
       load_dependencies(dep)
+      if(is.null(options$ext.depends)){
+        options$ext.depends <- list()
+      }
       if(length(ext_dep) > 2){
         options$ext.depends <- c(options$ext.depends, get(ext_dep[3]))
       } else{

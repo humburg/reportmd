@@ -6,6 +6,11 @@
 \usage{
 html_title(input, ...)
 }
+\arguments{
+\item{input}{Name of input file.}
+
+\item{...}{Additional arguments are ignored.}
+}
 \description{
 Extract title from an HTML document
 }

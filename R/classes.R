@@ -26,6 +26,7 @@
 #'  \item{files}{Path to directory containing additional files associated with the dependency.}
 #' @export
 #' @importFrom stringr str_extract
+#' @importFrom knitr opts_knit
 Dependency <- function(label, document, source, chunks, title, cache, ...){
   dep <- list(label=label)
   if(!missing(source)){

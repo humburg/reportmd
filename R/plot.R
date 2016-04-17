@@ -75,34 +75,37 @@ figureOptions <- function(..., format){
   }
 }
 
-#' Figure cross-references
+#' Figure and Table cross-references
 #'
-#' Define figure labels and reference them in the text to reference the figure.
-#' Figures are numbered automatically.
+#' Define figure and table labels and reference them in the text to create automatic
+#' reference the corresponding table or figure. Numbers are assigned automatically.
 #'
-#' @param label Figure label.
-#' @param caption Figure caption.
-#' @param prefix Fixed part of the printed figure label. Defaults to 'Figure'.
-#' @param sep Separator to use between printed figure label and caption.
+#' @param label Identifying label.
+#' @param caption Caption to display.
+#' @param prefix Fixed part of the printed label. Defaults to 'Figure' for figures and to
+#' 'Table' for tables.
+#' @param sep Separator to use between printed label and caption.
 #' @param prefix.highlight Markdown code the figure label should be wrapped in.
 #'    Allows the label to be displayed in bold or italics.
 #'
-#' @details Typically this function only needs to be called explicitly to refer
-#' to figures in the text. The call to set the label and generate the appropriately
-#' modified caption is issued automatically when a code chunk with the \code{fig.cap}
-#' option is encountered. In that case the label used in the reference should be the
-#' label of the code chunk that generated the figure. Note that this means code chunks
-#' that generate figures have to be named.
+#' @details Typically \code{figRef} this function only needs to be called
+#' explicitly to refer to figures in the text. The call to set the label and generate
+#' the appropriately modified caption is issued automatically when a code chunk with
+#' the \code{fig.cap} option is encountered. In that case the label used in the reference
+#' should be the label of the code chunk that generated the figure. Note that this means
+#' code chunks that generate figures have to be named.
 #'
-#' Figure reference can occur at any point in the text. It is not strictly necessary to
-#' define a label before it is referenced. However, figures are numbered in the order
-#' they are first mentioned and this can lead to figures appearing to be out of order.
+#' Reference can occur at any point in the text. It is not strictly necessary to
+#' define a label before it is referenced. However, numbering is determined by the order
+#' in which labels are first encountered and this can lead to figures or tables appearing
+#' to be out of order.
 #'
 #' @return If the \code{caption} argument is present a string combining the (computed)
 #' figure label with the caption. Otherwise a (markdown formatted) link to the
 #' figure is returned.
 #' @export
 #' @importFrom knitr opts_chunk
+#' @author Peter Humburg
 #' @examples
 #' options(figcap.prefix='Figure')
 #' options(figcap.prefix.highlight='**')
@@ -138,6 +141,7 @@ figRef <- local({
   }
 })
 
+#' @rdname figRef
 #' @export
 tabRef <- local({
   tag <- numeric()

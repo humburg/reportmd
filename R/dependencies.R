@@ -1,5 +1,6 @@
+#' @importFrom knitr opts_knit
 dependency_source <- function(deps){
-  child_path <- opts_knit$get('child.path')
+  child_path <- knitr::opts_knit$get('child.path')
   if(child_path == '') child_path <- '.'
   docs <- sapply(deps, function(x){
     if(is.character(x)) x else names(x)
@@ -10,9 +11,10 @@ dependency_source <- function(deps){
   docs
 }
 
+#' @importFrom knitr opts_knit
 dependency_output <- function(source){
   out_ext <- c(latex='pdf', html='html', markdown='md', jerkyll='html')
-  format <- opts_knit$get('rmarkdown.pandoc.to')
+  format <- knitr::opts_knit$get('rmarkdown.pandoc.to')
   prefix <- sub("\\.[^.]+$", "", source)
   paste(prefix, out_ext[format], sep='.')
 }
@@ -38,8 +40,9 @@ params2deps <- function(params){
   mapply(Dependency, label=names(deps), source=docs, SIMPLIFY=FALSE)
 }
 
-#' @inheritParams load_dependencies
+#' @param dep Dependency to update.
 #' @export
+#' @importFrom knitr opts_knit
 #' @rdname load_dependencies
 update_dependency <- function(dep){
   tag_dir <- file.path(dirname(dep$source), '.processing')
@@ -47,7 +50,7 @@ update_dependency <- function(dep){
     on.exit(unlink(tag_dir, recursive=TRUE), add=TRUE)
     dir.create(tag_dir)
   }
-  if(needs_update(dep, opts_knit$get('input.file'))){
+  if(needs_update(dep, knitr::opts_knit$get('input.file'))){
     wrapper <- file.path(tag_dir, paste0("render_", dep$label, '.R'))
     cat("setwd('..')\n", "rmarkdown::render(normalizePath('", dep$source, "'), quiet=TRUE)",
         file=wrapper, sep='')
@@ -68,15 +71,16 @@ update_dependency <- function(dep){
 #' @export
 #' @importFrom rmarkdown render
 #' @importFrom devtools clean_source
+#' @importFrom knitr knit_global
 #' @author Peter Humburg
-load_dependencies <- function(deps, where=knit_global()){
+load_dependencies <- function(deps, where=knitr::knit_global()){
   for(d in deps){
     update_dependency(d)
 
     ## identify files to load
     chunks <- d$chunks
     if(!length(chunks)) next
-    loaded <- opts_knit$get('loaded_chunks')
+    loaded <- knitr::opts_knit$get('loaded_chunks')
     chunks <- setdiff(chunks, loaded[[d$label]])
     if(length(chunks)){
       cache_pattern <- paste(paste0('^', chunks, '_'), collapse='|')
@@ -90,7 +94,7 @@ load_dependencies <- function(deps, where=knit_global()){
       }
       lapply(cached, lazyLoad, where)
       loaded[[d$label]] <- c(loaded[[d$label]], chunks)
-      opts_knit$set(loaded_chunks=loaded)
+      knitr::opts_knit$set(loaded_chunks=loaded)
     }
   }
   invisible(NULL)
@@ -117,8 +121,9 @@ copy_dependencies <- function(deps){
   invisible(NULL)
 }
 
+#' @importFrom knitr opts_knit
 needs_update <- function(dependency, main_file){
-  if(dependency$label %in% names(opts_knit$get('loaded_chunks'))) return(FALSE)
+  if(dependency$label %in% names(knitr::opts_knit$get('loaded_chunks'))) return(FALSE)
   update <- FALSE
   in_doc <- dependency$source
   out_doc <- dependency$document

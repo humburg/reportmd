@@ -7,9 +7,11 @@
 \usage{
 update_dependency(dep)
 
-load_dependencies(deps, where = knit_global())
+load_dependencies(deps, where = knitr::knit_global())
 }
 \arguments{
+\item{dep}{Dependency to update.}
+
 \item{deps}{List of objects of class \code{Dependency}}
 
 \item{where}{Environment into which dependencies should be loaded.}

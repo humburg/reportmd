@@ -31,6 +31,7 @@ printMD.integer <- function(x, big.mark=',', ...){
   base::prettyNum(x, big.mark=big.mark, ...)
 }
 
+#' @param format Format type to use.
 #' @method printMD Dependency
 #' @export
 #' @rdname printMD

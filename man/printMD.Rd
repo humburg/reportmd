@@ -25,6 +25,8 @@ printMD(x, ...)
 \item{...}{Additional arguments}
 
 \item{big.mark}{Separator used to mark intervals before the decimal point.}
+
+\item{format}{Format type to use.}
 }
 \value{
 String representation of x formatted for printing.

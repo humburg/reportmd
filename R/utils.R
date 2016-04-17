@@ -45,6 +45,8 @@ extract_yaml <- function(input, ...){
 
 #' Extract title from a Markdown document's yaml metadata
 #'
+#' @param input Name of input file.
+#' @param ... Additional arguments are ignored.
 #' @author Peter Humburg
 rmd_title <- function(input, ...){
   metadata <- extract_yaml(input, ...)
@@ -52,7 +54,8 @@ rmd_title <- function(input, ...){
 }
 
 #' Extract title from an HTML document
-#'
+#' @param input Name of input file.
+#' @param ... Additional arguments are ignored.
 #' @importFrom xml2 read_html
 #' @importFrom xml2 xml_find_one
 #' @importFrom xml2 xml_text

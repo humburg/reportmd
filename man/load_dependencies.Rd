@@ -7,10 +7,12 @@
 \usage{
 update_dependency(dep)
 
-load_dependencies(deps)
+load_dependencies(deps, where = knit_global())
 }
 \arguments{
 \item{deps}{List of objects of class \code{Dependency}}
+
+\item{where}{Environment into which dependencies should be loaded.}
 }
 \value{
 Called for its side effect.

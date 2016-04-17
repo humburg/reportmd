@@ -74,23 +74,26 @@ load_dependencies <- function(deps, where=knit_global()){
     update_dependency(d)
 
     ## identify files to load
-    ## either data from all cached chunks or only the ones listed explicitly
-    cache_pattern <- '^[^_]{2}'
     chunks <- d$chunks
+    if(!length(chunks)) next
+    loaded <- opts_knit$get('loaded_chunks')
+    chunks <- setdiff(chunks, loaded[[d$label]])
     if(length(chunks)){
       cache_pattern <- paste(paste0('^', chunks, '_'), collapse='|')
+      cached <- dir(d$cache, pattern=cache_pattern, full.names=TRUE)
+      cached <- unique(sub("\\.[^.]+$", "", cached))
+      if(length(cached) < length(chunks)){
+        found <- sapply(strsplit(cached, '_'), '[[', 1)
+        found_pattern <- paste(found, collapse='|')
+        missing <- chunks[!grepl(found_pattern, chunks)]
+        stop("Unable to locate output for chunks ", paste(missing, collpse=', '), " from document ", d$source, ".")
+      }
+      lapply(cached, lazyLoad, where)
+      loaded[[d$label]] <- c(loaded[[d$label]], chunks)
+      opts_knit$set(loaded_chunks=loaded)
     }
-    cached <- dir(d$cache, pattern=cache_pattern, full.names=TRUE)
-    cached <- unique(sub("\\.[^.]+$", "", cached))
-    if(length(cached) < length(chunks)){
-      found <- sapply(strsplit(cached, '_'), '[[', 1)
-      found_pattern <- paste(found, collapse='|')
-      missing <- chunks[!grepl(found_pattern, chunks)]
-      stop("Unable to locate output for chunks ", paste(missing, collpse=', '), " from document ", d$source, ".")
-    }
-    lapply(cached, lazyLoad, parent.frame(1))
   }
-  invisible(cached)
+  invisible(NULL)
 }
 
 #' Copy dependencies to working directory
@@ -115,6 +118,7 @@ copy_dependencies <- function(deps){
 }
 
 needs_update <- function(dependency, main_file){
+  if(dependency$label %in% names(opts_knit$get('loaded_chunks'))) return(FALSE)
   update <- FALSE
   in_doc <- dependency$source
   out_doc <- dependency$document

@@ -123,7 +123,7 @@ printMD(fit)
 
 We'll also prepare a plot visualising the result for inclusion in the main document.
 
-```{r prepRegPlot}
+```{r prepRegPlot, dependson='regression'}
 reg_fig <- ggplot(ext_cars, aes(x=wt, y=mpg, colour=origin, text=rownames(ext_cars))) + geom_point(size=2) +
   geom_abline(slope=fit$coefficients['wt'], intercept=fit$coefficients[1], linetype='dashed', colour='darkgrey') +
   geom_segment(aes(yend=fitted, xend=(fitted-fit$coefficients[1])/fit$coefficients['wt'])) +

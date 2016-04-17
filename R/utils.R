@@ -55,10 +55,11 @@ rmd_title <- function(input, ...){
 #'
 #' @importFrom xml2 read_html
 #' @importFrom xml2 xml_find_one
+#' @importFrom xml2 xml_text
 #'
 #' @author Peter Humburg
 html_title <- function(input, ...){
   contents <- xml2::read_html(input, ...)
   title <- xml2::xml_find_one(contents, '//title')
-  xml_text(title)
+  xml2::xml_text(title)
 }

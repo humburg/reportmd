@@ -60,6 +60,7 @@ fig.cap_opts_hook <- function(options){
 #'
 #' @return Updated list of options
 #' @export
+#' @importFrom knitr opts_knit
 #' @author Peter Humburg
 dependson_opts_hook <- function(options){
   depends <- options$dependson
@@ -89,6 +90,7 @@ dependson_opts_hook <- function(options){
 
 ## Output hooks
 
+#' @importFrom knitr opts_knit
 document_hook <- function(x){
   if(!is.null(opts_knit$get('dependencies'))){
     deps <- opts_knit$get('dependencies')

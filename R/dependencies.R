@@ -62,13 +62,14 @@ update_dependency <- function(dep){
 #' Load results from child documents
 #'
 #' @param deps List of objects of class \code{Dependency}
+#' @param where Environment into which dependencies should be loaded.
 #'
 #' @return Called for its side effect.
 #' @export
 #' @importFrom rmarkdown render
 #' @importFrom devtools clean_source
 #' @author Peter Humburg
-load_dependencies <- function(deps){
+load_dependencies <- function(deps, where=knit_global()){
   for(d in deps){
     update_dependency(d)
 

@@ -27,16 +27,14 @@ plotMD <- function(fig, format=options('reportmd.figure.current')){
 }
 
 #' Set figure related chunk options for interactive figures
-#' @param fig.width Figure width in inches
-#' @param fig.height Figure height in inches
 #' @param out.width Output width for figure in pixels
 #' @param out.height Output height for figure in pixels
 #' @param ... Additional knitr chunk options
 #' @return A list with the previous set of options is returned invisibly.
 #' @author Peter Humburg
 #' @export
-interactiveFig <- function(fig.width=8, fig.height=6, out.width='800px', out.height='600px', ...){
-  opts <- c(list(fig.width=fig.width, fig.height=fig.height, out.width=out.width, out.height=out.height),
+interactiveFig <- function(out.width='800px', out.height='600px', ...){
+  opts <- c(list(out.width=out.width, out.height=out.height),
             list(...), list(format='interactive'))
   do.call(figureOptions, opts)
 }
@@ -52,6 +50,12 @@ interactiveFig <- function(fig.width=8, fig.height=6, out.width='800px', out.hei
 screenFig <- function(fig.width=8, fig.height=8, dpi=300, ...){
   opts <- c(list(fig.width=fig.width, fig.height=fig.height, dpi=dpi),
             list(...), list(format='screen'))
+  do.call(figureOptions, opts)
+}
+
+printFig <- function(fig.width=8, fig.height=8, ...){
+  opts <- c(list(fig.width=fig.width, fig.height=fig.height, dpi=dpi),
+            list(...), list(format='print'))
   do.call(figureOptions, opts)
 }
 

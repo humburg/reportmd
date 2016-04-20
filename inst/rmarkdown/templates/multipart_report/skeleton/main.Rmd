@@ -64,6 +64,7 @@ opts_chunk$set(hold=TRUE, hide.fig.code=TRUE)
 ## These can be overwritten for individual chunks
 interactiveFig()
 screenFig()
+printFig()
 
 ## Pander options
 panderOptions("digits", 3)

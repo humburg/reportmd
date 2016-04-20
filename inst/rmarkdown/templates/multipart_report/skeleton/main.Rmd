@@ -27,12 +27,7 @@ library(plotly)
 
 ```{r dependencies, include=FALSE, cache=FALSE}
 ## Ensure required results from child documents are availsble
-opts_knit$set(input.file=sys.frame(1)$original_input)
-opts_knit$set(loaded_chunks=list())
-deps <- params2deps(params)
-load_dependencies(deps)
-copy_dependencies(deps)
-opts_knit$set(dependencies=deps)
+reportMD::setup(params)
 ```
 
 ```{r setup, include=FALSE, cache=FALSE}

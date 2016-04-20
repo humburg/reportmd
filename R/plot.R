@@ -21,7 +21,7 @@ plot_formats <- c(screen='png', print='pdf', interactive='png')
 #' @importFrom plotly ggplotly
 #' @export
 plotMD <- function(fig, format=options('reportmd.figure.current')){
-  if(format == 'interactive') {
+  if(format[1] == 'interactive') {
     plotly::ggplotly(fig)
   }else {
     fig

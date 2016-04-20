@@ -21,7 +21,7 @@
 fig.cap_chunk_hook <- function(before, options, envir) {
   global_fmt <- options('reportmd.figure.format') %||% list('screen')
   fmt <- options$format %||% global_fmt[[1]]
-  if(fmt == 'interactive'){
+  if(fmt[1] == 'interactive'){
     if(before){
       paste0('<div id="', knitr::opts_chunk$get('fig.lp'), options$label, '" class="figure">')
     } else{

@@ -1,3 +1,5 @@
+plot_formats <- c(screen='png', print='pdf', interactive='png')
+
 #' Create plots for inclusion in RMarkdown reports
 #'
 #' @param fig A ggplot2 plot for processing.

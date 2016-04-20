@@ -97,6 +97,20 @@ dependson_opts_hook <- function(options){
   options
 }
 
+format_opts_hook <- function(options){
+  general_opts <- c('fig.width', 'fig.height', 'out.width', 'out.height', 'out.extra')
+  options$dev <- plot_formats[options$format]
+  dev_opts <- lapply(options$format, function(x )figureOptions(format=x))
+  opts <- lapply(dev_opts, function(x, general) x[general], general_opts)
+  opts <- Reduce(function(x, y) mapply(`%||%`, x, y, SIMPLIFY=FALSE), opts)
+  opts <- opts[!sapply(opts, is.null)]
+  options[names(opts)] <- opts
+  dev_opts <- lapply(dev_opts, function(x, general) x[!names(x) %in% general], general_opts)
+  names(dev_opts) <- options$dev
+  options$dev.args <- dev_opts
+  options
+}
+
 ## Output hooks
 
 #' @importFrom knitr opts_knit
@@ -124,6 +138,7 @@ document_hook <- function(x){
 installHooks <- function(){
   knitr::opts_hooks$set(fig.cap=fig.cap_opts_hook)
   knitr::opts_hooks$set(dependson=dependson_opts_hook)
+  knitr::opts_hooks$set(format=format_opts_hook)
   knitr::knit_hooks$set(fig.cap=fig.cap_chunk_hook)
   knitr::knit_hooks$set(document=document_hook)
 }

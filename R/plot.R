@@ -65,7 +65,7 @@ screenFig <- function(fig.width=8, fig.height=8, dpi=300, ...){
 #' @return A list with the previous set of options is returned invisibly.
 #' @author Peter Humburg
 #' @export
-printFig <- function(fig.width=8, fig.height=8, ...){
+printFig <- function(fig.width=8, fig.height=8, dpi=300, ...){
   opts <- c(list(fig.width=fig.width, fig.height=fig.height, dpi=dpi),
             list(...), list(format='print'))
   do.call(figureOptions, opts)

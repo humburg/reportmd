@@ -43,11 +43,20 @@ fig.cap_opts_hook <- function(options){
   options(reportmd.figure.current=fmt)
 
   options$fig.cap = figRef(options$label, options$fig.cap)
+  if(!is.null(options$fig_download) && 'print' %in% fmt && length(fmt) > 1){
+    download <- options$fig_download
+    download <- stringr::str_replace(options$fig_download, stringr::fixed('%PATH%'),
+                                     file.path(options$fig.path,
+                                               paste(options$label, '1.pdf', sep='-')))
+    options$fig.cap <- paste(options$fig.cap, download)
+  }
+
   options$cache <- FALSE
   if(options$hide.fig.code){
     options$echo <- FALSE
     options$warning <- FALSE
   }
+
   opts <- options(paste('reportmd', 'figure', fmt, sep='.'))[[1]]
   opts <- merge_list(opts, options)
   opts

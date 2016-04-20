@@ -9,7 +9,8 @@ output:
     highlight: zenburn
 params:
   version: !r system("git describe --long --dirty --abbrev=10 --tags --always", intern=TRUE)
-  format: !r if(opts_knit$get("rmarkdown.pandoc.to") == 'html') 'interactive' else 'print'
+  format: !r if(opts_knit$get("rmarkdown.pandoc.to") == 'html') c('screen', 'print') else 'print'
+  fig_download: true
   depends:
     value:
       part1: part1.Rmd
@@ -96,7 +97,7 @@ pander(mtcars[1:5, c('mpg', 'hp', 'cyl')])
 ## Figures and Figure labels
 You can also embed plots, for example:
 
-```{r examplePlot, fig.cap="An example plot"}
+```{r examplePlot, fig.cap="An example plot", format='interactive'}
 carFig <- ggplot(mtcars, aes(x=hp, y=mpg, colour=cyl, text=rownames(mtcars))) + geom_point() + theme_bw()
 plotMD(carFig)
 ```
@@ -109,7 +110,7 @@ the use of *ggplot2* for plotting. Using the *plotMD* function to produce the pl
 seamless switching between the two by setting the `format` option, either globally (in the YAML frontmatter or in the 
 call to *render*) or for an individual chunk.
 
-```{r staticPlot, fig.cap=paste("Static version of", figRef('examplePlot')), format='screen'}
+```{r staticPlot, fig.cap=paste("Static version of", figRef('examplePlot'))}
 carFig <- ggplot(mtcars, aes(x=hp, y=mpg, colour=cyl, text=rownames(mtcars))) + geom_point() + theme_bw()
 plotMD(carFig)
 ```

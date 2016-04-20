@@ -53,6 +53,15 @@ screenFig <- function(fig.width=8, fig.height=8, dpi=300, ...){
   do.call(figureOptions, opts)
 }
 
+#' Set figure related chunk options for print figures
+#'
+#' @param fig.width Figure width in inches
+#' @param fig.height Figure height in inches
+#' @param ... Additional knitr chunk options
+#'
+#' @return A list with the previous set of options is returned invisibly.
+#' @author Peter Humburg
+#' @export
 printFig <- function(fig.width=8, fig.height=8, ...){
   opts <- c(list(fig.width=fig.width, fig.height=fig.height, dpi=dpi),
             list(...), list(format='print'))

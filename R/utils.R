@@ -85,7 +85,7 @@ setup <- function(params){
   }
   knitr::opts_chunk$set(dev=fig_format)
 
-  if(length(params$format) > 1 && 'print' %in% params$format && isTrue(params$fig_download)){
+  if(length(params$format) > 1 && 'print' %in% params$format && isTRUE(params$fig_download)){
     knitr::opts_chunk$set(fig_download='(Download as [PDF](%PATH%))')
   }
 }

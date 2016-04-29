@@ -98,7 +98,7 @@ dependson_opts_hook <- function(options){
 }
 
 format_opts_hook <- function(options){
-  general_opts <- c('fig.width', 'fig.height', 'out.width', 'out.height', 'out.extra')
+  general_opts <- c('fig.width', 'fig.height', 'out.width', 'out.height', 'out.extra', 'dpi')
   options$dev <- plot_formats[options$format]
   dev_opts <- lapply(options$format, function(x )figureOptions(format=x))
   opts <- lapply(dev_opts, function(x, general) x[general], general_opts)

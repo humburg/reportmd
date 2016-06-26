@@ -4,7 +4,7 @@
 \alias{printFig}
 \title{Set figure related chunk options for print figures}
 \usage{
-printFig(fig.width = 8, fig.height = 8, ...)
+printFig(fig.width = 8, fig.height = 8, dpi = 300, ...)
 }
 \arguments{
 \item{fig.width}{Figure width in inches}

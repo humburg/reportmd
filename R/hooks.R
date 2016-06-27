@@ -1,6 +1,6 @@
 ## Chunk hooks
 
-#' Special processing for figure chunks
+#' Special processing for figure and table chunks
 #'
 #' These hooks are intended for use with knitr. There is usually no need
 #' to call them directly.
@@ -10,8 +10,8 @@
 #' @param options List of chunk options.
 #' @param envir Environment in which the chunk is evaluated.
 #'
-#' @note These hooks are intended for chunks with the \code{fig.cap} option and this
-#' is assumed to be present.
+#' @note These hooks are intended for chunks with the \code{fig.cap} (for figures) and
+#' \code{tab.cap} (for tables) option and this is assumed to be present.
 #' @return In the case of \code{fig.cap_chunk_hook} markup used to wrap the figure is returned.
 #' @author Peter Humburg
 #' @importFrom knitr opts_chunk
@@ -60,6 +60,15 @@ fig.cap_opts_hook <- function(options){
   opts <- options(paste('reportmd', 'figure', fmt, sep='.'))[[1]]
   opts <- merge_list(opts, options)
   opts
+}
+
+#' @return \code{tab.cap_opts_hook} returns a list of chunk options with
+#' the \code{tab.cap} option augmented for automatic table numbering.
+#' @export
+#' @rdname figure-hooks
+tab.cap_opts_hook <- function(options){
+  options$tab.cap <- tabRef(options$label, option$tab.cap)
+  options
 }
 
 #' Dependency processing
@@ -137,6 +146,7 @@ document_hook <- function(x){
 #' @export
 installHooks <- function(){
   knitr::opts_hooks$set(fig.cap=fig.cap_opts_hook)
+  knitr::opts_hooks$set(tab.cap=fig.cap_opts_hook)
   knitr::opts_hooks$set(dependson=dependson_opts_hook)
   knitr::opts_hooks$set(format=format_opts_hook)
   knitr::knit_hooks$set(fig.cap=fig.cap_chunk_hook)

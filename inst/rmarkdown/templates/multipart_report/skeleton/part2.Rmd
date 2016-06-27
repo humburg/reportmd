@@ -9,7 +9,8 @@ output:
     highlight: zenburn
 params:
   version: !r system("git describe --long --dirty --abbrev=10 --tags --always", intern=TRUE)
-  format: !r if(opts_knit$get("rmarkdown.pandoc.to") == 'html') 'interactive' else 'print'
+  format: !r if(opts_knit$get("rmarkdown.pandoc.to") == 'html') c('screen', 'print') else 'print'
+  fig_download: true
   depends:
     value:
       part1: part1.Rmd
@@ -26,12 +27,7 @@ library(plotly)
 
 ```{r dependencies, include=FALSE, cache=FALSE}
 ## Ensure required results from child documents are availsble
-opts_knit$set(input.file=sys.frame(1)$original_input)
-opts_knit$set(loaded_chunks=list())
-deps <- params2deps(params)
-load_dependencies(deps)
-copy_dependencies(deps)
-opts_knit$set(dependencies=deps)
+reportMD::setup(params)
 ```
 
 ```{r setup, include=FALSE, cache=FALSE}
@@ -67,6 +63,7 @@ opts_chunk$set(hold=TRUE, hide.fig.code=TRUE)
 ## These can be overwritten for individual chunks
 interactiveFig()
 screenFig()
+printFig()
 
 ## Pander options
 panderOptions("digits", 3)
@@ -98,7 +95,7 @@ box_fig <- ggplot(ext_cars, aes(x=origin, y=mpg)) + geom_boxplot() + theme_bw()
 An initial look at the data suggests that there is a pronounced difference
 in the miles per gallon achieved by US and international cars (`r figRef("boxplot")`). 
 
-```{r boxplot, fig.cap="Boxplot of MPG for US and internationally build cars.", format='screen'}
+```{r boxplot, fig.cap="Boxplot of MPG for US and internationally build cars."}
 plotMD(box_fig)
 ```
 

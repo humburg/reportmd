@@ -21,7 +21,7 @@
 fig.cap_chunk_hook <- function(before, options, envir) {
   global_fmt <- options('reportmd.figure.format') %||% list('screen')
   fmt <- options$format %||% global_fmt[[1]]
-  if(fmt == 'interactive'){
+  if(fmt[1] == 'interactive'){
     if(before){
       paste0('<div id="', knitr::opts_chunk$get('fig.lp'), options$label, '" class="figure">')
     } else{
@@ -43,11 +43,20 @@ fig.cap_opts_hook <- function(options){
   options(reportmd.figure.current=fmt)
 
   options$fig.cap = figRef(options$label, options$fig.cap)
+  if(length(options$fig_download) && 'print' %in% fmt && length(fmt) > 1){
+    download <- options$fig_download
+    download <- stringr::str_replace(options$fig_download, stringr::fixed('%PATH%'),
+                                     file.path(options$fig.path,
+                                               paste(options$label, '1.pdf', sep='-')))
+    options$fig.cap <- paste(options$fig.cap, download)
+  }
+
   options$cache <- FALSE
   if(options$hide.fig.code){
     options$echo <- FALSE
     options$warning <- FALSE
   }
+
   opts <- options(paste('reportmd', 'figure', fmt, sep='.'))[[1]]
   opts <- merge_list(opts, options)
   opts
@@ -88,6 +97,20 @@ dependson_opts_hook <- function(options){
   options
 }
 
+format_opts_hook <- function(options){
+  general_opts <- c('fig.width', 'fig.height', 'out.width', 'out.height', 'out.extra', 'dpi')
+  options$dev <- plot_formats[options$format]
+  dev_opts <- lapply(options$format, function(x )figureOptions(format=x))
+  opts <- lapply(dev_opts, function(x, general) x[general], general_opts)
+  opts <- Reduce(function(x, y) mapply(`%||%`, x, y, SIMPLIFY=FALSE), opts)
+  opts <- opts[!sapply(opts, is.null)]
+  options[names(opts)] <- opts
+  dev_opts <- lapply(dev_opts, function(x, general) x[!names(x) %in% general], general_opts)
+  names(dev_opts) <- options$dev
+  options$dev.args <- dev_opts
+  options
+}
+
 ## Output hooks
 
 #' @importFrom knitr opts_knit
@@ -115,6 +138,7 @@ document_hook <- function(x){
 installHooks <- function(){
   knitr::opts_hooks$set(fig.cap=fig.cap_opts_hook)
   knitr::opts_hooks$set(dependson=dependson_opts_hook)
+  knitr::opts_hooks$set(format=format_opts_hook)
   knitr::knit_hooks$set(fig.cap=fig.cap_chunk_hook)
   knitr::knit_hooks$set(document=document_hook)
 }

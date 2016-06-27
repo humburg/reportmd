@@ -9,7 +9,8 @@ output:
     highlight: zenburn
 params:
   version: !r system("git describe --long --dirty --abbrev=10 --tags --always", intern=TRUE)
-  format: !r if(opts_knit$get("rmarkdown.pandoc.to") == 'html') 'interactive' else 'print'
+  format: !r if(opts_knit$get("rmarkdown.pandoc.to") == 'html') c('screen', 'print') else 'print'
+  fig_download: true
   depends:
     value:
       part1: part1.Rmd
@@ -27,12 +28,7 @@ library(plotly)
 
 ```{r dependencies, include=FALSE, cache=FALSE}
 ## Ensure required results from child documents are availsble
-opts_knit$set(input.file=sys.frame(1)$original_input)
-opts_knit$set(loaded_chunks=list())
-deps <- params2deps(params)
-load_dependencies(deps)
-copy_dependencies(deps)
-opts_knit$set(dependencies=deps)
+reportMD::setup(params)
 ```
 
 ```{r setup, include=FALSE, cache=FALSE}
@@ -68,6 +64,7 @@ opts_chunk$set(hold=TRUE, hide.fig.code=TRUE)
 ## These can be overwritten for individual chunks
 interactiveFig()
 screenFig()
+printFig()
 
 ## Pander options
 panderOptions("digits", 3)
@@ -101,7 +98,7 @@ pander(mtcars[1:5, c('mpg', 'hp', 'cyl')])
 ## Figures and Figure labels
 You can also embed plots, for example:
 
-```{r examplePlot, fig.cap="An example plot"}
+```{r examplePlot, fig.cap="An example plot", format='interactive'}
 carFig <- ggplot(mtcars, aes(x=hp, y=mpg, colour=cyl, text=rownames(mtcars))) + geom_point() + theme_bw()
 plotMD(carFig)
 ```
@@ -114,7 +111,7 @@ the use of *ggplot2* for plotting. Using the *plotMD* function to produce the pl
 seamless switching between the two by setting the `format` option, either globally (in the YAML frontmatter or in the 
 call to *render*) or for an individual chunk.
 
-```{r staticPlot, fig.cap=paste("Static version of", figRef('examplePlot')), format='screen'}
+```{r staticPlot, fig.cap=paste("Static version of", figRef('examplePlot'))}
 carFig <- ggplot(mtcars, aes(x=hp, y=mpg, colour=cyl, text=rownames(mtcars))) + geom_point() + theme_bw()
 plotMD(carFig)
 ```

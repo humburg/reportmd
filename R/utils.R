@@ -66,3 +66,26 @@ html_title <- function(input, ...){
   title <- xml2::xml_find_one(contents, '//title')
   xml2::xml_text(title)
 }
+
+#' Setup environment for Multi-document report
+#' @param params List of document parameters (as provided in the YAML header)
+#' @return Called for its side effect.
+#' @author Peter Humburg
+#' @export
+setup <- function(params){
+  opts_knit$set(input.file=sys.frame(1)$original_input)
+  opts_knit$set(loaded_chunks=list())
+  deps <- params2deps(params)
+  load_dependencies(deps)
+  copy_dependencies(deps)
+  opts_knit$set(dependencies=deps)
+  fig_format <- character()
+  for(format in params$format){
+    fig_format <- union(fig_format, plot_formats[format])
+  }
+  knitr::opts_chunk$set(dev=fig_format)
+
+  if(length(params$format) > 1 && 'print' %in% params$format && isTRUE(params$fig_download)){
+    knitr::opts_chunk$set(fig_download='(Download as [PDF](%PATH%))')
+  }
+}

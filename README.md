@@ -42,9 +42,18 @@ devtools::install_github('humburg/reportMD')
 ```
 
 ## Getting started
+The [Multi-document Rmarkdown template](inst/rmarkdown/templates/multipart_report/skeleton/skeleton.Rmd)
+included in this package has detailed instructions and examples. In *RStudio* select 
 
-See the [Multi-document Rmarkdown template](inst/rmarkdown/templates/multipart_report/skeleton/main.Rmd)
-included in this package for usage instructions and examples.
+>    File > New File > R Markdown > From Template > Multi-part Report {reportMD}
+
+This will create a copy of the template in the current project. Open the file
+*skeleton.Rmd* and click on RStudio's *Knit* button to compile the template into
+a webpage.
+
+Alternatively the template is available as part of the installed R package
+and can be located via the R command
+`system.file('rmarkdown/templates/multipart_report/skeleton', package="reportMD")`.
 
 ## Features
 Current and planned features include:

@@ -92,8 +92,12 @@ setup <- function(params){
 
 index <- function(label, origin, name, caption, type=c('figure', 'table')){
   type <- match.arg(type)
-  origin <- strsplit(basename(origin), '.', fixed=TRUE)[[1]]
-  origin <- paste(origin[-length(origin)], sep='.')
+  if(!is.null(origin)){
+    origin <- strsplit(basename(origin), '.', fixed=TRUE)[[1]]
+    origin <- paste(origin[-length(origin)], sep='.')
+  } else {
+    origin <- ''
+  }
   idx <- opts_knit$get('reportmd.index')
   idx[[type]] <- rbind(idx[[type]], c(label, origin, name, caption))
   opts_knit$set(reportmd.index=idx)

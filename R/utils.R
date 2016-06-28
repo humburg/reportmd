@@ -85,7 +85,25 @@ setup <- function(params){
   }
   knitr::opts_chunk$set(dev=fig_format)
 
+  opts_knit$set(reportmd.index=list(figure=matrix(ncol=4, nrow=0), table=matrix(ncol=4, nrow=0)))
   if(length(params$format) > 1 && 'print' %in% params$format && isTRUE(params$fig_download)){
     knitr::opts_chunk$set(fig_download='(Download as [PDF](%PATH%))')
+  }
+}
+
+index <- function(label, origin, name, caption, type=c('figure', 'table')){
+  type <- match.arg(type)
+  origin <- strsplit(basename(origin), '.', fixed=TRUE)[[1]]
+  origin <- paste(origin[-length(origin)], sep='.')
+  idx <- opts_knit$get('reportmd.index')
+  idx[[type]] <- rbind(idx[[type]], c(label, origin, name, caption))
+  opts_knit$set(reportmd.index=idx)
+}
+
+write_index <- function(index, type){
+  if(nrow(index)){
+    input <- sub('(.*)\\.[^.]+$','\\1', knitr::current_input())
+    index_name <- paste0(input, '_', type, '.idx')
+    write.table(index, file=index_name, sep="\t", row.names=FALSE, col.names=FALSE)
   }
 }

@@ -145,6 +145,7 @@ document_hook <- function(x){
                       sapply(deps, printMD, format='reference'))
     x <- paste(c(x, link_section), collapse='  \n')
   }
+  mapply(write_index, opts_knit$get('reportmd.index'), names(opts_knit$get('reportmd.index')))
   x
 }
 

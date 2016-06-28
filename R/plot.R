@@ -146,8 +146,10 @@ figRef <- local({
     }
     if (!missing(caption)) {
       created[label] <<- TRUE
+      caption <- eval(caption)
+      index(label, knitr::current_input(), paste(prefix, i), caption, type="figure")
       result <- paste0(prefix.highlight, prefix, " ", i, sep, prefix.highlight,
-                       " ", eval(caption))
+                       " ", caption)
     } else {
       used[label] <<- TRUE
       result <- paste(prefix, tag[label])
@@ -177,6 +179,7 @@ tabRef <- local({
     }
     if (!missing(caption)) {
       created[label] <<- TRUE
+      index(label, knitr::current_input(), paste(prefix, i), caption, type="table")
       result <- paste0(prefix.highlight, prefix, " ", i, sep, prefix.highlight,
              " ", eval(caption))
     } else {

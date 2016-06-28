@@ -73,7 +73,6 @@ html_title <- function(input, ...){
 #' @author Peter Humburg
 #' @export
 setup <- function(params){
-  opts_knit$set(input.file=sys.frame(1)$original_input)
   opts_knit$set(loaded_chunks=list())
   deps <- params2deps(params)
   load_dependencies(deps)

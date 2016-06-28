@@ -60,6 +60,7 @@ screenFig <- function(fig.width=8, fig.height=8, dpi=300, ...){
 #'
 #' @param fig.width Figure width in inches
 #' @param fig.height Figure height in inches
+#' @param dpi Resolution to use for figure output
 #' @param ... Additional knitr chunk options
 #'
 #' @return A list with the previous set of options is returned invisibly.

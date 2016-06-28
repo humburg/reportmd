@@ -11,6 +11,8 @@ printFig(fig.width = 8, fig.height = 8, dpi = 300, ...)
 
 \item{fig.height}{Figure height in inches}
 
+\item{dpi}{Resolution to use for figure output}
+
 \item{...}{Additional knitr chunk options}
 }
 \value{

@@ -99,6 +99,7 @@ index <- function(label, origin, name, caption, type=c('figure', 'table')){
   opts_knit$set(reportmd.index=idx)
 }
 
+#' @importFrom utils write.table
 write_index <- function(index, type){
   if(nrow(index)){
     input <- sub('(.*)\\.[^.]+$','\\1', knitr::current_input())

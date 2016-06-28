@@ -147,7 +147,7 @@ figRef <- local({
     if (!missing(caption)) {
       created[label] <<- TRUE
       result <- paste0(prefix.highlight, prefix, " ", i, sep, prefix.highlight,
-                       " ", caption)
+                       " ", eval(caption))
     } else {
       used[label] <<- TRUE
       result <- paste(prefix, tag[label])
@@ -177,11 +177,13 @@ tabRef <- local({
     }
     if (!missing(caption)) {
       created[label] <<- TRUE
-      paste0(prefix.highlight, prefix, " ", i, sep, prefix.highlight,
-             " ", caption)
+      result <- paste0(prefix.highlight, prefix, " ", i, sep, prefix.highlight,
+             " ", eval(caption))
     } else {
       used[label] <<- TRUE
-      paste(prefix, tag[label])
+      result <- paste(prefix, tag[label])
+      result <- paste0('[', result, '](#tab:', label, ')')
     }
+    result
   }
 })

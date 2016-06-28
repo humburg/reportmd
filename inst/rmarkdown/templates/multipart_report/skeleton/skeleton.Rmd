@@ -8,7 +8,7 @@ output:
     fig_caption: true
     highlight: zenburn
 params:
-  version: !r system("git describe --long --dirty --abbrev=10 --tags --always", intern=TRUE)
+  version: !r if(nchar(Sys.which('git'))) system("git describe --long --dirty --abbrev=10 --tags --always", intern=TRUE) else date()
   format: !r if(opts_knit$get("rmarkdown.pandoc.to") == 'html') c('screen', 'print') else 'print'
   fig_download: true
   depends:
@@ -91,8 +91,8 @@ This is an R Markdown document. Markdown is a simple formatting syntax for autho
 
 When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
 
-```{r, results='asis'}
-pander(mtcars[1:5, c('mpg', 'hp', 'cyl')])
+```{r data}
+data(mtcars)
 ```
 
 ## Figures and Figure labels
@@ -115,6 +115,15 @@ call to *render*) or for an individual chunk.
 carFig <- ggplot(mtcars, aes(x=hp, y=mpg, colour=cyl, text=rownames(mtcars))) + geom_point() + theme_bw()
 plotMD(carFig)
 ```
+
+## Tables
+Tables can be added to the output document by printing a `data.frame` or `matrix` using *printMD*.
+
+```{r carTable, tab.cap="A subset of the *mtcars* dataset."}
+printMD(mtcars[1:5, c('mpg', 'hp', 'cyl')])
+```
+
+Tables can be referenced in the same way as figures, using the *tabRef* function. This is a reference to `r tabRef('carTable')`.
 
 ## Using R objects from child documents
 Your R chunks may use objects created by a chunk in a different (child) document, provided the generating chunk is cached 

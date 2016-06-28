@@ -8,7 +8,7 @@ output:
     fig_caption: true
     highlight: zenburn
 params:
-  version: !r system("git describe --long --dirty --abbrev=10 --tags --always", intern=TRUE)
+  version: !r if(nchar(Sys.which('git'))) system("git describe --long --dirty --abbrev=10 --tags --always", intern=TRUE) else date()
   format: !r if(opts_knit$get("rmarkdown.pandoc.to") == 'html') c('screen', 'print') else 'print'
   fig_download: true
   depends:

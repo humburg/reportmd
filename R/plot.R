@@ -177,11 +177,13 @@ tabRef <- local({
     }
     if (!missing(caption)) {
       created[label] <<- TRUE
-      paste0(prefix.highlight, prefix, " ", i, sep, prefix.highlight,
+      result <- paste0(prefix.highlight, prefix, " ", i, sep, prefix.highlight,
              " ", caption)
     } else {
       used[label] <<- TRUE
-      paste(prefix, tag[label])
+      result <- paste(prefix, tag[label])
+      result <- paste0('[', result, '](#tab:', label, ')')
     }
+    result
   }
 })

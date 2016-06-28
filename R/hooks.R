@@ -12,7 +12,8 @@
 #'
 #' @note These hooks are intended for chunks with the \code{fig.cap} (for figures) and
 #' \code{tab.cap} (for tables) option and this is assumed to be present.
-#' @return In the case of \code{fig.cap_chunk_hook} markup used to wrap the figure is returned.
+#' @return The chunk hooks produce markup that adds anchors to enable direct links to the
+#' table or figure and add s the caption where required.
 #' @author Peter Humburg
 #' @importFrom knitr opts_chunk
 #' @export
@@ -30,6 +31,18 @@ fig.cap_chunk_hook <- function(before, options, envir) {
     }
   }
 }
+
+#' @export
+#' @rdname figure-hooks
+tab.cap_chunk_hook <- function(before, options, envir) {
+  if(before){
+    paste0('<div id="tab:', options$label, '" class="table-wrapper">',
+           '<p class="caption">', options$tab.cap, "</p>")
+  } else{
+    "</div>"
+  }
+}
+
 
 ## Option hooks
 
@@ -67,7 +80,8 @@ fig.cap_opts_hook <- function(options){
 #' @export
 #' @rdname figure-hooks
 tab.cap_opts_hook <- function(options){
-  options$tab.cap <- tabRef(options$label, option$tab.cap)
+  options$tab.cap <- tabRef(options$label, options$tab.cap)
+  options$echo <- FALSE
   options
 }
 
@@ -146,10 +160,11 @@ document_hook <- function(x){
 #' @export
 installHooks <- function(){
   knitr::opts_hooks$set(fig.cap=fig.cap_opts_hook)
-  knitr::opts_hooks$set(tab.cap=fig.cap_opts_hook)
+  knitr::opts_hooks$set(tab.cap=tab.cap_opts_hook)
   knitr::opts_hooks$set(dependson=dependson_opts_hook)
   knitr::opts_hooks$set(format=format_opts_hook)
   knitr::knit_hooks$set(fig.cap=fig.cap_chunk_hook)
+  knitr::knit_hooks$set(tab.cap=tab.cap_chunk_hook)
   knitr::knit_hooks$set(document=document_hook)
 }
 

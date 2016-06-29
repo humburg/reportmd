@@ -186,7 +186,7 @@ tabRef <- local({
   tag <- numeric()
   created <- logical()
   used <- logical()
-  function(label, caption, prefix = options("tabcap.prefix"),
+  function(label, caption, target, prefix = options("tabcap.prefix"),
            sep = options("tabcap.sep"), prefix.highlight = options("tabcap.prefix.highlight")) {
     if(!missing(target)){
       if(!missing(caption)){

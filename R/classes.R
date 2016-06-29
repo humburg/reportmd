@@ -56,6 +56,13 @@ Dependency <- function(label, document, source, chunks, title, cache, ...){
     dep$title <- extracted_title
   }
 
+  if(!is.null(dep$source)){
+    short_title <- rmd_short_title(dep$source)
+  } else {
+    short_title <- label
+  }
+  dep$short_title <- short_title
+
   if(missing(cache)){
     if(!is.null(dep$source)){
       cache <- file.path(dependency_subdir(dep$source, 'cache'), opts_knit$get("rmarkdown.pandoc.to"))

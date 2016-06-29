@@ -26,11 +26,18 @@ merge_list <- function(x,y){
   x
 }
 
+#' Processing YAML metadata
+#'
+#' @param input Name of input file.
+#' @param ... Additional arguments are ignored.
+
 #' @importFrom stringr str_extract_all
 #' @importFrom stringr str_replace
 #' @importFrom stringr regex
 #' @importFrom yaml yaml.load
 #'
+#' @return \code{extract_yaml} returns a named list with the
+#' contents of the yaml metadata block.
 #' @author Peter Humburg
 extract_yaml <- function(input, ...){
   contents <- readLines(input, ...)
@@ -45,12 +52,28 @@ extract_yaml <- function(input, ...){
 
 #' Extract title from a Markdown document's yaml metadata
 #'
-#' @param input Name of input file.
-#' @param ... Additional arguments are ignored.
-#' @author Peter Humburg
+#' @return The \code{rmd_*} functions return character vector of
+#' length one containing the value of the corresponding field.
+#' @rdname extract_yaml
 rmd_title <- function(input, ...){
   metadata <- extract_yaml(input, ...)
   metadata$title
+}
+
+#' @details \code{rmd_short_title} tries to infer
+#' a suitable short title for a document if it isn't
+#' provided explicitly in the header by using the part
+#' of the title preceding the first punctuation mark
+#' (if any).
+#' @rdname extract_yaml
+rmd_short_title <- function(input, ...){
+  metadata <- extract_yaml(input, ...)
+  ans <- metadata$short_title
+  if(is.null(ans)){
+    ans <- metadata$title
+    ans <- sub('(^[^.:;!?]+).*', '\\1', ans)
+  }
+  ans
 }
 
 #' Extract title from an HTML document

@@ -116,6 +116,9 @@ carFig <- ggplot(mtcars, aes(x=hp, y=mpg, colour=cyl, text=rownames(mtcars))) + 
 plotMD(carFig)
 ```
 
+It is also possible to link to a figure in a child document by providing the corresponding label
+from the list of dependencies to indicate the target file: `r figRef('boxplot', target='part2')`.
+
 ## Tables
 Tables can be added to the output document by printing a `data.frame` or `matrix` using *printMD*.
 

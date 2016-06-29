@@ -137,5 +137,15 @@ write_index <- function(index, type){
 
 #' @importFrom utils read.table
 read_index <- function(file){
-  read.table(file, header=FALSE)
+  if(file.exists(file)){
+    read.table(file, header=FALSE)
+  }
+}
+
+get_index <- function(target, type=c('figure', 'table')){
+  type <- match.arg(type)
+  if(is.character(target$index[[type]])){
+    target$index[[type]] <- read_index(target$index[[type]])
+  }
+  target$index[[type]]
 }

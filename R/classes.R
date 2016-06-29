@@ -75,17 +75,10 @@ Dependency <- function(label, document, source, chunks, title, cache, index, ...
   }
   dep$cache <- cache
 
-  if(!missing(index)){
-    index <- lapply(index, function(x) if(is.character(x)) read_index(x) else x)
-  } else if(!is.null(dep$source)){
+  if(missing(index) && !is.null(dep$source)){
     prefix <- stringr::str_replace(dep$source, '\\.[^.]+$', '')
-    index <- list()
-    if(file.exists(paste(prefix, 'figure.idx', sep='_'))){
-      index$figure <- read_index(paste(prefix, 'figure.idx', sep='_'))
-    }
-    if(file.exists(paste(prefix, 'table.idx', sep='_'))){
-      index$table <- read_index(paste(prefix, 'table.idx', sep='_'))
-    }
+    index <- list(figure=paste(prefix, 'figure.idx', sep='_'),
+                  table=paste(prefix, 'table.idx', sep='_'))
   }
   dep$index <- index
 

@@ -134,3 +134,8 @@ write_index <- function(index, type){
     write.table(index, file=index_name, sep="\t", row.names=FALSE, col.names=FALSE)
   }
 }
+
+#' @importFrom utils read.table
+read_index <- function(file){
+  read.table(file, header=FALSE)
+}

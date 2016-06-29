@@ -9,7 +9,7 @@ figRef(label, caption, target, prefix = options("figcap.prefix"),
   sep = options("figcap.sep"),
   prefix.highlight = options("figcap.prefix.highlight"))
 
-tabRef(label, caption, prefix = options("tabcap.prefix"),
+tabRef(label, caption, target, prefix = options("tabcap.prefix"),
   sep = options("tabcap.sep"),
   prefix.highlight = options("tabcap.prefix.highlight"))
 }

@@ -5,7 +5,7 @@
 \alias{tabRef}
 \title{Figure and Table cross-references}
 \usage{
-figRef(label, caption, prefix = options("figcap.prefix"),
+figRef(label, caption, target, prefix = options("figcap.prefix"),
   sep = options("figcap.sep"),
   prefix.highlight = options("figcap.prefix.highlight"))
 
@@ -17,6 +17,8 @@ tabRef(label, caption, prefix = options("tabcap.prefix"),
 \item{label}{Identifying label.}
 
 \item{caption}{Caption to display.}
+
+\item{target}{An object of class \code{Dependency}.}
 
 \item{prefix}{Fixed part of the printed label. Defaults to 'Figure' for figures and to
 'Table' for tables.}
@@ -36,7 +38,7 @@ Define figure and table labels and reference them in the text to create automati
 reference the corresponding table or figure. Numbers are assigned automatically.
 }
 \details{
-Typically \code{figRef} this function only needs to be called
+Typically \code{figRef} only needs to be called
 explicitly to refer to figures in the text. The call to set the label and generate
 the appropriately modified caption is issued automatically when a code chunk with
 the \code{fig.cap} option is encountered. In that case the label used in the reference
@@ -47,6 +49,11 @@ Reference can occur at any point in the text. It is not strictly necessary to
 define a label before it is referenced. However, numbering is determined by the order
 in which labels are first encountered and this can lead to figures or tables appearing
 to be out of order.
+
+It is possible to refer to figures in other documents by supplying a \code{Dependency}
+object to argument \code{target}. This will generate a reference of the form
+"Short Title, Figure Label", e.g. "Methods, Figure 1". It is an error to provide
+a \code{target} as well as a \code{caption}.
 }
 \examples{
 options(figcap.prefix='Figure')

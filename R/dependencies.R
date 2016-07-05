@@ -50,7 +50,7 @@ update_dependency <- function(dep){
     on.exit(unlink(tag_dir, recursive=TRUE), add=TRUE)
     dir.create(tag_dir)
   }
-  if(needs_update(dep, knitr::opts_knit$get('input.file'))){
+  if(needs_update(dep, knitr::current_input())){
     wrapper <- file.path(tag_dir, paste0("render_", dep$label, '.R'))
     cat("setwd('..')\n", "rmarkdown::render(normalizePath('", dep$source, "'), quiet=TRUE)",
         file=wrapper, sep='')

@@ -26,11 +26,18 @@ merge_list <- function(x,y){
   x
 }
 
+#' Processing YAML metadata
+#'
+#' @param input Name of input file.
+#' @param ... Additional arguments are ignored.
+
 #' @importFrom stringr str_extract_all
 #' @importFrom stringr str_replace
 #' @importFrom stringr regex
 #' @importFrom yaml yaml.load
 #'
+#' @return \code{extract_yaml} returns a named list with the
+#' contents of the yaml metadata block.
 #' @author Peter Humburg
 extract_yaml <- function(input, ...){
   contents <- readLines(input, ...)
@@ -45,12 +52,28 @@ extract_yaml <- function(input, ...){
 
 #' Extract title from a Markdown document's yaml metadata
 #'
-#' @param input Name of input file.
-#' @param ... Additional arguments are ignored.
-#' @author Peter Humburg
+#' @return The \code{rmd_*} functions return character vector of
+#' length one containing the value of the corresponding field.
+#' @rdname extract_yaml
 rmd_title <- function(input, ...){
   metadata <- extract_yaml(input, ...)
   metadata$title
+}
+
+#' @details \code{rmd_short_title} tries to infer
+#' a suitable short title for a document if it isn't
+#' provided explicitly in the header by using the part
+#' of the title preceding the first punctuation mark
+#' (if any).
+#' @rdname extract_yaml
+rmd_short_title <- function(input, ...){
+  metadata <- extract_yaml(input, ...)
+  ans <- metadata$short_title
+  if(is.null(ans)){
+    ans <- metadata$title
+    ans <- sub('(^[^.:;!?]+).*', '\\1', ans)
+  }
+  ans
 }
 
 #' Extract title from an HTML document
@@ -73,7 +96,6 @@ html_title <- function(input, ...){
 #' @author Peter Humburg
 #' @export
 setup <- function(params){
-  opts_knit$set(input.file=sys.frame(1)$original_input)
   opts_knit$set(loaded_chunks=list())
   deps <- params2deps(params)
   load_dependencies(deps)
@@ -85,7 +107,45 @@ setup <- function(params){
   }
   knitr::opts_chunk$set(dev=fig_format)
 
+  opts_knit$set(reportmd.index=list(figure=matrix(ncol=4, nrow=0), table=matrix(ncol=4, nrow=0)))
   if(length(params$format) > 1 && 'print' %in% params$format && isTRUE(params$fig_download)){
     knitr::opts_chunk$set(fig_download='(Download as [PDF](%PATH%))')
   }
+}
+
+index <- function(label, origin, name, caption, type=c('figure', 'table')){
+  type <- match.arg(type)
+  if(!is.null(origin)){
+    origin <- strsplit(basename(origin), '.', fixed=TRUE)[[1]]
+    origin <- paste(origin[-length(origin)], sep='.')
+  } else {
+    origin <- ''
+  }
+  idx <- opts_knit$get('reportmd.index')
+  idx[[type]] <- rbind(idx[[type]], c(label, origin, name, caption))
+  opts_knit$set(reportmd.index=idx)
+}
+
+#' @importFrom utils write.table
+write_index <- function(index, type){
+  if(nrow(index)){
+    input <- sub('(.*)\\.[^.]+$','\\1', knitr::current_input())
+    index_name <- paste0(input, '_', type, '.idx')
+    write.table(index, file=index_name, sep="\t", row.names=FALSE, col.names=FALSE)
+  }
+}
+
+#' @importFrom utils read.table
+read_index <- function(file){
+  if(file.exists(file)){
+    read.table(file, header=FALSE)
+  }
+}
+
+get_index <- function(target, type=c('figure', 'table')){
+  type <- match.arg(type)
+  if(is.character(target$index[[type]])){
+    target$index[[type]] <- read_index(target$index[[type]])
+  }
+  target$index[[type]]
 }

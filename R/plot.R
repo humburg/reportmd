@@ -180,6 +180,8 @@ figRef <- local({
   }
 })
 
+utils::globalVariables(c('V1', 'V2'))
+
 #' @rdname figRef
 #' @export
 tabRef <- local({

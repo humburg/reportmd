@@ -1,3 +1,5 @@
+plot_formats <- c(screen='png', print='pdf', interactive='png')
+
 #' Create plots for inclusion in RMarkdown reports
 #'
 #' @param fig A ggplot2 plot for processing.
@@ -18,8 +20,9 @@
 #' @author Peter Humburg
 #' @importFrom plotly ggplotly
 #' @export
-plotMD <- function(fig, format=options('reportmd.figure.current')){
-  if(format == 'interactive') {
+plotMD <- function(fig, format=knitr::opts_current$get('format')){
+  format <- match.arg(format, c('screen', 'print', 'interactive'), several.ok=TRUE)
+  if(format[1] == 'interactive') {
     plotly::ggplotly(fig)
   }else {
     fig
@@ -27,16 +30,14 @@ plotMD <- function(fig, format=options('reportmd.figure.current')){
 }
 
 #' Set figure related chunk options for interactive figures
-#' @param fig.width Figure width in inches
-#' @param fig.height Figure height in inches
 #' @param out.width Output width for figure in pixels
 #' @param out.height Output height for figure in pixels
 #' @param ... Additional knitr chunk options
 #' @return A list with the previous set of options is returned invisibly.
 #' @author Peter Humburg
 #' @export
-interactiveFig <- function(fig.width=8, fig.height=6, out.width='800px', out.height='600px', ...){
-  opts <- c(list(fig.width=fig.width, fig.height=fig.height, out.width=out.width, out.height=out.height),
+interactiveFig <- function(out.width='800px', out.height='600px', ...){
+  opts <- c(list(out.width=out.width, out.height=out.height),
             list(...), list(format='interactive'))
   do.call(figureOptions, opts)
 }
@@ -52,6 +53,22 @@ interactiveFig <- function(fig.width=8, fig.height=6, out.width='800px', out.hei
 screenFig <- function(fig.width=8, fig.height=8, dpi=300, ...){
   opts <- c(list(fig.width=fig.width, fig.height=fig.height, dpi=dpi),
             list(...), list(format='screen'))
+  do.call(figureOptions, opts)
+}
+
+#' Set figure related chunk options for print figures
+#'
+#' @param fig.width Figure width in inches
+#' @param fig.height Figure height in inches
+#' @param dpi Resolution to use for figure output
+#' @param ... Additional knitr chunk options
+#'
+#' @return A list with the previous set of options is returned invisibly.
+#' @author Peter Humburg
+#' @export
+printFig <- function(fig.width=8, fig.height=8, dpi=300, ...){
+  opts <- c(list(fig.width=fig.width, fig.height=fig.height, dpi=dpi),
+            list(...), list(format='print'))
   do.call(figureOptions, opts)
 }
 
@@ -82,13 +99,14 @@ figureOptions <- function(..., format){
 #'
 #' @param label Identifying label.
 #' @param caption Caption to display.
+#' @param target An object of class \code{Dependency}.
 #' @param prefix Fixed part of the printed label. Defaults to 'Figure' for figures and to
 #' 'Table' for tables.
 #' @param sep Separator to use between printed label and caption.
 #' @param prefix.highlight Markdown code the figure label should be wrapped in.
 #'    Allows the label to be displayed in bold or italics.
 #'
-#' @details Typically \code{figRef} this function only needs to be called
+#' @details Typically \code{figRef} only needs to be called
 #' explicitly to refer to figures in the text. The call to set the label and generate
 #' the appropriately modified caption is issued automatically when a code chunk with
 #' the \code{fig.cap} option is encountered. In that case the label used in the reference
@@ -99,6 +117,11 @@ figureOptions <- function(..., format){
 #' define a label before it is referenced. However, numbering is determined by the order
 #' in which labels are first encountered and this can lead to figures or tables appearing
 #' to be out of order.
+#'
+#' It is possible to refer to figures in other documents by supplying a \code{Dependency}
+#' object to argument \code{target}. This will generate a reference of the form
+#' "Short Title, Figure Label", e.g. "Methods, Figure 1". It is an error to provide
+#' a \code{target} as well as a \code{caption}.
 #'
 #' @return If the \code{caption} argument is present a string combining the (computed)
 #' figure label with the caption. Otherwise a (markdown formatted) link to the
@@ -116,30 +139,48 @@ figRef <- local({
   tag <- numeric()
   created <- logical()
   used <- logical()
-  function(label, caption, prefix = options("figcap.prefix"),
+  function(label, caption, target, prefix = options("figcap.prefix"),
            sep = options("figcap.sep"), prefix.highlight = options("figcap.prefix.highlight")) {
-    i <- which(names(tag) == label)
-    if (length(i) == 0) {
-      i <- length(tag) + 1
-      tag <<- c(tag, i)
-      names(tag)[length(tag)] <<- label
-      used <<- c(used, FALSE)
-      names(used)[length(used)] <<- label
-      created <<- c(created, FALSE)
-      names(created)[length(created)] <<- label
-    }
-    if (!missing(caption)) {
-      created[label] <<- TRUE
-      result <- paste0(prefix.highlight, prefix, " ", i, sep, prefix.highlight,
-                       " ", caption)
-    } else {
-      used[label] <<- TRUE
-      result <- paste(prefix, tag[label])
-      result <- paste0('[', result, '](#', knitr::opts_chunk$get('fig.lp'), label, ')')
+    if(!missing(target)){
+      if(!missing(caption)){
+        stop("Can't set caption for Figure in external file '", target$label, "'.")
+      }
+      target <- opts_knit$get('dependencies')[[target]]
+      idx <- get_index(target, 'figure')
+      idx <- subset(idx, V1 == label & V2 == target$label)
+      if(nrow(idx) == 1){
+        result <- paste0("[", target$short_title, ', ', idx[1, 3], "](", target$document, "#", knitr::opts_chunk$get('fig.lp'), label, ")")
+      } else{
+        warning("Unable to locate Figure with label '", label, "' in file '", target$label, "'.")
+      }
+    } else{
+      i <- which(names(tag) == label)
+      if (length(i) == 0) {
+        i <- length(tag) + 1
+        tag <<- c(tag, i)
+        names(tag)[length(tag)] <<- label
+        used <<- c(used, FALSE)
+        names(used)[length(used)] <<- label
+        created <<- c(created, FALSE)
+        names(created)[length(created)] <<- label
+      }
+      if (!missing(caption)) {
+        created[label] <<- TRUE
+        caption <- eval(caption)
+        index(label, knitr::current_input(), paste(prefix, i), caption, type="figure")
+        result <- paste0(prefix.highlight, prefix, " ", i, sep, prefix.highlight,
+                         " ", caption)
+      } else {
+        used[label] <<- TRUE
+        result <- paste(prefix, tag[label])
+        result <- paste0('[', result, '](#', knitr::opts_chunk$get('fig.lp'), label, ')')
+      }
     }
     result
   }
 })
+
+utils::globalVariables(c('V1', 'V2'))
 
 #' @rdname figRef
 #' @export
@@ -147,25 +188,42 @@ tabRef <- local({
   tag <- numeric()
   created <- logical()
   used <- logical()
-  function(label, caption, prefix = options("tabcap.prefix"),
+  function(label, caption, target, prefix = options("tabcap.prefix"),
            sep = options("tabcap.sep"), prefix.highlight = options("tabcap.prefix.highlight")) {
-    i <- which(names(tag) == label)
-    if (length(i) == 0) {
-      i <- length(tag) + 1
-      tag <<- c(tag, i)
-      names(tag)[length(tag)] <<- label
-      used <<- c(used, FALSE)
-      names(used)[length(used)] <<- label
-      created <<- c(created, FALSE)
-      names(created)[length(created)] <<- label
+    if(!missing(target)){
+      if(!missing(caption)){
+        stop("Can't set caption for Table in external file '", target$label, "'.")
+      }
+      target <- opts_knit$get('dependencies')[[target]]
+      idx <- get_index(target, 'table')
+      idx <- subset(idx, V1 == label & V2 == target$label)
+      if(nrow(idx) == 1){
+        result <- paste0("[", target$short_title, ', ', idx[1, 3], "](", target$document, "#tab:", label, ")")
+      } else{
+        warning("Unable to locate Table with label '", label, "' in file '", target$label, "'.")
+      }
+    } else{
+      i <- which(names(tag) == label)
+      if (length(i) == 0) {
+        i <- length(tag) + 1
+        tag <<- c(tag, i)
+        names(tag)[length(tag)] <<- label
+        used <<- c(used, FALSE)
+        names(used)[length(used)] <<- label
+        created <<- c(created, FALSE)
+        names(created)[length(created)] <<- label
+      }
+      if (!missing(caption)) {
+        created[label] <<- TRUE
+        index(label, knitr::current_input(), paste(prefix, i), caption, type="table")
+        result <- paste0(prefix.highlight, prefix, " ", i, sep, prefix.highlight,
+               " ", eval(caption))
+      } else {
+        used[label] <<- TRUE
+        result <- paste(prefix, tag[label])
+        result <- paste0('[', result, '](#tab:', label, ')')
+      }
     }
-    if (!missing(caption)) {
-      created[label] <<- TRUE
-      paste0(prefix.highlight, prefix, " ", i, sep, prefix.highlight,
-             " ", caption)
-    } else {
-      used[label] <<- TRUE
-      paste(prefix, tag[label])
-    }
+    result
   }
 })

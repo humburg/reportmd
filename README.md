@@ -23,9 +23,39 @@ This R package aims to provide a number of features to support analyses
 that are split across multiple RMarkdown files with cross-file dependencies
 and enables multi-page HTML output.
 
-See the [Multi-document Rmarkdown template](inst/rmarkdown/templates/multipart_report/skeleton/main.Rmd)
-included in this package for usage instructions and examples.
+## Installation
+To install *reportMD* and some of the dependancies requires [*devtools*](https://github.com/hadley/devtools).
+Users of [*RStudio*](https://www.rstudio.com/) will already have this installed,
+otherwise `install.packages('devtools')` will take care of that.
 
+Currently *reportMD* relies on the development version of [*knitrBootstrap*](https://github.com/jimhester/knitrBootstrap),
+which can be installed with
+
+```r
+devtools::install_github('jimhester/knitrBootstrap', ref='rmarkdown_template')
+```
+
+Following this the latest version of *reportMD* can be installed:
+
+```r
+devtools::install_github('humburg/reportMD')
+```
+
+## Getting started
+The [Multi-document Rmarkdown template](inst/rmarkdown/templates/multipart_report/skeleton/skeleton.Rmd)
+included in this package has detailed instructions and examples. In *RStudio* select 
+
+>    File > New File > R Markdown > From Template > Multi-part Report {reportMD}
+
+This will create a copy of the template in the current project. Open the file
+*skeleton.Rmd* and click on RStudio's *Knit* button to compile the template into
+a webpage.
+
+Alternatively the template is available as part of the installed R package
+and can be located via the R command
+`system.file('rmarkdown/templates/multipart_report/skeleton', package="reportMD")`.
+
+## Features
 Current and planned features include:
 - [x] Ability to declare required RMarkdown documents in yaml header;
     - [x] Dependencies are resolved and rendered to the requested output

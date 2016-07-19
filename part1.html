@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+  <head>
+
+    <meta charset="utf-8" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="generator" content="pandoc" />
+
+        <meta name="author" content="Author Name" />
+    
+    
+    <title>Part 1</title>
+
+        <script src="part1_files/jquery-1.11.3/jquery.min.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link href="part1_files/bootstrap3-3.2.0/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="part1_files/bootstrap3-3.2.0/css/themes/default/bootstrap.min.css" rel="stylesheet" />
+    <script src="part1_files/bootstrap3-3.2.0/js/bootstrap.min.js"></script>
+    <link href="part1_files/highlightjs-8.2/highlight/zenburn.css" rel="stylesheet" />
+    <script src="part1_files/highlightjs-8.2/highlight.pack.js"></script>
+    <link href="part1_files/MagnificPopup-0.9.9/magnific-popup.css" rel="stylesheet" />
+    <script src="part1_files/MagnificPopup-0.9.9/magnific-popup.js"></script>
+    <script src="part1_files/Navigation-1.1/tabsets.js"></script>
+    <link href="part1_files/knitrBootstrap_simple-0.0.1/css/simple.css" rel="stylesheet" />
+    <script src="part1_files/knitrBootstrap_simple-0.0.1/js/simple.js"></script>
+    
+    
+  </head>
+
+  <body data-spy="scroll" data-target="#toc">
+    <div id="wrapper" class="container">
+      <div class="row">
+        <div class="contents col-xs-12 col-md-10">
+
+          
+                    <div class="page-header">
+            <h1 class="title">Part 1</h1>
+                                                <h4 class="author"><em>Author Name</em></h4>
+                                                  <h4 class="date"><em>Wed 20 Jul 2016</em></h4>
+                      </div>
+                    
+<div id="introduction" class="section level1"><h1>Introduction</h1><p>This is the first part of an example data analysis. In this example we’ll do some basic data pre-processing and then export the dataset for use in the downstream analysis.</p><p>We’ll use the (outdated and not very exciting) <em>mtcars</em> dataset for this analysis. This consists of 11 variables for 32 car models build in 1973 and 1974. It looks something like this:</p><div class="container-fluid"><div id="mtcarsHead" class="row"><div class="panel panel-primary"><button class="btn btn-default btn-xs btn-primary" data-toggle="tooltip" title="R source"><span class="glyphicon glyphicon-chevron-left"></span></button><pre ><code class="source r">printMD(head(mtcars))</code></pre></div><table><colgroup><col width="26%" /><col width="6%" /><col width="6%" /><col width="7%" /><col width="5%" /><col width="7%" /><col width="5%" /><col width="7%" /><col width="5%" /><col width="5%" /><col width="7%" /><col width="7%" /></colgroup><thead><tr class="header"><th align="center"> </th><th align="center">mpg</th><th align="center">cyl</th><th align="center">disp</th><th align="center">hp</th><th align="center">drat</th><th align="center">wt</th><th align="center">qsec</th><th align="center">vs</th><th align="center">am</th><th align="center">gear</th><th align="center">carb</th></tr></thead><tbody><tr class="odd"><td align="center"><strong>Mazda RX4</strong></td><td align="center">21</td><td align="center">6</td><td align="center">160</td><td align="center">110</td><td align="center">3.9</td><td align="center">2.62</td><td align="center">16.5</td><td align="center">0</td><td align="center">1</td><td align="center">4</td><td align="center">4</td></tr><tr class="even"><td align="center"><strong>Mazda RX4 Wag</strong></td><td align="center">21</td><td align="center">6</td><td align="center">160</td><td align="center">110</td><td align="center">3.9</td><td align="center">2.88</td><td align="center">17</td><td align="center">0</td><td align="center">1</td><td align="center">4</td><td align="center">4</td></tr><tr class="odd"><td align="center"><strong>Datsun 710</strong></td><td align="center">22.8</td><td align="center">4</td><td align="center">108</td><td align="center">93</td><td align="center">3.85</td><td align="center">2.32</td><td align="center">18.6</td><td align="center">1</td><td align="center">1</td><td align="center">4</td><td align="center">1</td></tr><tr class="even"><td align="center"><strong>Hornet 4 Drive</strong></td><td align="center">21.4</td><td align="center">6</td><td align="center">258</td><td align="center">110</td><td align="center">3.08</td><td align="center">3.21</td><td align="center">19.4</td><td align="center">1</td><td align="center">0</td><td align="center">3</td><td align="center">1</td></tr><tr class="odd"><td align="center"><strong>Hornet Sportabout</strong></td><td align="center">18.7</td><td align="center">8</td><td align="center">360</td><td align="center">175</td><td align="center">3.15</td><td align="center">3.44</td><td align="center">17</td><td align="center">0</td><td align="center">0</td><td align="center">3</td><td align="center">2</td></tr><tr class="even"><td align="center"><strong>Valiant</strong></td><td align="center">18.1</td><td align="center">6</td><td align="center">225</td><td align="center">105</td><td align="center">2.76</td><td align="center">3.46</td><td align="center">20.2</td><td align="center">1</td><td align="center">0</td><td align="center">3</td><td align="center">1</td></tr></tbody></table></div></div><p>The only thing we’ll do for the purpose of this example is to add an additional column to indicate whether the car was build in the US or elsewhere.</p><div class="container-fluid"><div id="origin" class="row"><div class="panel panel-primary"><button class="btn btn-default btn-xs btn-primary" data-toggle="tooltip" title="R source"><span class="glyphicon glyphicon-chevron-left"></span></button><pre ><code class="source r">international <- c(1:3, 8:14, 18:21, 26:28, 30:32)
+ext_cars <- mtcars
+ext_cars$origin <- 'US'
+ext_cars$origin[international] <- 'international'</code></pre></div></div></div></div><div id="appendix" class="section level1 tabset"><h1>Appendix</h1><div id="custom-functions" class="section level2"><h2>Custom Functions</h2><div class="container-fluid"><div id="functions" class="row"><div class="panel panel-primary"><button class="btn btn-default btn-xs btn-primary" data-toggle="tooltip" title="R source"><span class="glyphicon glyphicon-chevron-left"></span></button><pre ><code class="source r">## Custom functions used in the analysis should go into this chunk.
+## They will be listed in their own section of the appendix.</code></pre></div></div></div></div><div id="configuration" class="section level2"><h2>Configuration</h2><div class="container-fluid"><div id="setup" class="row"><div class="panel panel-primary"><button class="btn btn-default btn-xs btn-primary" data-toggle="tooltip" title="R source"><span class="glyphicon glyphicon-chevron-left"></span></button><pre ><code class="source r">## This chunk should contain global configuration commands.
+## Use this to set knitr options and related things. Everything
+## in this chunk will be included in an appendix to document the
+## configuration used.
+output <- opts_knit$get("rmarkdown.pandoc.to")
+
+## By default R code is only included in HTML versions of the report
+## (where it can be collapsed). You can generate a PDF version
+## using rmarkdown::pdf_document to get a copy for print. Extensive
+## chunks of R code may or may not be desired in that setting. If you
+## want them simply change the following arguments to `echo = TRUE`.
+## In either case the default can be overwritten for individual chunks.
+opts_chunk$set(echo = output=="html")
+opts_chunk$set(warning = output=="html")
+opts_chunk$set(message = output=="html")
+
+## Cache options
+opts_chunk$set(cache=TRUE)
+
+## Figure options
+## Set default figure format
+options(reportmd.figure.format=params$format)
+
+## Set 'hide.fig.code' to FALSE to include code chunks that
+## produce Figures in the output. Note that this affects all chunks
+## that provide a figure caption.
+opts_chunk$set(hold=TRUE, hide.fig.code=TRUE)
+
+## Set up default plotting options for different formats.
+## These can be overwritten for individual chunks
+interactiveFig()
+screenFig()
+
+## Pander options
+panderOptions("digits", 3)
+panderOptions("table.split.table", 160)
+
+## Configure Figure and Table lables
+options(figcap.prefix = "Figure", figcap.sep = ":", figcap.prefix.highlight = "**")
+options(tabcap.prefix = "Table", tabcap.sep = ":", tabcap.prefix.highlight = "**")
+
+## Install required knitr hooks
+installHooks()</code></pre></div></div></div></div><div id="version" class="section level2"><h2>Version</h2><div id="document-version" class="section level3"><h3>Document version</h3><div class="container-fluid"><div id="docVersion" class="row">Wed Jul 20 08:42:08 2016</div></div></div><div id="session-info" class="section level3"><h3>Session Info</h3><div class="container-fluid"><div id="sessionInfo" class="row"><ul><li><p><strong>platform</strong>:</p><ul><li><strong>version</strong>: R version 3.2.3 (2015-12-10)</li><li><strong>system</strong>: x86_64, mingw32</li><li><strong>ui</strong>: RTerm</li><li><strong>language</strong>: (EN)</li><li><strong>collate</strong>: English_Australia.1252</li><li><strong>tz</strong>: Australia/Sydney</li><li><strong>date</strong>: 2016-06-28</li></ul></li><li><p><strong>packages</strong>:</p><table style="width:93%;"><colgroup><col width="20%" /><col width="5%" /><col width="13%" /><col width="15%" /><col width="37%" /></colgroup><thead><tr class="header"><th align="center">package</th><th align="center">*</th><th align="center">version</th><th align="center">date</th><th align="center">source</th></tr></thead><tbody><tr class="odd"><td align="center">assertthat</td><td align="center"></td><td align="center">0.1</td><td align="center">2013-12-06</td><td align="center">CRAN (R 3.2.0)</td></tr><tr class="even"><td align="center">base64enc</td><td align="center"></td><td align="center">0.1-3</td><td align="center">2015-07-28</td><td align="center">CRAN (R 3.2.3)</td></tr><tr class="odd"><td align="center">codetools</td><td align="center"></td><td align="center">0.2-14</td><td align="center">2015-07-15</td><td align="center">CRAN (R 3.2.1)</td></tr><tr class="even"><td align="center">colorspace</td><td align="center"></td><td align="center">1.2-6</td><td align="center">2015-03-11</td><td align="center">CRAN (R 3.2.1)</td></tr><tr class="odd"><td align="center">devtools</td><td align="center"></td><td align="center">1.12.0</td><td align="center">2016-06-24</td><td align="center">CRAN (R 3.2.5)</td></tr><tr class="even"><td align="center">digest</td><td align="center"></td><td align="center">0.6.9</td><td align="center">2016-01-08</td><td align="center">CRAN (R 3.2.3)</td></tr><tr class="odd"><td align="center">evaluate</td><td align="center"></td><td align="center">0.9</td><td align="center">2016-04-29</td><td align="center">CRAN (R 3.2.5)</td></tr><tr class="even"><td align="center">formatR</td><td align="center"></td><td align="center">1.4</td><td align="center">2016-05-09</td><td align="center">CRAN (R 3.2.5)</td></tr><tr class="odd"><td align="center">ggplot2</td><td align="center">*</td><td align="center">2.1.0</td><td align="center">2016-03-01</td><td align="center">CRAN (R 3.2.3)</td></tr><tr class="even"><td align="center">gridExtra</td><td align="center"></td><td align="center">2.2.1</td><td align="center">2016-02-29</td><td align="center">CRAN (R 3.2.3)</td></tr><tr class="odd"><td align="center">gtable</td><td align="center"></td><td align="center">0.2.0</td><td align="center">2016-02-26</td><td align="center">CRAN (R 3.2.3)</td></tr><tr class="even"><td align="center">htmltools</td><td align="center"></td><td align="center">0.3.5</td><td align="center">2016-03-21</td><td align="center">CRAN (R 3.2.4)</td></tr><tr class="odd"><td align="center">htmlwidgets</td><td align="center"></td><td align="center">0.6</td><td align="center">2016-02-25</td><td align="center">CRAN (R 3.2.3)</td></tr><tr class="even"><td align="center">httr</td><td align="center"></td><td align="center">1.2.0</td><td align="center">2016-06-15</td><td align="center">CRAN (R 3.2.5)</td></tr><tr class="odd"><td align="center">jsonlite</td><td align="center"></td><td align="center">0.9.22</td><td align="center">2016-06-15</td><td align="center">CRAN (R 3.2.5)</td></tr><tr class="even"><td align="center">knitr</td><td align="center">*</td><td align="center">1.13</td><td align="center">2016-05-09</td><td align="center">CRAN (R 3.2.5)</td></tr><tr class="odd"><td align="center">knitrBootstrap</td><td align="center"></td><td align="center">1.0.0</td><td align="center">2016-06-21</td><td align="center">local</td></tr><tr class="even"><td align="center">magrittr</td><td align="center"></td><td align="center">1.5</td><td align="center">2014-11-22</td><td align="center">CRAN (R 3.2.0)</td></tr><tr class="odd"><td align="center">markdown</td><td align="center"></td><td align="center">0.7.7</td><td align="center">2015-04-22</td><td align="center">CRAN (R 3.2.0)</td></tr><tr class="even"><td align="center">memoise</td><td align="center"></td><td align="center">1.0.0</td><td align="center">2016-01-29</td><td align="center">CRAN (R 3.2.3)</td></tr><tr class="odd"><td align="center">munsell</td><td align="center"></td><td align="center">0.4.3</td><td align="center">2016-02-13</td><td align="center">CRAN (R 3.2.3)</td></tr><tr class="even"><td align="center">pander</td><td align="center">*</td><td align="center">0.6.0</td><td align="center">2015-11-23</td><td align="center">CRAN (R 3.2.3)</td></tr><tr class="odd"><td align="center">plotly</td><td align="center">*</td><td align="center">3.6.0</td><td align="center">2016-05-18</td><td align="center">CRAN (R 3.2.5)</td></tr><tr class="even"><td align="center">plyr</td><td align="center"></td><td align="center">1.8.4</td><td align="center">2016-06-08</td><td align="center">CRAN (R 3.2.5)</td></tr><tr class="odd"><td align="center">R6</td><td align="center"></td><td align="center">2.1.2</td><td align="center">2016-01-26</td><td align="center">CRAN (R 3.2.3)</td></tr><tr class="even"><td align="center">Rcpp</td><td align="center"></td><td align="center">0.12.5</td><td align="center">2016-05-14</td><td align="center">CRAN (R 3.2.5)</td></tr><tr class="odd"><td align="center">reportMD</td><td align="center">*</td><td align="center">0.0.4</td><td align="center">2016-06-28</td><td align="center">local (<a href="mailto:humburg/reportmd@NA">humburg/reportmd@NA</a>)</td></tr><tr class="even"><td align="center">rmarkdown</td><td align="center"></td><td align="center">0.9.6</td><td align="center">2016-05-01</td><td align="center">CRAN (R 3.2.5)</td></tr><tr class="odd"><td align="center">scales</td><td align="center"></td><td align="center">0.4.0</td><td align="center">2016-02-26</td><td align="center">CRAN (R 3.2.3)</td></tr><tr class="even"><td align="center">stringi</td><td align="center"></td><td align="center">1.1.1</td><td align="center">2016-05-27</td><td align="center">CRAN (R 3.2.5)</td></tr><tr class="odd"><td align="center">stringr</td><td align="center"></td><td align="center">1.0.0</td><td align="center">2015-04-30</td><td align="center">CRAN (R 3.2.0)</td></tr><tr class="even"><td align="center">tibble</td><td align="center"></td><td align="center">1.0</td><td align="center">2016-03-23</td><td align="center">CRAN (R 3.2.5)</td></tr><tr class="odd"><td align="center">tidyr</td><td align="center"></td><td align="center">0.5.1</td><td align="center">2016-06-14</td><td align="center">CRAN (R 3.2.5)</td></tr><tr class="even"><td align="center">viridis</td><td align="center"></td><td align="center">0.3.4</td><td align="center">2016-03-12</td><td align="center">CRAN (R 3.2.4)</td></tr><tr class="odd"><td align="center">withr</td><td align="center"></td><td align="center">1.0.2</td><td align="center">2016-06-20</td><td align="center">CRAN (R 3.2.5)</td></tr><tr class="even"><td align="center">xml2</td><td align="center"></td><td align="center">1.0.0</td><td align="center">2016-06-24</td><td align="center">CRAN (R 3.2.5)</td></tr><tr class="odd"><td align="center">yaml</td><td align="center"></td><td align="center">2.1.13</td><td align="center">2014-06-12</td><td align="center">CRAN (R 3.2.0)</td></tr></tbody></table></li></ul><!-- end of list --></div></div></div></div></div>
+
+          
+          <p class="text-muted" id="credit">
+            Styled with <a href="https://github.com/jimhester/knitrBootstrap">knitrBootstrap</a>
+          </p>
+
+        </div>
+
+                <div  class="col-md-2">
+          <div class="hidden-print hidden-xs hidden-sm sidebar affix">
+            <div id="toc" class="sidenav well">
+              <ul><li><a href="#introduction">Introduction</a></li><li><a href="#appendix">Appendix</a><ul><li><a href="#custom-functions">Custom Functions</a></li><li><a href="#configuration">Configuration</a></li><li><a href="#version">Version</a><ul><li><a href="#document-version">Document version</a></li><li><a href="#session-info">Session Info</a></li></ul></li></ul></li></ul>
+            </div>
+          </div>
+        </div>
+        
+      </div>
+    </div>
+
+        <!-- dynamically load mathjax for compatibility with self-contained -->
+    <script>
+      (function () {
+          var script = document.createElement("script");
+          script.type = "text/javascript";
+          script.src  = "https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+          document.getElementsByTagName("head")[0].appendChild(script);
+      })();
+    </script>
+      </body>
+</html>

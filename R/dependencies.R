@@ -88,8 +88,12 @@ load_dependencies <- function(deps, where=knitr::knit_global()){
       cached <- unique(sub("\\.[^.]+$", "", cached))
       if(length(cached) < length(chunks)){
         found <- sapply(strsplit(cached, '_'), '[[', 1)
-        found_pattern <- paste(found, collapse='|')
-        missing <- chunks[!grepl(found_pattern, chunks)]
+        if(length(found)){
+          found_pattern <- paste(found, collapse='|')
+          missing <- chunks[!grepl(found_pattern, chunks)]
+        } else {
+          missing <- chunks
+        }
         stop("Unable to locate output for chunks ", paste(missing, collpse=', '), " from document ", d$source, ".")
       }
       lapply(cached, lazyLoad, where)

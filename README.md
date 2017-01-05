@@ -23,6 +23,8 @@ This R package aims to provide a number of features to support analyses
 that are split across multiple RMarkdown files with cross-file dependencies
 and enables multi-page HTML output.
 
+An example of a report generated with *reportMD* is available [online](https://humburg.github.io/reportmd/).
+
 ## Installation
 To install *reportMD* and some of the dependancies requires [*devtools*](https://github.com/hadley/devtools).
 Users of [*RStudio*](https://www.rstudio.com/) will already have this installed,

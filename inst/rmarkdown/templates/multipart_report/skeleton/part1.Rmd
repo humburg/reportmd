@@ -9,7 +9,8 @@ output:
     highlight: zenburn
 params:
   version: !r if(nchar(Sys.which('git'))) system("git describe --long --dirty --abbrev=10 --tags --always", intern=TRUE) else date()
-  format: !r if(opts_knit$get("rmarkdown.pandoc.to") == 'html') 'interactive' else 'print'
+  format: !r if(opts_knit$get("rmarkdown.pandoc.to") == 'html') c('screen', 'print') else 'print'
+  fig_download: true
 ---
 
 ```{r loadPackages, include=FALSE, cache=FALSE}
@@ -21,6 +22,10 @@ library(ggplot2)
 library(plotly)
 ```
 
+```{r dependencies, include=FALSE, cache=FALSE}
+## Ensure required results from child documents are availsble
+reportMD::setup(params)
+```
 
 ```{r setup, include=FALSE, cache=FALSE}
 ## This chunk should contain global configuration commands.
@@ -55,6 +60,7 @@ opts_chunk$set(hold=TRUE, hide.fig.code=TRUE)
 ## These can be overwritten for individual chunks
 interactiveFig()
 screenFig()
+printFig()
 
 ## Pander options
 panderOptions("digits", 3)

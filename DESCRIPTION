@@ -1,6 +1,6 @@
 Package: reportMD
 Title: Scientific reports with RMarkdown
-Version: 0.1.0
+Version: 0.1.1
 Authors@R: person("Peter", "Humburg", email = "p.humburg@garvan.org.au", role = c("aut", "cre"))
 Description: Utilities designed to facilitate the creation of scientific reports
     with RMarkdown. The package builds on knitrBootstrap and rmarkdown to generate
@@ -12,7 +12,7 @@ Imports:
     plotly,
     pander,
     knitr,
-    devtools,
+    callr,
     rmarkdown,
     stringr,
     yaml,

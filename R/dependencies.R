@@ -43,6 +43,7 @@ params2deps <- function(params){
 #' @param dep Dependency to update.
 #' @export
 #' @importFrom knitr opts_knit
+#' @importFrom callr r
 #' @rdname load_dependencies
 update_dependency <- function(dep){
   tag_dir <- file.path(dirname(dep$source), '.processing')
@@ -54,7 +55,7 @@ update_dependency <- function(dep){
     wrapper <- file.path(tag_dir, paste0("render_", dep$label, '.R'))
     cat("setwd('..')\n", "rmarkdown::render(normalizePath('", dep$source, "'), quiet=TRUE)",
         file=wrapper, sep='')
-    devtools::clean_source(wrapper, quiet=TRUE)
+    callr::r(function(x) source(x), args=list(wrapper))
   }
   if(!file.exists(dep$document)){
     stop("Unable to locate output of child document: ", dep$document)
@@ -70,7 +71,6 @@ update_dependency <- function(dep){
 #' @return Called for its side effect.
 #' @export
 #' @importFrom rmarkdown render
-#' @importFrom devtools clean_source
 #' @importFrom knitr knit_global
 #' @author Peter Humburg
 load_dependencies <- function(deps, where=knitr::knit_global()){

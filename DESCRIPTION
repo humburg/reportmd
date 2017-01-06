@@ -16,9 +16,9 @@ Imports:
     rmarkdown,
     stringr,
     yaml,
-    xml2
+    xml2,
+    htmltools
 Suggests:
-    knitrBootstrap (>= 1.0.0),
     ggplot2
 License: MIT + file LICENSE
 LazyData: true

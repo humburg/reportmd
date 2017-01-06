@@ -3,7 +3,7 @@ title: "Part 1"
 author: "Author Name"
 date: "`r format(Sys.time(), '%a %d %b %Y')`"
 output:
-  knitrBootstrap::simple_document:
+  reportMD::multi_document:
     toc: true
     fig_caption: true
     highlight: zenburn
@@ -32,29 +32,10 @@ reportMD::setup(params)
 ## Use this to set knitr options and related things. Everything
 ## in this chunk will be included in an appendix to document the
 ## configuration used.
-output <- opts_knit$get("rmarkdown.pandoc.to")
-
-## By default R code is only included in HTML versions of the report
-## (where it can be collapsed). You can generate a PDF version
-## using rmarkdown::pdf_document to get a copy for print. Extensive
-## chunks of R code may or may not be desired in that setting. If you
-## want them simply change the following arguments to `echo = TRUE`.
-## In either case the default can be overwritten for individual chunks.
-opts_chunk$set(echo = output=="html")
-opts_chunk$set(warning = output=="html")
-opts_chunk$set(message = output=="html")
-
-## Cache options
-opts_chunk$set(cache=TRUE)
 
 ## Figure options
 ## Set default figure format
 options(reportmd.figure.format=params$format)
-
-## Set 'hide.fig.code' to FALSE to include code chunks that
-## produce Figures in the output. Note that this affects all chunks
-## that provide a figure caption.
-opts_chunk$set(hold=TRUE, hide.fig.code=TRUE)
 
 ## Set up default plotting options for different formats.
 ## These can be overwritten for individual chunks
@@ -69,9 +50,6 @@ panderOptions("table.split.table", 160)
 ## Configure Figure and Table lables
 options(figcap.prefix = "Figure", figcap.sep = ":", figcap.prefix.highlight = "**")
 options(tabcap.prefix = "Table", tabcap.sep = ":", tabcap.prefix.highlight = "**")
-
-## Install required knitr hooks
-installHooks()
 ```
 
 ```{r functions, include=FALSE}

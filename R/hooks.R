@@ -149,23 +149,40 @@ document_hook <- function(x){
   x
 }
 
-
-#' Set knitr hooks
-#'
-#' Installs all required knitr hooks.
-#'
-#' @return Called for its side effect.
-#' @author Peter Humburg
-#' @importFrom knitr opts_hooks
-#' @importFrom knitr knit_hooks
-#' @export
-installHooks <- function(){
-  knitr::opts_hooks$set(fig.cap=fig.cap_opts_hook)
-  knitr::opts_hooks$set(tab.cap=tab.cap_opts_hook)
-  knitr::opts_hooks$set(dependson=dependson_opts_hook)
-  knitr::opts_hooks$set(format=format_opts_hook)
-  knitr::knit_hooks$set(fig.cap=fig.cap_chunk_hook)
-  knitr::knit_hooks$set(tab.cap=tab.cap_chunk_hook)
-  knitr::knit_hooks$set(document=document_hook)
+## Hooks inherited from knitrBootstrap
+bootstrap_chunk_hook <- function(x, options){
+  class <- options[["bootstrap.class"]] <- options[["bootstrap.class"]] %||% "row"
+  tags$div(class="container-fluid", tags$div(class=class, id=add_anchor(options[["label"]]), x))
 }
 
+#' @importFrom knitr hook_plot_md
+bootstrap_plot_hook <- function(x, options) {
+  thumbnail <- options[["bootstrap.thumbnail"]] <- options[["bootstrap.thumbnail"]] %||% TRUE
+  if (!thumbnail) {
+    fig <- knitr::hook_plot_md(x, options)
+    if(options$fig.show != "hold"){
+      fig <- paste0("\n\n", fig, "\n\n")
+    }
+    return(tags$div(class = c("row", "text-center"), fig))
+  }
+  thumbnail_plot_hook(x, options)
+}
+
+thumbnail_plot_hook <- function(x, options){
+  thumbnail_size <- options["bootstrap.thumbnail.size"] <- options[["bootstrap.thumbnail.size"]] %||% "col-md-6"
+  src <- opts_knit$get('upload.fun')(x)
+  caption <- options$fig.cap %||% ""
+  img <- tags$img(src=src, alt=caption)
+  if(caption != "" && options$fig.show != "hold"){
+    caption <- tags$p(class="caption", caption)
+  }
+  fig <- tags$a(href = "#", class = "thumbnail", img)
+  if (options$fig.show == "hold"){
+    fig <- tags$div(class=thumbnail_size, fig)
+  } else{ #only one figure from this code block so center it
+    fig <- tags$div(class = c("figure", calc_offset(thumbnail_size),
+                              thumbnail_size), id=add_anchor(options[["label"]], prefix=knitr::opts_chunk$get('fig.lp')), fig, caption)
+    fig <- tags$div(class = c("row"), fig)
+  }
+  fig
+}

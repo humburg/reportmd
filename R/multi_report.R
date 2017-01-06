@@ -126,12 +126,9 @@ html_dependency_mw_intent <- function(){
                             script="mwheelIntent.js")
 }
 
-generate_panel <- function(engine, name, x, show){
+generate_panel <- function(engine, name, label, x, show){
   tags$div(class=c("panel", panel_types[name]),
-           tags$button(class=c("btn", "btn-default", "btn-xs", button_types[name]),
-                       'data-toggle'="tooltip", title=paste(engine, name, collapse=" "),
-                       tags$span(class=c("glyphicon", "glyphicon-chevron-left"))),
-           tags$pre(tags$code(class=c(name, tolower(engine)), x))
+           tags$pre(tags$code(class=c(name, tolower(engine)), 'data-label'=label, x))
   )
 }
 
@@ -147,7 +144,7 @@ multi_knit_hooks <- function() {
                      warning = (options[["bootstrap.show.warning"]] <- options[["bootstrap.show.warning"]] %||% TRUE),
                      error = (options[["bootstrap.show.error"]] <- options[["bootstrap.show.error"]] %||% TRUE),
                      TRUE)
-      generate_panel(options$engine, name, x, !show)
+      generate_panel(options$engine, name, opts_current$get("label"), x, !show)
     }
   }
   c(

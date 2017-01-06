@@ -152,7 +152,16 @@ document_hook <- function(x){
 ## Hooks inherited from knitrBootstrap
 bootstrap_chunk_hook <- function(x, options){
   class <- options[["bootstrap.class"]] <- options[["bootstrap.class"]] %||% "row"
-  tags$div(class="container-fluid", tags$div(class=class, id=add_anchor(options[["label"]]), x))
+  label <- options[["label"]]
+  button <- NULL
+  if(options[['echo']]){
+    button <- tags$button(class=c("btn", "btn-default", "btn-xs", "sidenote"),
+                          'data-toggle'="tooltip", title=label,
+                          tags$span(paste(options[["engine"]], 'source')))
+  }
+  tags$div(class="container-fluid",
+           tags$div(class=c(class, 'code-chunk'), id=add_anchor(label),
+                    button, x))
 }
 
 #' @importFrom knitr hook_plot_md

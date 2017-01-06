@@ -3,45 +3,35 @@ body {
   position: relative;
 }
 .panel {
-  border-left-width: 10px;
   position: relative;
 }
-.panel button {
-  position: absolute;
+.code-chunk button {
+  background: none;
+  box-shadow: none;
   top: 0;
-  left: -9px;
-  border: 0;
-  height:100%;
-  width: 0;
-  color: transparent;
-  border-top-right-radius: 0;
-  border-bottom-right-radius: 0;
+  border: 1px;
+  border-color: #858585;
+  border-radius: 3px;
+  border-style: solid;
 }
-.collapsed button {
-  border-top-right-radius: 3px;
-  border-bottom-right-radius: 3px;
+
+.collapsed div{
+  display: none;
 }
-button span {
-  left: -6px;
+
+.sidenote
+{
+  float: left;
+  margin-left: -50px;
+  text-align: left;
 }
-.collapsed span {
-  left: -7px;
-}
-.panel.collapsed {
-  display: inline-block;
-  height:24px;
-  width:0;
-}
+
 /* remove the border and margin for pre blocks */
 pre {
   padding: 0;
   border: 0;
   margin: 0;
   border-radius: 0;
-}
-
-pre code {
-  padding: 9.5px;
 }
 
 /* Magnific overrides to give transparent images a white background */
@@ -297,3 +287,4 @@ pre code {
 {
 	margin: 0 -3px 0 0;
 }
+

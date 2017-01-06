@@ -8,11 +8,11 @@ body {
 }
 .panel button {
   position: absolute;
-  top: 0px;
+  top: 0;
   left: -9px;
-  border: 0px;
+  border: 0;
   height:100%;
-  width: 0px;
+  width: 0;
   color: transparent;
   border-top-right-radius: 0;
   border-bottom-right-radius: 0;

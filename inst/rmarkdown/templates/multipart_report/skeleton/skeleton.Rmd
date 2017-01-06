@@ -27,7 +27,7 @@ library(plotly)
 ```
 
 ```{r dependencies, include=FALSE, cache=FALSE}
-## Ensure required results from child documents are availsble
+## Ensure required results from child documents are available
 reportMD::setup(params)
 ```
 

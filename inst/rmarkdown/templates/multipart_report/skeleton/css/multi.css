@@ -15,15 +15,30 @@ body {
   border-style: solid;
 }
 
+.code-chunk > .panel {
+  border-left-width: 4px;
+}
+
 .collapsed div{
   display: none;
 }
 
 .sidenote
 {
-  float: left;
-  margin-left: -50px;
   text-align: left;
+}
+
+@media screen and (min-width: 992px) {
+  .sidenote{
+    float: left;
+    margin-left: -70px;
+  }
+  #wrapper {
+    padding-left: 80px;
+  }
+  .code-chunk button{
+    width: 60px;
+  }
 }
 
 /* remove the border and margin for pre blocks */

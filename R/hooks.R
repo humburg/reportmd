@@ -27,7 +27,7 @@ fig.cap_chunk_hook <- function(before, options, envir) {
       paste0('<div id="', knitr::opts_chunk$get('fig.lp'), options$label, '" class="figure">')
     } else{
       options(reportmd.figure.current=NULL)
-      paste0('<p class="caption text-center">', options$fig.cap,"</p></div>")
+      paste0("</div>")
     }
   }
 }

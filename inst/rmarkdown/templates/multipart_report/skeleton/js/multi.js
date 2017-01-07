@@ -44,7 +44,7 @@ $(function() {
 
   /* Activate styled scrollbars for non-webkit browsers */
   var isWebkit = /WebKit/.test(navigator.userAgent) && !/Edge/.test(navigator.userAgent);
-  if (false) {
-    $('#toc').jScrollPane();
+  if (!isWebkit) {
+    $('.scrollbar').jScrollPane();
   }
 });

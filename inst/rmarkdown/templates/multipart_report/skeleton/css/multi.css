@@ -47,6 +47,12 @@ pre {
   border: 0;
   margin: 0;
   border-radius: 0;
+  overflow-x: auto;
+}
+
+pre code {
+    word-wrap: normal;
+    white-space: pre;
 }
 
 /* Magnific overrides to give transparent images a white background */
@@ -158,38 +164,43 @@ pre {
   }
 }
 
-#toc::-webkit-scrollbar {
+.source::-webkit-scrollbar, .scrollbar::-webkit-scrollbar {
   width: 3px;
+  height: 3px;
 }
-#toc::-webkit-scrollbar:hover {
+.source::-webkit-scrollbar:hover, .scrollbar::-webkit-scrollbar:hover {
   width: 5px;
+  height: 5px;
 }
-#toc::-webkit-scrollbar:active {
+.source::-webkit-scrollbar:active, .scrollbar::-webkit-scrollbar:active {
   width: 5px;
+  height: 5px;
 }
-#toc::-webkit-scrollbar-button {
+.source::-webkit-scrollbar-button, .scrollbar::-webkit-scrollbar-button {
   width: 0;
   height: 0;
 }
-#toc::-webkit-scrollbar-thumb {
+.source::-webkit-scrollbar-thumb, .scrollbar::-webkit-scrollbar-thumb {
   background: #428bca;
   border: 0 none #ffffff;
   border-radius: 15px;
 }
-#toc::-webkit-scrollbar-thumb:hover {
+.source::-webkit-scrollbar-thumb:hover, .scrollbar::-webkit-scrollbar-thumb:hover {
   background: #2a6496;
   width: 5px;
+  height: 5px;
 }
-#toc::-webkit-scrollbar-thumb:active {
+.source::-webkit-scrollbar-thumb:active, .scrollbar::-webkit-scrollbar-thumb:active {
   background: #2a6496;
   width: 5px;
+  height: 5px;
 }
-#toc::-webkit-scrollbar-track {
+.source::-webkit-scrollbar-track, .scrollbar::-webkit-scrollbar-track {
   background: transparent;
   border: 0 none #ffffff;
   border-radius: 15px;
 }
-#toc::-webkit-scrollbar-corner {
+.source::-webkit-scrollbar-corner, .scrollbar::-webkit-scrollbar-corner {
   background: transparent;
 }
 

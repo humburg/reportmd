@@ -5,12 +5,6 @@ panel_types <- c("source" = "panel-primary",
                  "warning" = "panel-warning",
                  "error" = "panel-danger")
 
-button_types <- c("source" = "btn-primary",
-                  "output" = "btn-success",
-                  "message" = "btn-info",
-                  "warning" = "btn-warning",
-                  "error" = "btn-danger")
-
 #' Writing Complex Scientific Reports in R
 #'
 #' An R Markdown document format for multi-part reports.

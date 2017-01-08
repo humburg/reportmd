@@ -34,9 +34,6 @@ multi_document <- function(theme = NULL, highlight = NULL, pandoc_args = NULL, .
       html_dependency_hljs(highlight),
       html_dependency_magnific_popup(),
       html_dependency_navigation(),
-      html_dependency_jScrollPane(),
-      html_dependency_mouse_wheel(),
-      html_dependency_mw_intent(),
       html_dependency_multi()
     ),
     template =
@@ -97,28 +94,6 @@ html_dependency_navigation <- function(){
                             script = "tabsets.js")
 }
 
-## JS dependencies for jScrollPane
-## This is used to provide styled scrollbars in non webkit browsers
-html_dependency_jScrollPane <- function(){
-  htmltools::htmlDependency(name="jScrollPane",
-                            version="2.0.23",
-                            src=system.file(package='reportMD', "rmarkdown/rmd/jScrollPane/"),
-                            script="jquery.jscrollpane.min.js")
-}
-
-html_dependency_mouse_wheel <- function(){
-  htmltools::htmlDependency(name="MouseWheel",
-                            version="3.1.12",
-                            src=system.file(package='reportMD', "rmarkdown/rmd/jScrollPane/"),
-                            script="jquery.mousewheel.js")
-}
-
-html_dependency_mw_intent <- function(){
-  htmltools::htmlDependency(name="MouseWheelIntent",
-                            version="1.2",
-                            src=system.file(package='reportMD', "rmarkdown/rmd/jScrollPane/"),
-                            script="mwheelIntent.js")
-}
 
 generate_panel <- function(engine, name, label, x, show){
   tags$div(class=c("panel", panel_types[name]),

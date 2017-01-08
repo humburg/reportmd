@@ -41,10 +41,4 @@ $(function() {
 
   /* Activate tooltips */
   $('[data-toggle="tooltip"]').tooltip({container:'body'});
-
-  /* Activate styled scrollbars for non-webkit browsers */
-  var isWebkit = /WebKit/.test(navigator.userAgent) && !/Edge/.test(navigator.userAgent);
-  if (!isWebkit) {
-    $('.scrollbar').jScrollPane();
-  }
 });

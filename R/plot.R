@@ -168,11 +168,11 @@ figRef <- local({
         created[label] <<- TRUE
         caption <- eval(caption)
         index(label, knitr::current_input(), paste(prefix, i), caption, type="figure")
-        result <- paste0(prefix.highlight, prefix, " ", i, sep, prefix.highlight,
+        result <- paste0(prefix.highlight, prefix, "&nbsp;", i, sep, prefix.highlight,
                          " ", caption)
       } else {
         used[label] <<- TRUE
-        result <- paste(prefix, tag[label])
+        result <- paste(prefix, tag[label], sep="&nbsp;")
         result <- paste0('[', result, '](#', knitr::opts_chunk$get('fig.lp'), label, ')')
       }
     }
@@ -216,11 +216,11 @@ tabRef <- local({
       if (!missing(caption)) {
         created[label] <<- TRUE
         index(label, knitr::current_input(), paste(prefix, i), caption, type="table")
-        result <- paste0(prefix.highlight, prefix, " ", i, sep, prefix.highlight,
+        result <- paste0(prefix.highlight, prefix, "&nbsp;", i, sep, prefix.highlight,
                " ", eval(caption))
       } else {
         used[label] <<- TRUE
-        result <- paste(prefix, tag[label])
+        result <- paste(prefix, tag[label], sep="&nbsp;")
         result <- paste0('[', result, '](#tab:', label, ')')
       }
     }

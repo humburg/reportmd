@@ -67,6 +67,9 @@ pre code {
   position: fixed;
   overflow-y: auto;
   max-height: 85vh;
+  border-style: solid;
+  border-width: 1px;
+  border-color: lightgrey;
 }
 
 /*
@@ -99,18 +102,18 @@ pre code {
 .sidebar ul > li > a {
   display: block;
   padding: 5px 20px;
+  color: #333;
 }
 .sidebar ul > li > a:hover,
 .sidebar ul > li > a:focus {
   text-decoration: none;
-  border-left: 1px solid;
+  background-color: lightgrey;
 }
 .sidebar ul > .active > a,
 .sidebar ul > .active:hover > a,
 .sidebar ul > .active:focus > a {
-  font-weight: bold;
-  background-color: transparent;
-  border-left: 1px solid;
+  background-color: #428bca;
+  color: white;
 }
 
 /* Nav: second level (shown on .active) */

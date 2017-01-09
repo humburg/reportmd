@@ -14,7 +14,7 @@ dependency_source <- function(deps){
 #' @importFrom knitr opts_knit
 dependency_output <- function(source){
   out_ext <- c(latex='pdf', html='html', markdown='md', jerkyll='html')
-  format <- knitr::opts_knit$get('rmarkdown.pandoc.to')
+  format <- 'html'
   prefix <- sub("\\.[^.]+$", "", source)
   paste(prefix, out_ext[format], sep='.')
 }
@@ -26,16 +26,15 @@ dependency_subdir <- function(source, type){
 
 #' Extract dependency information from YAML header
 #'
-#' @param params List of document parameters
+#' @param deps List of dependencies
 #'
 #' @return A list of \code{Dependency} objects
 #' @author Peter Humburg
 #' @export
-params2deps <- function(params){
-  if(is.null(params$depends)){
+params2deps <- function(deps){
+  if(is.null(deps)){
     return(list())
   }
-  deps <- params$depends
   docs <- dependency_source(deps)
   mapply(Dependency, label=names(deps), source=docs, SIMPLIFY=FALSE)
 }
@@ -75,8 +74,6 @@ update_dependency <- function(dep){
 #' @author Peter Humburg
 load_dependencies <- function(deps, where=knitr::knit_global()){
   for(d in deps){
-    update_dependency(d)
-
     ## identify files to load
     chunks <- d$chunks
     if(!length(chunks)) next

@@ -20,7 +20,7 @@ plot_formats <- c(screen='png', print='pdf', interactive='png')
 #' @author Peter Humburg
 #' @importFrom plotly ggplotly
 #' @export
-plotMD <- function(fig, format=knitr::opts_current$get('format')){
+plotMD <- function(fig, format=knitr::opts_current$get('fig_format')){
   format <- match.arg(format, c('screen', 'print', 'interactive'), several.ok=TRUE)
   if(format[1] == 'interactive') {
     plotly::ggplotly(fig)

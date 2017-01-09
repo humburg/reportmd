@@ -4,7 +4,8 @@
 \alias{multi_document}
 \title{Writing Complex Scientific Reports in R}
 \usage{
-multi_document(theme = NULL, highlight = NULL, pandoc_args = NULL, ...)
+multi_document(theme = NULL, highlight = NULL, pandoc_args = NULL,
+  fig_format = c("screen", "print"), fig_download = TRUE, ...)
 }
 \arguments{
 \item{theme}{Visual theme to use for styling of the html output}
@@ -12,6 +13,11 @@ multi_document(theme = NULL, highlight = NULL, pandoc_args = NULL, ...)
 \item{highlight}{Visual style to use for Syntax highlighting}
 
 \item{pandoc_args}{Arguments to be passed to pandoc}
+
+\item{fig_format}{Default format(s) for figures}
+
+\item{fig_download}{Logical indicating whether a download link should be added to
+figure captions.}
 
 \item{...}{Additional arguments are passed to rmarkdown::html_document}
 }

@@ -14,17 +14,20 @@ panel_types <- c("source" = "panel-primary",
 #' @param theme Visual theme to use for styling of the html output
 #' @param highlight Visual style to use for Syntax highlighting
 #' @param pandoc_args Arguments to be passed to pandoc
+#' @param fig_format Default format(s) for figures
+#' @param fig_download Logical indicating whether a download link should be added to
+#'     figure captions.
 #' @param ... Additional arguments are passed to rmarkdown::html_document
 #' @importFrom rmarkdown html_dependency_jquery
 #' @export
-multi_document <- function(theme = NULL, highlight = NULL, pandoc_args = NULL, ...){
+multi_document <- function(theme = NULL, highlight = NULL, pandoc_args = NULL,
+                           fig_format=c('screen', 'print'), fig_download=TRUE, ...){
   theme <- theme %||% "default"
   highlight <- highlight %||% "default"
   pandoc_args <- pandoc_args %||% c(
     "--variable",
     "mathjax-url:https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"
   )
-
   results <- rmarkdown::html_document(
     highlight = NULL,
     theme = NULL,
@@ -41,9 +44,31 @@ multi_document <- function(theme = NULL, highlight = NULL, pandoc_args = NULL, .
         package="reportMD", "rmarkdown/rmd/default.html"),
     pandoc_args = check_pandoc_args(pandoc_args), ...)
 
+  ff <- character()
+  for(format in fig_format){
+    ff <- union(ff, plot_formats[format])
+  }
+
+  fig_download_text <- ''
+  if(length(fig_format) > 1 && 'print' %in% fig_format && isTRUE(fig_download)){
+    fig_download_text <- '(Download as [PDF](%PATH%))'
+  }
+
+  args <- list(...)
+  deps <- NULL
+  if('depends' %in% names(args)){
+    deps <- params2deps(args$depends)
+    for(d in deps){
+      update_dependency(d)
+    }
+    copy_dependencies(deps)
+  }
+
   results$knitr <- list(
-    opts_chunk = list(tidy=TRUE, highlight=FALSE, cache=TRUE,
-                      hold=TRUE, hide.fig.code=TRUE),
+    opts_knit = list(reportmd.index=list(figure=matrix(ncol=4, nrow=0), table=matrix(ncol=4, nrow=0)),
+                     loaded_chunks=list(), dependencies=deps),
+    opts_chunk = list(tidy=FALSE, highlight=FALSE, cache=TRUE, dev=ff, fig_format=fig_format,
+                      hold=TRUE, hide.fig.code=TRUE, fig_download=fig_download_text),
     knit_hooks = multi_knit_hooks(),
     opts_hooks = multi_opts_hooks()
   )
@@ -101,6 +126,7 @@ generate_panel <- function(engine, name, label, x, show){
   )
 }
 
+#' @importFrom knitr opts_current
 multi_knit_hooks <- function() {
   html_hook <- function(name) {
     force(name)
@@ -113,7 +139,7 @@ multi_knit_hooks <- function() {
                      warning = (options[["bootstrap.show.warning"]] <- options[["bootstrap.show.warning"]] %||% TRUE),
                      error = (options[["bootstrap.show.error"]] <- options[["bootstrap.show.error"]] %||% TRUE),
                      TRUE)
-      generate_panel(options$engine, name, opts_current$get("label"), x, !show)
+      generate_panel(options$engine, name, knitr::opts_current$get("label"), x, !show)
     }
   }
   c(

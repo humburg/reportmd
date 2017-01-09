@@ -20,8 +20,7 @@
 #'
 #' @rdname figure-hooks
 fig.cap_chunk_hook <- function(before, options, envir) {
-  global_fmt <- options('reportmd.figure.format') %||% list('screen')
-  fmt <- options$format %||% global_fmt[[1]]
+  fmt <- options$fig_format %||% list('screen')
   if(fmt[1] == 'interactive'){
     if(before){
       paste0('<div id="', knitr::opts_chunk$get('fig.lp'), options$label, '" class="figure">')
@@ -51,8 +50,7 @@ tab.cap_chunk_hook <- function(before, options, envir) {
 #' @export
 #' @rdname figure-hooks
 fig.cap_opts_hook <- function(options){
-  global_fmt <- options('reportmd.figure.format')[[1]]
-  fmt <- options$format %||% global_fmt
+  fmt <- options$fig_format %||% list('screen')
   options(reportmd.figure.current=fmt)
 
   options$fig.cap = figRef(options$label, options$fig.cap)
@@ -122,8 +120,8 @@ dependson_opts_hook <- function(options){
 
 format_opts_hook <- function(options){
   general_opts <- c('fig.width', 'fig.height', 'out.width', 'out.height', 'out.extra', 'dpi')
-  options$dev <- plot_formats[options$format]
-  dev_opts <- lapply(options$format, function(x )figureOptions(format=x))
+  options$dev <- plot_formats[options$fig_format]
+  dev_opts <- lapply(options$fig_format, function(x )figureOptions(format=x))
   opts <- lapply(dev_opts, function(x, general) x[general], general_opts)
   opts <- Reduce(function(x, y) mapply(`%||%`, x, y, SIMPLIFY=FALSE), opts)
   opts <- opts[!sapply(opts, is.null)]

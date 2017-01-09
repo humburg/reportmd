@@ -7,13 +7,10 @@ output:
     toc: true
     fig_caption: true
     highlight: zenburn
+    depends:
+      part1: part1.Rmd
 params:
   version: !r if(nchar(Sys.which('git'))) system("git describe --long --dirty --abbrev=10 --tags --always", intern=TRUE) else date()
-  format: !r if(opts_knit$get("rmarkdown.pandoc.to") == 'html') c('screen', 'print') else 'print'
-  fig_download: true
-  depends:
-    value:
-      part1: part1.Rmd
 ---
 
 ```{r loadPackages, include=FALSE, cache=FALSE}
@@ -25,20 +22,12 @@ library(ggplot2)
 library(plotly)
 ```
 
-```{r dependencies, include=FALSE, cache=FALSE}
-## Ensure required results from child documents are available
-reportMD::setup(params)
-```
-
 ```{r setup, include=FALSE, cache=FALSE}
 ## This chunk should contain global configuration commands.
 ## Use this to set knitr options and related things. Everything
 ## in this chunk will be included in an appendix to document the
 ## configuration used.
 
-## Figure options
-## Set default figure format
-options(reportmd.figure.format=params$format)
 
 ## Set up default plotting options for different formats.
 ## These can be overwritten for individual chunks

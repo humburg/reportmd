@@ -53,7 +53,7 @@ options(tabcap.prefix = "Table", tabcap.sep = ":", tabcap.prefix.highlight = "**
 
 # Analysis
 This is the second part of the multi-part data analysis document. Here we'll use
-the pre-processed dataset produced in Part 1 for a basic analysis.
+the pre-processed dataset produced in [Part 1][part1] for a basic analysis.
 
 ```{r prepBoxplot, dependson='part1:origin'}
 box_fig <- ggplot(ext_cars, aes(x=origin, y=mpg)) + geom_boxplot() + theme_bw()
@@ -66,7 +66,7 @@ in the miles per gallon achieved by US and international cars (`r figRef("boxplo
 plotMD(box_fig)
 ```
 
-An reasonable initial hypothesis for why this might be the case is that US built
+A reasonable initial hypothesis for why this might be the case is that US built
 cars may tend to be larger (and therefore heavier) and have larger engines.
 As it turns out car weight and engine displacement are highly correlated 
 ($\rho$ = `r printMD(cor(mtcars$disp, mtcars$wt), digits=2)`), so we'll

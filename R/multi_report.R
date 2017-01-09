@@ -66,7 +66,9 @@ multi_document <- function(theme = NULL, highlight = NULL, pandoc_args = NULL,
 
   results$knitr <- list(
     opts_knit = list(reportmd.index=list(figure=matrix(ncol=4, nrow=0), table=matrix(ncol=4, nrow=0)),
-                     loaded_chunks=list(), dependencies=deps),
+                     loaded_chunks=list(), dependencies=deps, figcap.prefix="Figure",
+                     figcap.sep = ":", figcap.prefix.highlight = "**",
+                     tabcap.prefix = "Table", tabcap.sep = ":", tabcap.prefix.highlight = "**"),
     opts_chunk = list(tidy=FALSE, highlight=FALSE, cache=TRUE, dev=ff, fig_format=fig_format,
                       hold=TRUE, hide.fig.code=TRUE, fig_download=fig_download_text),
     knit_hooks = multi_knit_hooks(),

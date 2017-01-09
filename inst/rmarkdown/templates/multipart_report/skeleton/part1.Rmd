@@ -35,10 +35,6 @@ printFig()
 ## Pander options
 panderOptions("digits", 3)
 panderOptions("table.split.table", 160)
-
-## Configure Figure and Table lables
-options(figcap.prefix = "Figure", figcap.sep = ":", figcap.prefix.highlight = "**")
-options(tabcap.prefix = "Table", tabcap.sep = ":", tabcap.prefix.highlight = "**")
 ```
 
 ```{r functions, include=FALSE}

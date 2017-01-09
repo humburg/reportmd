@@ -128,10 +128,11 @@ figureOptions <- function(..., format){
 #' figure is returned.
 #' @export
 #' @importFrom knitr opts_chunk
+#' @importFrom knitr opts_knit
 #' @author Peter Humburg
 #' @examples
-#' options(figcap.prefix='Figure')
-#' options(figcap.prefix.highlight='**')
+#' knitr::opts_knit$set('figcap.prefix','Figure')
+#' knitr::opts_knit$set('figcap.prefix.highlight', '**')
 #'
 #' figRef('foo', 'A test caption')
 #' figRef('foo')
@@ -139,13 +140,14 @@ figRef <- local({
   tag <- numeric()
   created <- logical()
   used <- logical()
-  function(label, caption, target, prefix = options("figcap.prefix"),
-           sep = options("figcap.sep"), prefix.highlight = options("figcap.prefix.highlight")) {
+  function(label, caption, target, prefix = knitr::opts_knit$get("figcap.prefix"),
+           sep = knitr::opts_knit$get("figcap.sep"),
+           prefix.highlight = knitr::opts_knit$get("figcap.prefix.highlight")) {
     if(!missing(target)){
       if(!missing(caption)){
         stop("Can't set caption for Figure in external file '", target$label, "'.")
       }
-      target <- opts_knit$get('dependencies')[[target]]
+      target <- knitr::opts_knit$get('dependencies')[[target]]
       idx <- get_index(target, 'figure')
       idx <- subset(idx, V1 == label & V2 == target$label)
       if(nrow(idx) == 1){
@@ -188,13 +190,14 @@ tabRef <- local({
   tag <- numeric()
   created <- logical()
   used <- logical()
-  function(label, caption, target, prefix = options("tabcap.prefix"),
-           sep = options("tabcap.sep"), prefix.highlight = options("tabcap.prefix.highlight")) {
+  function(label, caption, target, prefix = knitr::opts_knit$get("tabcap.prefix"),
+           sep = knitr::opts_knit$get("tabcap.sep"),
+           prefix.highlight = knitr::opts_knit$get("tabcap.prefix.highlight")) {
     if(!missing(target)){
       if(!missing(caption)){
         stop("Can't set caption for Table in external file '", target$label, "'.")
       }
-      target <- opts_knit$get('dependencies')[[target]]
+      target <- knitr::opts_knit$get('dependencies')[[target]]
       idx <- get_index(target, 'table')
       idx <- subset(idx, V1 == label & V2 == target$label)
       if(nrow(idx) == 1){

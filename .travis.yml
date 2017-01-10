@@ -3,7 +3,5 @@ cache: packages
 r:
   - release
   - devel
-r_github_packages:
-  - ropensci/plotly
 pandoc_version: 1.17.0.2
 warnings_are_errors: true

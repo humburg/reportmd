@@ -28,13 +28,6 @@ library(plotly)
 ## in this chunk will be included in an appendix to document the
 ## configuration used.
 
-
-## Set up default plotting options for different formats.
-## These can be overwritten for individual chunks
-interactiveFig()
-screenFig()
-printFig()
-
 ## Pander options
 panderOptions("digits", 3)
 panderOptions("table.split.table", 160)

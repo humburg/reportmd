@@ -43,7 +43,6 @@ multi_document <- function(theme = NULL, highlight = NULL, pandoc_args = NULL,
       system.file(
         package="reportMD", "rmarkdown/rmd/default.html"),
     pandoc_args = check_pandoc_args(pandoc_args), ...)
-
   ff <- character()
   for(format in fig_format){
     ff <- union(ff, plot_formats[format])
@@ -70,7 +69,11 @@ multi_document <- function(theme = NULL, highlight = NULL, pandoc_args = NULL,
                      figcap.sep = ":", figcap.prefix.highlight = "**",
                      tabcap.prefix = "Table", tabcap.sep = ":", tabcap.prefix.highlight = "**"),
     opts_chunk = list(tidy=FALSE, highlight=FALSE, cache=TRUE, dev=ff, fig_format=fig_format,
-                      hold=TRUE, hide.fig.code=TRUE, fig_download=fig_download_text),
+                      hold=TRUE, hide.fig.code=TRUE, fig_download=fig_download_text,
+                      fig.width=8, fig.height=8, dpi=300,
+                      reportmd.figure.interactive=list(out.width='800px', out.height='600px'),
+                      reportmd.figure.screen=list(fig.width=8, fig.height=8, dpi=300),
+                      reportmd.figure.print=list(fig.width=8, fig.height=8, dpi=300)),
     knit_hooks = multi_knit_hooks(),
     opts_hooks = multi_opts_hooks()
   )
@@ -159,5 +162,5 @@ multi_opts_hooks <- function() {
   list(fig.cap=fig.cap_opts_hook,
        tab.cap=tab.cap_opts_hook,
        dependson=dependson_opts_hook,
-       format=format_opts_hook)
+       fig_format=format_opts_hook)
 }

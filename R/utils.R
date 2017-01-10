@@ -21,6 +21,8 @@
 #' @export
 merge_list <- function(x,y){
   if(!is.null(y) && length(y)){
+    exclude <- names(y) %in% names(x) & sapply(y, is.null)
+    y <- y[!exclude]
     x[names(y)] <- y
   }
   x

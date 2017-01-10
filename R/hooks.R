@@ -51,7 +51,7 @@ tab.cap_chunk_hook <- function(before, options, envir) {
 #' @rdname figure-hooks
 fig.cap_opts_hook <- function(options){
   fmt <- options$fig_format %||% list('screen')
-  options(reportmd.figure.current=fmt)
+  options$reportmd.figure.current=fmt
 
   options$fig.cap = figRef(options$label, options$fig.cap)
   if(length(options$fig_download) && 'print' %in% fmt && length(fmt) > 1){
@@ -68,7 +68,11 @@ fig.cap_opts_hook <- function(options){
     options$warning <- FALSE
   }
 
-  opts <- options(paste('reportmd', 'figure', fmt, sep='.'))[[1]]
+  opts <- knitr::opts_chunk$get(paste('reportmd', 'figure', fmt, sep='.'))
+  if(length(fmt) == 1){
+    opts <- list(opts)
+    names(opts) <- paste('reportmd', 'figure', fmt, sep='.')
+  }
   opts <- merge_list(opts, options)
   opts
 }

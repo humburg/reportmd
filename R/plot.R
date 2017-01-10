@@ -23,7 +23,11 @@ plot_formats <- c(screen='png', print='pdf', interactive='png')
 plotMD <- function(fig, format=knitr::opts_current$get('fig_format')){
   format <- match.arg(format, c('screen', 'print', 'interactive'), several.ok=TRUE)
   if(format[1] == 'interactive') {
-    plotly::ggplotly(fig)
+    width <- knitr::opts_current$get('out.width')
+    width <- as.integer(stringr::str_replace(width, 'px', ''))
+    height <- knitr::opts_current$get('out.height')
+    height <- as.integer(stringr::str_replace(height, 'px', ''))
+    plotly::ggplotly(fig, width=width, height=height)
   }else {
     fig
   }
@@ -82,13 +86,12 @@ figureOptions <- function(..., format){
   target = paste('reportmd', 'figure', format, sep='.')
   dots <- list(...)
   if(length(dots)){
-    dots <- merge_list(dots, options(target)[[1]])
+    dots <- merge_list(dots, knitr::opts_chunk$get(target))
     arg <- list(dots)
     names(arg) <- target
     do.call(knitr::opts_chunk$set, dots)
-    do.call(options, arg)[[1]]
   } else{
-    options(target)[[1]]
+    knitr::opts_chunk$get(target)
   }
 }
 

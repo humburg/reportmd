@@ -108,12 +108,12 @@ pre code {
 .sidebar ul > .active > ul > li > a,
 .sidebar ul > .active:hover > ul > li > a,
 .sidebar ul > .active:focus > ul > li > a {
-  background-color: #f5f5f5;
+  background-color: #f8f8f8;
 }
 .sidebar ul > li > a:hover,
 .sidebar ul > li > a:focus {
-  color: white !important;
-  background-color: #ccc !important;
+  color: #2a6496 !important;
+  background-color: #eee !important;
 }
 .sidebar ul > .active > a,
 .sidebar ul > .active:hover > a,

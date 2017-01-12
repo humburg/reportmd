@@ -40,7 +40,7 @@ plotMD <- function(fig, format=knitr::opts_current$get('fig_format')){
 #' @return A list with the previous set of options is returned invisibly.
 #' @author Peter Humburg
 #' @export
-interactiveFig <- function(out.width='800px', out.height='600px', ...){
+interactiveFig <- function(out.width='700px', out.height='600px', ...){
   opts <- c(list(out.width=out.width, out.height=out.height),
             list(...), list(format='interactive'))
   do.call(figureOptions, opts)

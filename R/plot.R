@@ -22,15 +22,18 @@ plot_formats <- c(screen='png', print='pdf', interactive='png')
 #' @export
 plotMD <- function(fig, format=knitr::opts_current$get('fig_format')){
   format <- match.arg(format, c('screen', 'print', 'interactive'), several.ok=TRUE)
-  if(format[1] == 'interactive') {
+  fig_out <- fig
+  if('interactive' %in% format) {
     width <- knitr::opts_current$get('out.width')
     width <- as.integer(stringr::str_replace(width, 'px', ''))
     height <- knitr::opts_current$get('out.height')
     height <- as.integer(stringr::str_replace(height, 'px', ''))
-    plotly::ggplotly(fig, width=width, height=height)
-  }else {
-    fig
+    fig_out <- plotly::ggplotly(fig, width=width, height=height)
+    if('screen' %in% format){
+      print(fig)
+    }
   }
+  fig_out
 }
 
 #' Set figure related chunk options for interactive figures

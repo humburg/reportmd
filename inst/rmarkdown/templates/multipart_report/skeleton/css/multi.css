@@ -63,6 +63,26 @@ pre code {
   background: white;
 }
 
+.plotly-fallback{
+ display: block;
+}
+.responsive > .figure{
+ display: none;
+}
+
+@media screen and (min-width: 992px) {
+ .plotly-fallback{
+   display: none;
+ }
+ .responsive > .figure{
+   display: block;
+   text-align: center;
+ }
+ .responsive > .figure > .plotly{
+   margin: auto;
+ }
+}
+
 #toc {
   position: fixed;
   overflow-y: auto;
@@ -168,7 +188,7 @@ pre code {
     margin-bottom: 0;
   }
 }
-@media screen and (min-width: 1200px) {
+@media screen and (min-width: 1380px) {
   /* Widen the fixed sidebar again */
   .sidebar.affix-bottom,
   .sidebar.affix {

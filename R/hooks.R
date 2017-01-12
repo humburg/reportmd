@@ -21,9 +21,13 @@
 #' @rdname figure-hooks
 fig.cap_chunk_hook <- function(before, options, envir) {
   fmt <- options$fig_format %||% list('screen')
-  if(fmt[1] == 'interactive'){
+  if('interactive' %in% fmt){
     if(before){
-      paste0('<div id="', knitr::opts_chunk$get('fig.lp'), options$label, '" class="figure">')
+      if('screen' %in% fmt){
+        paste0('<div id="', knitr::opts_chunk$get('fig.lp'), options$label, '" class="figure responsive">')
+      } else {
+        paste0('<div id="', knitr::opts_chunk$get('fig.lp'), options$label, '" class="figure">')
+      }
     } else{
       options(reportmd.figure.current=NULL)
       paste0("</div>")
@@ -124,6 +128,12 @@ dependson_opts_hook <- function(options){
 
 format_opts_hook <- function(options){
   general_opts <- c('fig.width', 'fig.height', 'out.width', 'out.height', 'out.extra', 'dpi')
+  if('interactive' %in% options$fig_format){
+    options$fig_format <- union(options$fig_format, 'screen')
+    if(length(options$fig_download)){
+      options$fig_format <- union(options$fig_format, 'print')
+    }
+  }
   options$dev <- plot_formats[options$fig_format]
   dev_opts <- lapply(options$fig_format, function(x )figureOptions(format=x))
   opts <- lapply(dev_opts, function(x, general) x[general], general_opts)
@@ -174,7 +184,11 @@ bootstrap_plot_hook <- function(x, options) {
     if(options$fig.show != "hold"){
       fig <- paste0("\n\n", fig, "\n\n")
     }
-    return(tags$div(class = c("row", "text-center"), fig))
+    classes <- c("row", "text-center")
+    if('interactive' %in% options$fig_format){
+      classes <- c(classes, 'plotly-fallback')
+    }
+    return(tags$div(class = classes, fig))
   }
   thumbnail_plot_hook(x, options)
 }
@@ -191,9 +205,12 @@ thumbnail_plot_hook <- function(x, options){
   if (options$fig.show == "hold"){
     fig <- tags$div(class=thumbnail_size, fig)
   } else{ #only one figure from this code block so center it
-    fig <- tags$div(class = c("figure", calc_offset(thumbnail_size),
-                              thumbnail_size), id=add_anchor(options[["label"]], prefix=knitr::opts_chunk$get('fig.lp')), fig, caption)
-    fig <- tags$div(class = c("row"), fig)
+    classes <- c("figure", calc_offset(thumbnail_size), thumbnail_size)
+    if('interactive' %in% options$fig_format){
+      classes <- c(classes, 'plotly-fallback')
+    }
+    fig <- tags$div(class = classes, id=add_anchor(options[["label"]], prefix=knitr::opts_chunk$get('fig.lp')), fig, caption)
+    fig <- tags$div(class = "row", fig)
   }
   fig
 }

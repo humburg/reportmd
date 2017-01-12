@@ -6,7 +6,7 @@ output:
   reportMD::multi_document:
     toc: true
     fig_caption: true
-    highlight: zenburn
+    highlight: atom-one-dark
 params:
   version: !r if(nchar(Sys.which('git'))) system("git describe --long --dirty --abbrev=10 --tags --always", intern=TRUE) else date()
 ---

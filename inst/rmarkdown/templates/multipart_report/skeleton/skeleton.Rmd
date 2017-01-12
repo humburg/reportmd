@@ -6,7 +6,7 @@ output:
   reportMD::multi_document:
     toc: true
     fig_caption: true
-    highlight: zenburn
+    highlight: atom-one-dark
     depends:
       part1: part1.Rmd
       part2: part2.Rmd

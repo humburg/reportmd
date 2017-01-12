@@ -95,10 +95,10 @@ html_dependency_bootstrap3 <- function(theme) {
 
 html_dependency_hljs <- function(highlight) {
   htmltools::htmlDependency(name = "highlightjs",
-                            version = "8.2",
+                            version = "9.9",
                             src = system.file(package="reportMD", "rmarkdown/rmd/highlightjs/"),
                             script = "highlight.pack.js",
-                            stylesheet=paste0("highlight/", highlight, ".css"))
+                            stylesheet=paste0("styles/", highlight, ".css"))
 }
 
 html_dependency_multi <- function() {

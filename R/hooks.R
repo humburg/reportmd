@@ -58,7 +58,7 @@ fig.cap_opts_hook <- function(options){
   options$reportmd.figure.current=fmt
 
   options$fig.cap = figRef(options$label, options$fig.cap)
-  if(length(options$fig_download) && 'print' %in% fmt && length(fmt) > 1){
+  if(length(options$fig_download) && ('print' %in% fmt && length(fmt) > 1) || fmt == 'interactive'){
     download <- options$fig_download
     download <- stringr::str_replace(options$fig_download, stringr::fixed('%PATH%'),
                                      file.path(options$fig.path,

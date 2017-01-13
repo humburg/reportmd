@@ -20,13 +20,20 @@ plot_formats <- c(screen='png', print='pdf', interactive='png')
 #' @author Peter Humburg
 #' @importFrom plotly ggplotly
 #' @export
-plotMD <- function(fig, format=knitr::opts_current$get('format')){
+plotMD <- function(fig, format=knitr::opts_current$get('fig_format')){
   format <- match.arg(format, c('screen', 'print', 'interactive'), several.ok=TRUE)
-  if(format[1] == 'interactive') {
-    plotly::ggplotly(fig)
-  }else {
-    fig
+  fig_out <- fig
+  if('interactive' %in% format) {
+    width <- knitr::opts_current$get('out.width')
+    width <- as.integer(stringr::str_replace(width, 'px', ''))
+    height <- knitr::opts_current$get('out.height')
+    height <- as.integer(stringr::str_replace(height, 'px', ''))
+    fig_out <- plotly::ggplotly(fig, width=width, height=height)
+    if('screen' %in% format){
+      print(fig)
+    }
   }
+  fig_out
 }
 
 #' Set figure related chunk options for interactive figures
@@ -36,7 +43,7 @@ plotMD <- function(fig, format=knitr::opts_current$get('format')){
 #' @return A list with the previous set of options is returned invisibly.
 #' @author Peter Humburg
 #' @export
-interactiveFig <- function(out.width='800px', out.height='600px', ...){
+interactiveFig <- function(out.width='700px', out.height='600px', ...){
   opts <- c(list(out.width=out.width, out.height=out.height),
             list(...), list(format='interactive'))
   do.call(figureOptions, opts)
@@ -82,13 +89,12 @@ figureOptions <- function(..., format){
   target = paste('reportmd', 'figure', format, sep='.')
   dots <- list(...)
   if(length(dots)){
-    dots <- merge_list(dots, options(target)[[1]])
+    dots <- merge_list(dots, knitr::opts_chunk$get(target))
     arg <- list(dots)
     names(arg) <- target
     do.call(knitr::opts_chunk$set, dots)
-    do.call(options, arg)[[1]]
   } else{
-    options(target)[[1]]
+    knitr::opts_chunk$get(target)
   }
 }
 
@@ -128,10 +134,11 @@ figureOptions <- function(..., format){
 #' figure is returned.
 #' @export
 #' @importFrom knitr opts_chunk
+#' @importFrom knitr opts_knit
 #' @author Peter Humburg
 #' @examples
-#' options(figcap.prefix='Figure')
-#' options(figcap.prefix.highlight='**')
+#' knitr::opts_knit$set('figcap.prefix','Figure')
+#' knitr::opts_knit$set('figcap.prefix.highlight', '**')
 #'
 #' figRef('foo', 'A test caption')
 #' figRef('foo')
@@ -139,13 +146,14 @@ figRef <- local({
   tag <- numeric()
   created <- logical()
   used <- logical()
-  function(label, caption, target, prefix = options("figcap.prefix"),
-           sep = options("figcap.sep"), prefix.highlight = options("figcap.prefix.highlight")) {
+  function(label, caption, target, prefix = knitr::opts_knit$get("figcap.prefix"),
+           sep = knitr::opts_knit$get("figcap.sep"),
+           prefix.highlight = knitr::opts_knit$get("figcap.prefix.highlight")) {
     if(!missing(target)){
       if(!missing(caption)){
         stop("Can't set caption for Figure in external file '", target$label, "'.")
       }
-      target <- opts_knit$get('dependencies')[[target]]
+      target <- knitr::opts_knit$get('dependencies')[[target]]
       idx <- get_index(target, 'figure')
       idx <- subset(idx, V1 == label & V2 == target$label)
       if(nrow(idx) == 1){
@@ -168,11 +176,11 @@ figRef <- local({
         created[label] <<- TRUE
         caption <- eval(caption)
         index(label, knitr::current_input(), paste(prefix, i), caption, type="figure")
-        result <- paste0(prefix.highlight, prefix, " ", i, sep, prefix.highlight,
+        result <- paste0(prefix.highlight, prefix, "&nbsp;", i, sep, prefix.highlight,
                          " ", caption)
       } else {
         used[label] <<- TRUE
-        result <- paste(prefix, tag[label])
+        result <- paste(prefix, tag[label], sep="&nbsp;")
         result <- paste0('[', result, '](#', knitr::opts_chunk$get('fig.lp'), label, ')')
       }
     }
@@ -188,13 +196,14 @@ tabRef <- local({
   tag <- numeric()
   created <- logical()
   used <- logical()
-  function(label, caption, target, prefix = options("tabcap.prefix"),
-           sep = options("tabcap.sep"), prefix.highlight = options("tabcap.prefix.highlight")) {
+  function(label, caption, target, prefix = knitr::opts_knit$get("tabcap.prefix"),
+           sep = knitr::opts_knit$get("tabcap.sep"),
+           prefix.highlight = knitr::opts_knit$get("tabcap.prefix.highlight")) {
     if(!missing(target)){
       if(!missing(caption)){
         stop("Can't set caption for Table in external file '", target$label, "'.")
       }
-      target <- opts_knit$get('dependencies')[[target]]
+      target <- knitr::opts_knit$get('dependencies')[[target]]
       idx <- get_index(target, 'table')
       idx <- subset(idx, V1 == label & V2 == target$label)
       if(nrow(idx) == 1){
@@ -216,11 +225,11 @@ tabRef <- local({
       if (!missing(caption)) {
         created[label] <<- TRUE
         index(label, knitr::current_input(), paste(prefix, i), caption, type="table")
-        result <- paste0(prefix.highlight, prefix, " ", i, sep, prefix.highlight,
+        result <- paste0(prefix.highlight, prefix, "&nbsp;", i, sep, prefix.highlight,
                " ", eval(caption))
       } else {
         used[label] <<- TRUE
-        result <- paste(prefix, tag[label])
+        result <- paste(prefix, tag[label], sep="&nbsp;")
         result <- paste0('[', result, '](#tab:', label, ')')
       }
     }

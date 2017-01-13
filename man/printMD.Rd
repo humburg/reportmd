@@ -12,7 +12,8 @@ printMD(x, ...)
 
 \method{printMD}{default}(x, ...)
 
-\method{printMD}{double}(x, big.mark = ",", ...)
+\method{printMD}{double}(x, big.mark = ",",
+  digits = pander::panderOptions("digits"), ...)
 
 \method{printMD}{integer}(x, big.mark = ",", ...)
 
@@ -26,6 +27,8 @@ printMD(x, ...)
 
 \item{big.mark}{Separator used to mark intervals before the decimal point.}
 
+\item{digits}{Number of sinificant digits to display, passed to \code{format}}
+
 \item{format}{Format type to use.}
 }
 \value{
@@ -37,6 +40,7 @@ Pretty printing of R objects for Markdown output
 \examples{
 printMD(head(cars))
 printMD(10000)
+          printMD(10^6)
 printMD(10000L)
 }
 \author{

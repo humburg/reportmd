@@ -1,0 +1,237 @@
+/* make the left border larger to fit the collapse button */
+body {
+  position: relative;
+}
+.panel {
+  position: relative;
+}
+.code-chunk button {
+  background: none;
+  box-shadow: none;
+  top: 0;
+  border: 1px;
+  border-color: #858585;
+  border-radius: 3px;
+  border-style: solid;
+}
+
+.code-chunk > .panel {
+  border-left-width: 4px;
+}
+
+.collapsed div{
+  display: none;
+}
+
+.sidenote
+{
+  text-align: left;
+}
+
+@media screen and (min-width: 992px) {
+  .sidenote{
+    float: left;
+    margin-left: -70px;
+  }
+  #wrapper {
+    padding-left: 80px;
+  }
+  .code-chunk button{
+    width: 60px;
+  }
+}
+
+/* remove the border and margin for pre blocks */
+pre {
+  padding: 0;
+  border: 0;
+  margin: 0;
+  border-radius: 0;
+  overflow-x: auto;
+}
+
+pre code {
+  word-wrap: normal;
+  white-space: pre;
+}
+
+/* Magnific overrides to give transparent images a white background */
+.mfp-image img{
+  background: white;
+}
+.mfp-figure:after {
+  background: white;
+}
+
+.plotly-fallback{
+ display: block;
+}
+.responsive > .figure{
+ display: none;
+}
+
+@media screen and (min-width: 992px) {
+ .plotly-fallback{
+   display: none;
+ }
+ .responsive > .figure{
+   display: block;
+   text-align: center;
+ }
+ .responsive > .figure > .plotly{
+   margin: auto;
+ }
+}
+
+#toc {
+  position: fixed;
+  overflow-y: auto;
+  max-height: 85vh;
+  border-style: solid;
+  border-width: 1px;
+  border-color: lightgrey;
+  width: 100%;
+}
+
+/*
+ * Side navigation
+ *
+ * Scrollspy and affixed enhanced navigation to highlight sections and secondary
+ * sections of docs content.
+ */
+
+/* By default it's not affixed in mobile views, so undo that */
+.sidebar.affix {
+  position: static;
+  height: 90vh;
+}
+
+/* First level of nav */
+.sidenav {
+  margin-top: 30px;
+  margin-bottom: 30px;
+  padding-top:    10px;
+  padding-bottom: 10px;
+  border-radius: 5px;
+  background-color: white;
+}
+
+.sidenav ul{
+  list-style: none;
+}
+
+/* All levels of nav */
+.sidebar ul > li > a {
+  display: block;
+  padding: 5px 20px;
+  color: #333;
+}
+.sidebar ul > .active > ul > li > a,
+.sidebar ul > .active:hover > ul > li > a,
+.sidebar ul > .active:focus > ul > li > a {
+  background-color: #f8f8f8;
+}
+.sidebar ul > li > a:hover,
+.sidebar ul > li > a:focus {
+  color: #2a6496 !important;
+  background-color: #eee !important;
+}
+.sidebar ul > .active > a,
+.sidebar ul > .active:hover > a,
+.sidebar ul > .active:focus > a {
+  background-color: #428bca !important;
+  color: white !important;
+}
+
+
+
+/* Nav: second level (shown on .active) */
+.sidebar ul ul {
+  display: none; /* Hide by default, but at >768px, show it */
+  margin-bottom: 8px;
+}
+.sidebar ul ul > li > a {
+  padding-top:    3px;
+  padding-bottom: 3px;
+  padding-left: 30px;
+  font-size: 90%;
+}
+
+.sidebar ul ul ul > li > a {
+  padding-left: 40px;
+}
+.sidebar ul ul ul ul > li > a {
+  padding-left: 50px;
+}
+
+/* Show and affix the side nav when space allows it */
+@media screen and (min-width: 992px) {
+  .sidebar ul > .active > ul {
+    display: block;
+  }
+  /* Widen the fixed sidebar */
+  .sidebar.affix,
+  .sidebar.affix-bottom {
+    width: 213px;
+  }
+  .sidebar.affix-top,
+  .sidebar.affix {
+    position: fixed; /* Undo the static from mobile first approach */
+    top: 30px;
+  }
+  .sidebar.affix-bottom {
+    position: absolute; /* Undo the static from mobile first approach */
+  }
+  .sidebar.affix-bottom .sidenav,
+  .sidebar.affix .sidenav {
+    margin-top: 0;
+    margin-bottom: 0;
+  }
+}
+@media screen and (min-width: 1380px) {
+  /* Widen the fixed sidebar again */
+  .sidebar.affix-bottom,
+  .sidebar.affix {
+    width: 263px;
+  }
+}
+
+.source::-webkit-scrollbar, .scrollbar::-webkit-scrollbar {
+  width: 3px;
+  height: 3px;
+}
+.source::-webkit-scrollbar:hover, .scrollbar::-webkit-scrollbar:hover {
+  width: 5px;
+  height: 5px;
+}
+.source::-webkit-scrollbar:active, .scrollbar::-webkit-scrollbar:active {
+  width: 5px;
+  height: 5px;
+}
+.source::-webkit-scrollbar-button, .scrollbar::-webkit-scrollbar-button {
+  width: 0;
+  height: 0;
+}
+.source::-webkit-scrollbar-thumb, .scrollbar::-webkit-scrollbar-thumb {
+  background: #428bca;
+  border: 0 none #ffffff;
+  border-radius: 15px;
+}
+.source::-webkit-scrollbar-thumb:hover, .scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #2a6496;
+  width: 5px;
+  height: 5px;
+}
+.source::-webkit-scrollbar-thumb:active, .scrollbar::-webkit-scrollbar-thumb:active {
+  background: #2a6496;
+  width: 5px;
+  height: 5px;
+}
+.source::-webkit-scrollbar-track, .scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+  border: 0 none #ffffff;
+  border-radius: 15px;
+}
+.source::-webkit-scrollbar-corner, .scrollbar::-webkit-scrollbar-corner {
+  background: transparent;
+}

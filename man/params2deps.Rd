@@ -4,10 +4,10 @@
 \alias{params2deps}
 \title{Extract dependency information from YAML header}
 \usage{
-params2deps(params)
+params2deps(deps)
 }
 \arguments{
-\item{params}{List of document parameters}
+\item{deps}{List of dependencies}
 }
 \value{
 A list of \code{Dependency} objects

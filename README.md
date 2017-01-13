@@ -30,14 +30,7 @@ To install *reportMD* and some of the dependancies requires [*devtools*](https:/
 Users of [*RStudio*](https://www.rstudio.com/) will already have this installed,
 otherwise `install.packages('devtools')` will take care of that.
 
-Currently *reportMD* relies on the development version of [*knitrBootstrap*](https://github.com/jimhester/knitrBootstrap),
-which can be installed with
-
-```r
-devtools::install_github('jimhester/knitrBootstrap', ref='rmarkdown_template')
-```
-
-Following this the latest version of *reportMD* can be installed:
+The latest version of *reportMD* can be installed:
 
 ```r
 devtools::install_github('humburg/reportMD')

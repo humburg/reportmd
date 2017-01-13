@@ -150,14 +150,16 @@ format_opts_hook <- function(options){
 
 #' @importFrom knitr opts_knit
 document_hook <- function(x){
-  if(!is.null(opts_knit$get('dependencies'))){
-    deps <- opts_knit$get('dependencies')
-    link_section <- c('##Related Documents',
-                      sapply(deps, printMD, format='md reference'), '',
-                      sapply(deps, printMD, format='reference'))
-    x <- paste(c(x, link_section), collapse='  \n')
+  if(!knitr::opts_knit$get('child')){
+    if(!is.null(opts_knit$get('dependencies'))){
+      deps <- opts_knit$get('dependencies')
+      link_section <- c('##Related Documents',
+                        sapply(deps, printMD, format='md reference'), '',
+                        sapply(deps, printMD, format='reference'))
+      x <- paste(c(x, link_section), collapse='  \n')
+    }
+    mapply(write_index, knitr::opts_knit$get('reportmd.index'), names(knitr::opts_knit$get('reportmd.index')))
   }
-  mapply(write_index, opts_knit$get('reportmd.index'), names(opts_knit$get('reportmd.index')))
   x
 }
 

@@ -83,23 +83,6 @@ reg_fig <- ggplot(ext_cars, aes(x=wt, y=mpg, colour=origin, text=rownames(ext_ca
   theme_bw()
 ```
 
-# Appendix {.tabset}
-## Custom Functions
-```{r functions, eval=FALSE, include=TRUE}
-```
-
-## Configuration
-```{r setup, eval=FALSE}
-```
-
-## Version
-### Document version
-```{r docVersion, echo=FALSE, results='asis', cache=FALSE}
-cat(params$version)
-```
-
-### Session Info
-```{r sessionInfo, echo=FALSE, results='asis', class='text', warning=FALSE}
-pander(devtools::session_info())
+```{r appendix, child='rmd/appendix.Rmd'}
 ```
 

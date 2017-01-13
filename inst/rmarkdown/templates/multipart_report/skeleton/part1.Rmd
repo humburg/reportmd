@@ -62,23 +62,5 @@ ext_cars$origin[international] <- 'international'
 ```
 
 
-# Appendix {.tabset}
-## Custom Functions
-```{r functions, eval=FALSE, include=TRUE}
+```{r appendix, child='rmd/appendix.Rmd'}
 ```
-
-## Configuration
-```{r setup, eval=FALSE}
-```
-
-## Version
-### Document version
-```{r docVersion, echo=FALSE, results='asis', cache=FALSE}
-cat(params$version)
-```
-
-### Session Info
-```{r sessionInfo, echo=FALSE, results='asis', class='text', warning=FALSE}
-pander(devtools::session_info())
-```
-

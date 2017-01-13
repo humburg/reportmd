@@ -141,23 +141,6 @@ Links to all document dependencies listed in the header will be added to the *Re
 It is also possible to link to a figure or table in a child document by providing the corresponding label
 from the list of dependencies to indicate the target file: `r figRef('boxplot', target='part2')`.
 
-# Appendix {.tabset}
-## Custom Functions
-```{r functions, eval=FALSE, include=TRUE}
-```
-
-## Configuration
-```{r setup, eval=FALSE}
-```
-
-## Version
-### Document version
-```{r docVersion, echo=FALSE, results='asis', cache=FALSE}
-cat(params$version)
-```
-
-### Session Info
-```{r sessionInfo, echo=FALSE, results='asis', class='text', warning=FALSE}
-pander(devtools::session_info())
+```{r appendix, child='rmd/appendix.Rmd'}
 ```
 

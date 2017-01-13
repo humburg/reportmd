@@ -68,7 +68,7 @@ Dependency <- function(label, document, source, chunks, title, cache, index, ...
 
   if(missing(cache)){
     if(!is.null(dep$source)){
-      cache <- file.path(dependency_subdir(dep$source, 'cache'), opts_knit$get("rmarkdown.pandoc.to"))
+      cache <- file.path(dependency_subdir(dep$source, 'cache'), 'html')
     } else{
       cache <- NULL
     }

@@ -21,6 +21,8 @@
 #' @export
 merge_list <- function(x,y){
   if(!is.null(y) && length(y)){
+    exclude <- names(y) %in% names(x) & sapply(y, is.null)
+    y <- y[!exclude]
     x[names(y)] <- y
   }
   x
@@ -90,29 +92,6 @@ html_title <- function(input, ...){
   xml2::xml_text(title)
 }
 
-#' Setup environment for Multi-document report
-#' @param params List of document parameters (as provided in the YAML header)
-#' @return Called for its side effect.
-#' @author Peter Humburg
-#' @export
-setup <- function(params){
-  opts_knit$set(loaded_chunks=list())
-  deps <- params2deps(params)
-  load_dependencies(deps)
-  copy_dependencies(deps)
-  opts_knit$set(dependencies=deps)
-  fig_format <- character()
-  for(format in params$format){
-    fig_format <- union(fig_format, plot_formats[format])
-  }
-  knitr::opts_chunk$set(dev=fig_format)
-
-  opts_knit$set(reportmd.index=list(figure=matrix(ncol=4, nrow=0), table=matrix(ncol=4, nrow=0)))
-  if(length(params$format) > 1 && 'print' %in% params$format && isTRUE(params$fig_download)){
-    knitr::opts_chunk$set(fig_download='(Download as [PDF](%PATH%))')
-  }
-}
-
 index <- function(label, origin, name, caption, type=c('figure', 'table')){
   type <- match.arg(type)
   if(!is.null(origin)){
@@ -149,3 +128,78 @@ get_index <- function(target, type=c('figure', 'table')){
   }
   target$index[[type]]
 }
+
+# there are 12 columns, odd numbers cannot be centered in the columns
+calc_offset <- function(size) {
+  res <- strsplit(size, "-")[[1]]
+  num_size <- as.numeric(res[3])
+  offset <- paste0(paste0(res[1:2], collapse = "-"), "-offset-", (12 - (num_size + (num_size %% 2))) / 2)
+  offset
+}
+
+tags <- list(
+  a = function(...) tag("a", list(...)),
+  b = function(...) tag("b", list(...)),
+  button = function(...) tag("button", list(...)),
+  code = function(...) tag("code", list(...), add_newline = FALSE),
+  div = function(...) tag("div", list(...)),
+  img = function(...) tag("img", list(...)),
+  li = function(...) tag("li", list(...)),
+  p = function(...) tag("p", list(...)),
+  pre = function(...) tag("pre", list(...)),
+  span = function(...) tag("span", list(...)),
+  ul = function(...) tag("ul", list(...)),
+  h5 = function(...) tag('h5', list(...)),
+  link = function(...) tag('link', list(...)),
+  title = function(...) tag('title', list(...))
+)
+
+tag <- function(type, arg_list, add_newline = TRUE){
+  named_idx = nzchar(names(arg_list))
+  named_idx = if(length(named_idx) == 0) FALSE else named_idx
+
+  newline = if (add_newline) { "\n" } else { "" }
+  paste0('<', type, ' ', print_attributes(arg_list[named_idx]), '>',
+         paste0(unlist(arg_list[!named_idx]), collapse='\n'), '</', type,'>', newline)
+}
+
+
+generate_attribute <- function(index, data) {
+  paste0(names(data)[index], '="', paste0(data[[index]], collapse=' '), '"')
+}
+
+print_attributes <- function(attributes) {
+  paste0(vapply(seq_along(attributes), FUN.VALUE=character(1),
+                FUN=generate_attribute, USE.NAMES=FALSE, attributes), collapse= ' ')
+
+}
+
+check_pandoc_args <- function(args){
+  if(!"--wrap" %in% args){
+    args <- c(args, "--wrap=none")
+  }
+  if(!any(grepl("mathjax-url:", args))){
+    args <- c(args, "--variable", "mathjax-url:https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML")
+  }
+  args
+}
+
+add_anchor <- function(label, prefix, named_only=TRUE){
+  if(!grepl("^unnamed-chunk", label) || !named_only){
+    if(!missing(prefix)){
+      label <- paste0(prefix, label)
+    }
+  } else{
+    label <- ""
+  }
+  label
+}
+
+fix_exponent <- function(x){
+  x <- stringr::str_replace(x, stringr::fixed('e'), '\\times 10^{')
+  x <- paste0('$', x, '}$')
+  x <- stringr::str_replace(x, '\\{\\+?(-?)0*(\\d+)', '{\\1\\2')
+  x <- stringr::str_replace(x, stringr::fixed('$1\\times '), '$')
+  x
+}
+

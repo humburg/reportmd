@@ -5,13 +5,13 @@
 \alias{tabRef}
 \title{Figure and Table cross-references}
 \usage{
-figRef(label, caption, target, prefix = options("figcap.prefix"),
-  sep = options("figcap.sep"),
-  prefix.highlight = options("figcap.prefix.highlight"))
+figRef(label, caption, target, prefix = knitr::opts_knit$get("figcap.prefix"),
+  sep = knitr::opts_knit$get("figcap.sep"),
+  prefix.highlight = knitr::opts_knit$get("figcap.prefix.highlight"))
 
-tabRef(label, caption, target, prefix = options("tabcap.prefix"),
-  sep = options("tabcap.sep"),
-  prefix.highlight = options("tabcap.prefix.highlight"))
+tabRef(label, caption, target, prefix = knitr::opts_knit$get("tabcap.prefix"),
+  sep = knitr::opts_knit$get("tabcap.sep"),
+  prefix.highlight = knitr::opts_knit$get("tabcap.prefix.highlight"))
 }
 \arguments{
 \item{label}{Identifying label.}
@@ -56,8 +56,8 @@ object to argument \code{target}. This will generate a reference of the form
 a \code{target} as well as a \code{caption}.
 }
 \examples{
-options(figcap.prefix='Figure')
-options(figcap.prefix.highlight='**')
+knitr::opts_knit$set('figcap.prefix','Figure')
+knitr::opts_knit$set('figcap.prefix.highlight', '**')
 
 figRef('foo', 'A test caption')
 figRef('foo')

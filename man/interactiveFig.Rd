@@ -4,7 +4,7 @@
 \alias{interactiveFig}
 \title{Set figure related chunk options for interactive figures}
 \usage{
-interactiveFig(out.width = "800px", out.height = "600px", ...)
+interactiveFig(out.width = "700px", out.height = "600px", ...)
 }
 \arguments{
 \item{out.width}{Output width for figure in pixels}

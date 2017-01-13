@@ -43,7 +43,8 @@ panderOptions("table.split.table", 160)
 
 # Using this template
 ## Basics
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>. This template uses the *Multi-part report* template from the *reportMD* package, which is designed
+to produce a series of interconected HTML documents.
 
 When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
 
@@ -65,18 +66,18 @@ argument. This is a reference to `r figRef('examplePlot')`. The *reportMD* packa
 in HTML pages (generated with [*plotly*](https://github.com/ropensci/plotly)) as well static versions. This feature relies on
 the use of *ggplot2* for plotting. Using the *plotMD* function to produce the plot from a *grob* prepared earlier allows
 seamless switching between the two by setting the `fig_format` option, either globally (in the YAML frontmatter or in the 
-call to *render*) or for an individual chunk.
+call to *render*), via a call to `knitr::opts_chunk$set` or in the options for an individual chunk. Please note that the
+interactive version of a figure is only shown on devices with sufficient resolution. On low resolution screens (or in small
+browser windows) a static version of the plot will be displayed instead.
 
 ```{r staticPlot, fig.cap=paste("Static version of", figRef('examplePlot'))}
 carFig <- ggplot(mtcars, aes(x=hp, y=mpg, colour=cyl, text=rownames(mtcars))) + geom_point() + theme_bw()
 plotMD(carFig)
 ```
 
-It is also possible to link to a figure in a child document by providing the corresponding label
-from the list of dependencies to indicate the target file: `r figRef('boxplot', target='part2')`.
-
 ## Tables
 Tables can be added to the output document by printing a `data.frame` or `matrix` using *printMD*.
+Use the `tab.cap` chunk option to provide a table caption.
 
 ```{r carTable, tab.cap="A subset of the *mtcars* dataset."}
 printMD(mtcars[1:5, c('mpg', 'hp', 'cyl')])
@@ -127,6 +128,9 @@ it more explicit where objects in a code chunk come from.
 It may be useful to add links to the child documents in appropriate places throughout the text. This can
 be achieved using *pandoc*'s reference link syntax. For example, to link to [Part 2][part2] simply use `[some text][part2]`.
 Links to all document dependencies listed in the header will be added to the *Related Documents* section of the appendix.
+
+It is also possible to link to a figure or table in a child document by providing the corresponding label
+from the list of dependencies to indicate the target file: `r figRef('boxplot', target='part2')`.
 
 # Appendix {.tabset}
 ## Custom Functions

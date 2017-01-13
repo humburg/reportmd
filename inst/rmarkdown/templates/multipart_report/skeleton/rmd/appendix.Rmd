@@ -1,0 +1,22 @@
+# Appendix {.tabset}
+## Custom Functions
+```{r functions, eval=FALSE, include=TRUE}
+```
+
+## Configuration
+```{r setup, eval=FALSE}
+```
+
+## Version
+### Document version
+```{r docVersion, echo=FALSE, results='asis', cache=FALSE}
+cat(params$version)
+```
+
+### Session Info
+```{r sessionInfo, echo=FALSE, results='asis', class='text', warning=FALSE}
+info <- devtools::session_info()
+info$platform <- unclass(info$platform)
+info$packages <- as.data.frame(info$packages)
+pander(unclass(info))
+```

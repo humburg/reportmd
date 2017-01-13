@@ -20,14 +20,17 @@
 #'
 #' @rdname figure-hooks
 fig.cap_chunk_hook <- function(before, options, envir) {
-  global_fmt <- options('reportmd.figure.format') %||% list('screen')
-  fmt <- options$format %||% global_fmt[[1]]
-  if(fmt[1] == 'interactive'){
+  fmt <- options$fig_format %||% list('screen')
+  if('interactive' %in% fmt){
     if(before){
-      paste0('<div id="', knitr::opts_chunk$get('fig.lp'), options$label, '" class="figure">')
+      if('screen' %in% fmt){
+        paste0('<div id="', knitr::opts_chunk$get('fig.lp'), options$label, '" class="figure responsive">')
+      } else {
+        paste0('<div id="', knitr::opts_chunk$get('fig.lp'), options$label, '" class="figure">')
+      }
     } else{
       options(reportmd.figure.current=NULL)
-      paste0('<p class="caption text-center">', options$fig.cap,"</p></div>")
+      paste0("</div>")
     }
   }
 }
@@ -51,12 +54,11 @@ tab.cap_chunk_hook <- function(before, options, envir) {
 #' @export
 #' @rdname figure-hooks
 fig.cap_opts_hook <- function(options){
-  global_fmt <- options('reportmd.figure.format')[[1]]
-  fmt <- options$format %||% global_fmt
-  options(reportmd.figure.current=fmt)
+  fmt <- options$fig_format %||% list('screen')
+  options$reportmd.figure.current=fmt
 
   options$fig.cap = figRef(options$label, options$fig.cap)
-  if(length(options$fig_download) && 'print' %in% fmt && length(fmt) > 1){
+  if(length(options$fig_download) && ('print' %in% fmt && length(fmt) > 1) || fmt == 'interactive'){
     download <- options$fig_download
     download <- stringr::str_replace(options$fig_download, stringr::fixed('%PATH%'),
                                      file.path(options$fig.path,
@@ -70,7 +72,11 @@ fig.cap_opts_hook <- function(options){
     options$warning <- FALSE
   }
 
-  opts <- options(paste('reportmd', 'figure', fmt, sep='.'))[[1]]
+  opts <- knitr::opts_chunk$get(paste('reportmd', 'figure', fmt, sep='.'))
+  if(length(fmt) == 1){
+    opts <- list(opts)
+    names(opts) <- paste('reportmd', 'figure', fmt, sep='.')
+  }
   opts <- merge_list(opts, options)
   opts
 }
@@ -122,8 +128,14 @@ dependson_opts_hook <- function(options){
 
 format_opts_hook <- function(options){
   general_opts <- c('fig.width', 'fig.height', 'out.width', 'out.height', 'out.extra', 'dpi')
-  options$dev <- plot_formats[options$format]
-  dev_opts <- lapply(options$format, function(x )figureOptions(format=x))
+  if('interactive' %in% options$fig_format){
+    options$fig_format <- union(options$fig_format, 'screen')
+    if(length(options$fig_download)){
+      options$fig_format <- union(options$fig_format, 'print')
+    }
+  }
+  options$dev <- plot_formats[options$fig_format]
+  dev_opts <- lapply(options$fig_format, function(x )figureOptions(format=x))
   opts <- lapply(dev_opts, function(x, general) x[general], general_opts)
   opts <- Reduce(function(x, y) mapply(`%||%`, x, y, SIMPLIFY=FALSE), opts)
   opts <- opts[!sapply(opts, is.null)]
@@ -138,34 +150,73 @@ format_opts_hook <- function(options){
 
 #' @importFrom knitr opts_knit
 document_hook <- function(x){
-  if(!is.null(opts_knit$get('dependencies'))){
-    deps <- opts_knit$get('dependencies')
-    link_section <- c('##Related Documents',
-                      sapply(deps, printMD, format='md reference'), '',
-                      sapply(deps, printMD, format='reference'))
-    x <- paste(c(x, link_section), collapse='  \n')
+  if(!knitr::opts_knit$get('child')){
+    if(!is.null(opts_knit$get('dependencies'))){
+      deps <- opts_knit$get('dependencies')
+      link_section <- c('##Related Documents',
+                        sapply(deps, printMD, format='md reference'), '',
+                        sapply(deps, printMD, format='reference'))
+      x <- paste(c(x, link_section), collapse='  \n')
+    }
+    mapply(write_index, knitr::opts_knit$get('reportmd.index'), names(knitr::opts_knit$get('reportmd.index')))
   }
-  mapply(write_index, opts_knit$get('reportmd.index'), names(opts_knit$get('reportmd.index')))
   x
 }
 
-
-#' Set knitr hooks
-#'
-#' Installs all required knitr hooks.
-#'
-#' @return Called for its side effect.
-#' @author Peter Humburg
-#' @importFrom knitr opts_hooks
-#' @importFrom knitr knit_hooks
-#' @export
-installHooks <- function(){
-  knitr::opts_hooks$set(fig.cap=fig.cap_opts_hook)
-  knitr::opts_hooks$set(tab.cap=tab.cap_opts_hook)
-  knitr::opts_hooks$set(dependson=dependson_opts_hook)
-  knitr::opts_hooks$set(format=format_opts_hook)
-  knitr::knit_hooks$set(fig.cap=fig.cap_chunk_hook)
-  knitr::knit_hooks$set(tab.cap=tab.cap_chunk_hook)
-  knitr::knit_hooks$set(document=document_hook)
+inline_hook <- function(x){
+  printMD(x)
 }
 
+## Hooks inherited from knitrBootstrap
+bootstrap_chunk_hook <- function(x, options){
+  class <- options[["bootstrap.class"]] <- options[["bootstrap.class"]] %||% "row"
+  label <- options[["label"]]
+  button <- NULL
+  if(options[['echo']]){
+    button <- tags$button(class=c("btn", "btn-default", "btn-xs", "sidenote"),
+                          'data-toggle'="tooltip", title=label,
+                          tags$span(paste(options[["engine"]], 'source')))
+  }
+  tags$div(class="container-fluid",
+           tags$div(class=c(class, 'code-chunk'), id=add_anchor(label),
+                    button, x))
+}
+
+#' @importFrom knitr hook_plot_md
+bootstrap_plot_hook <- function(x, options) {
+  thumbnail <- options[["bootstrap.thumbnail"]] <- options[["bootstrap.thumbnail"]] %||% TRUE
+  if (!thumbnail) {
+    fig <- knitr::hook_plot_md(x, options)
+    if(options$fig.show != "hold"){
+      fig <- paste0("\n\n", fig, "\n\n")
+    }
+    classes <- c("row", "text-center")
+    if('interactive' %in% options$fig_format){
+      classes <- c(classes, 'plotly-fallback')
+    }
+    return(tags$div(class = classes, fig))
+  }
+  thumbnail_plot_hook(x, options)
+}
+
+thumbnail_plot_hook <- function(x, options){
+  thumbnail_size <- options["bootstrap.thumbnail.size"] <- options[["bootstrap.thumbnail.size"]] %||% "col-md-6"
+  src <- opts_knit$get('upload.fun')(x)
+  caption <- options$fig.cap %||% ""
+  img <- tags$img(src=src, alt=caption)
+  if(caption != "" && options$fig.show != "hold"){
+    caption <- tags$p(class="caption", caption)
+  }
+  fig <- tags$a(href = "#", class = "thumbnail", img)
+  if (options$fig.show == "hold"){
+    fig <- tags$div(class=thumbnail_size, fig)
+  } else{ #only one figure from this code block so center it
+    classes <- c("figure", calc_offset(thumbnail_size), thumbnail_size)
+    if('interactive' %in% options$fig_format){
+      classes <- c(classes, 'plotly-fallback')
+    }
+    fig <- tags$div(class = classes, id=add_anchor(options[["label"]], prefix=knitr::opts_chunk$get('fig.lp')), fig, caption)
+    fig <- tags$div(class = "row", fig)
+  }
+  fig
+}

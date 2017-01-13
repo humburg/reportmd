@@ -15,12 +15,21 @@ printMD <- function(x, ...) UseMethod('printMD')
 printMD.default <- function(x, ...) pander::pander(x, ...)
 
 #' @param big.mark Separator used to mark intervals before the decimal point.
+#' @param digits Number of sinificant digits to display, passed to \code{format}
 #' @examples printMD(10000)
+#'           printMD(10^6)
 #' @method printMD double
 #' @export
+#' @importFrom stringr str_detect
+#' @importFrom stringr str_replace
+#' @importFrom stringr fixed
 #' @rdname printMD
-printMD.double <- function(x, big.mark=',', ...){
-  base::prettyNum(x, big.mark=big.mark, ...)
+printMD.double <- function(x, big.mark=',', digits=pander::panderOptions('digits'), ...){
+  pretty <- base::prettyNum(x, big.mark=big.mark, digits=digits, ...)
+  if(stringr::str_detect(pretty, stringr::fixed('e'))){
+    pretty <- fix_exponent(pretty)
+  }
+  pretty
 }
 
 #' @examples printMD(10000L)
@@ -28,7 +37,11 @@ printMD.double <- function(x, big.mark=',', ...){
 #' @export
 #' @rdname printMD
 printMD.integer <- function(x, big.mark=',', ...){
-  base::prettyNum(x, big.mark=big.mark, ...)
+  pretty <- base::prettyNum(x, big.mark=big.mark, ...)
+  if(stringr::str_detect(pretty, stringr::fixed('e'))){
+    pretty <- fix_exponent(pretty)
+  }
+  pretty
 }
 
 #' @param format Format type to use.

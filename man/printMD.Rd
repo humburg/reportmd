@@ -30,8 +30,6 @@ printMD(x, ...)
 \item{digits}{Number of sinificant digits to display, passed to \code{format}}
 
 \item{format}{Format type to use.}
-
-\item{...}{Further arguments to \code{format}}
 }
 \value{
 String representation of x formatted for printing.

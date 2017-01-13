@@ -16,7 +16,6 @@ printMD.default <- function(x, ...) pander::pander(x, ...)
 
 #' @param big.mark Separator used to mark intervals before the decimal point.
 #' @param digits Number of sinificant digits to display, passed to \code{format}
-#' @param ... Further arguments to \code{format}
 #' @examples printMD(10000)
 #'           printMD(10^6)
 #' @method printMD double

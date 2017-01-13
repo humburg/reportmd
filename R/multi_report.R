@@ -154,6 +154,7 @@ multi_knit_hooks <- function() {
     fig.cap=fig.cap_chunk_hook,
     tab.cap=tab.cap_chunk_hook,
     document=document_hook,
+    inline=inline_hook,
     NULL
   )
 }

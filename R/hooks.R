@@ -161,6 +161,10 @@ document_hook <- function(x){
   x
 }
 
+inline_hook <- function(x){
+  printMD(x)
+}
+
 ## Hooks inherited from knitrBootstrap
 bootstrap_chunk_hook <- function(x, options){
   class <- options[["bootstrap.class"]] <- options[["bootstrap.class"]] %||% "row"

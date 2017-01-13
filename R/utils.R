@@ -195,3 +195,11 @@ add_anchor <- function(label, prefix, named_only=TRUE){
   label
 }
 
+fix_exponent <- function(x){
+  x <- stringr::str_replace(x, stringr::fixed('e'), '\\times 10^{')
+  x <- paste0('$', x, '}$')
+  x <- stringr::str_replace(x, '\\{\\+?(-?)0*(\\d+)', '{\\1\\2')
+  x <- stringr::str_replace(x, stringr::fixed('$1\\times '), '$')
+  x
+}
+

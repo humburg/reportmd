@@ -58,7 +58,7 @@ plotMD(box_fig)
 A reasonable initial hypothesis for why this might be the case is that US built
 cars may tend to be larger (and therefore heavier) and have larger engines.
 As it turns out car weight and engine displacement are highly correlated 
-($\rho$ = `r printMD(cor(mtcars$disp, mtcars$wt), digits=2)`), so we'll
+($\rho$ = `r cor(mtcars$disp, mtcars$wt)`), so we'll
 investigate this by fitting a linear regression model with weight as
 explanatory variable.
 

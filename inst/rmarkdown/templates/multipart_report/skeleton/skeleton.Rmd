@@ -85,6 +85,15 @@ printMD(mtcars[1:5, c('mpg', 'hp', 'cyl')])
 
 Tables can be referenced in the same way as figures, using the *tabRef* function. This is a reference to `r tabRef('carTable')`.
 
+## Inline R code
+This document format attempts to format output from inline code to be easily readable and consistent without
+requireing careful formatting at the time of writing.
+For example, this is a large number: `r 10^4`, this one is even larger: `r 3*10^6`. Here is a small one: `r 10^-6`.
+$\pi$ is approximately `r pi`. The number of significant digits displayed can be controlled via
+*pander*'s *digits* option (which this document set to 3). If higher accuracy is desired for a specific
+number this can be achieved by passing it through *printMD* directly. A petter approximation of $\pi$
+is given by `r printMD(pi, digits=10)`.
+
 ## Using R objects from child documents
 Your R chunks may use objects created by a chunk in a different (child) document, provided the generating chunk is cached 
 and the cache is available when this document is knitted. To do this simply list the path to the child document in the

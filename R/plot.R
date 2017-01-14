@@ -157,7 +157,7 @@ figRef <- local({
       idx <- get_index(target, 'figure')
       idx <- subset(idx, V1 == label & V2 == target$label)
       if(nrow(idx) == 1){
-        result <- paste0("[", target$short_title, ', ', idx[1, 3], "](", target$document, "#", knitr::opts_chunk$get('fig.lp'), label, ")")
+        result <- paste0("[", target$short_title, ', ', idx[1, 3], "](", basename(target$document), "#", knitr::opts_chunk$get('fig.lp'), label, ")")
       } else{
         warning("Unable to locate Figure with label '", label, "' in file '", target$label, "'.")
       }
@@ -207,7 +207,7 @@ tabRef <- local({
       idx <- get_index(target, 'table')
       idx <- subset(idx, V1 == label & V2 == target$label)
       if(nrow(idx) == 1){
-        result <- paste0("[", target$short_title, ', ', idx[1, 3], "](", target$document, "#tab:", label, ")")
+        result <- paste0("[", target$short_title, ', ', idx[1, 3], "](", basename(target$document), "#tab:", label, ")")
       } else{
         warning("Unable to locate Table with label '", label, "' in file '", target$label, "'.")
       }

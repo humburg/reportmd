@@ -33,7 +33,7 @@ cwl_stage <- function(document, depends){
   names(deps) <- NULL
   stage <- list(run='render.cwl', 'in'=list(rmd=paste0(document$label, '_in')))
   if(length(deps)){
-    stage$in$dep <- deps
+    stage$`in`$dep <- deps
   }
   stage$out <- list('html')
   stage
@@ -119,7 +119,7 @@ workflow <- function(main_doc,
   write(yaml::as.yaml(params), file=paste0(prefix, '-job.yml'))
 }
 
-#' importFrom R.utils getRelativePath
+#' @importFrom R.utils getRelativePath
 params <- function(documents, rel_path){
   if(missing(rel_path) || is.null(rel_path)){
     rel_path <- '/'

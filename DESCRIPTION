@@ -17,10 +17,10 @@ Imports:
     stringr,
     yaml,
     xml2,
-    htmltools
-Suggests:
-    ggplot2,
+    htmltools,
     R.utils
+Suggests:
+    ggplot2
 License: MIT + file LICENSE
 LazyData: true
 RoxygenNote: 5.0.1

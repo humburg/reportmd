@@ -19,7 +19,8 @@ Imports:
     xml2,
     htmltools
 Suggests:
-    ggplot2
+    ggplot2,
+    R.utils
 License: MIT + file LICENSE
 LazyData: true
 RoxygenNote: 5.0.1

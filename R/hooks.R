@@ -156,7 +156,13 @@ document_hook <- function(x){
       link_section <- c('##Related Documents',
                         sapply(deps, printMD, format='md reference'), '',
                         sapply(deps, printMD, format='reference'))
-      x <- paste(c(x, link_section), collapse='  \n')
+      link_section <- paste(link_section, collapse='  \n')
+      ref_idx <- which(stringr::str_detect(x, '^\\s*##\\s*[Rr]eferences\\s*$'))
+      if(length(ref_idx)){
+        x <- c(x[1:(ref_idx[1]-1)], link_section, x[ref_idx:length(x)])
+      } else {
+        x <-c(x, link_section)
+      }
     }
     mapply(write_index, knitr::opts_knit$get('reportmd.index'), names(knitr::opts_knit$get('reportmd.index')))
   }

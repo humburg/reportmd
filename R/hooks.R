@@ -88,6 +88,8 @@ fig.cap_opts_hook <- function(options){
 tab.cap_opts_hook <- function(options){
   options$tab.cap <- tabRef(options$label, options$tab.cap)
   options$echo <- FALSE
+  options$cache <- FALSE
+  options$results <- 'asis'
   options
 }
 

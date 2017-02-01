@@ -45,9 +45,10 @@ data pre-processing and then export the dataset for use in the downstream analys
 
 We'll use the (outdated and not very exciting) *mtcars* dataset for this analysis.
 This consists of `r ncol(mtcars)` variables for `r nrow(mtcars)` car models build
-in 1973 and 1974. It looks something like this:
+in 1973 and 1974. The first few rows of the dataset are shown in `r tabRef('mtcarsHead')`.
 
-```{r mtcarsHead}
+```{r mtcarsHead, tab.cap=paste0("The *mtcars* dataset (", download_link(mtcars, text='download'), ').')}
+add_download(mtcars, label='mtcars', description='The *mtcars* dataset')
 printMD(head(mtcars))
 ```
 

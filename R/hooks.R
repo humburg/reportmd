@@ -35,18 +35,6 @@ fig.cap_chunk_hook <- function(before, options, envir) {
   }
 }
 
-#' @export
-#' @rdname figure-hooks
-tab.cap_chunk_hook <- function(before, options, envir) {
-  if(before){
-    paste0('<div id="tab:', options$label, '" class="table-wrapper">',
-           '<p class="caption">', options$tab.cap, "</p>")
-  } else{
-    "</div>"
-  }
-}
-
-
 ## Option hooks
 
 #' @return \code{fig.cap_opts_hook} returns a list of chunk options
@@ -86,10 +74,9 @@ fig.cap_opts_hook <- function(options){
 #' @export
 #' @rdname figure-hooks
 tab.cap_opts_hook <- function(options){
-  options$tab.cap <- tabRef(options$label, options$tab.cap)
   options$echo <- FALSE
   options$cache <- FALSE
-  options$results <- 'asis'
+  options$results <- 'markup'
   options
 }
 
@@ -170,6 +157,28 @@ document_hook <- function(x){
   }
   x
 }
+
+output_hook <- function(x, options){
+  if(!is.null(options[['tab.cap']])){
+    caption <- tags$p(class='caption', tabRef(options$label, options$tab.cap))
+    x <- tags$div(id=paste0('tab:', options$label, class='table-wrapper'),
+                     caption, x)
+  } else {
+    x <- paste(x, collapse = "\n")
+    options[["bootstrap.show.output"]] <- options[["bootstrap.show.output"]] %||% TRUE
+    x <- generate_panel(options$engine, 'output', knitr::opts_current$get("label"), x, !show)
+  }
+  x
+}
+
+source_hook <- function(x, options){
+  if(is.null(options[['tab.cap']])){
+    x <- paste(x, collapse = "\n")
+    options[["bootstrap.show.source"]] <- options[["bootstrap.show.source"]] %||% TRUE
+    generate_panel(options$engine, 'source', knitr::opts_current$get("label"), x, !show)
+  }
+}
+
 
 inline_hook <- function(x){
   printMD(x)

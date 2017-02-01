@@ -17,17 +17,21 @@ panel_types <- c("source" = "panel-primary",
 #' @param fig_format Default format(s) for figures
 #' @param fig_download Logical indicating whether a download link should be added to
 #'     figure captions.
+#' @param tab_download Logical indicating whether a download link should be added to
+#'     table captions.
 #' @param ... Additional arguments are passed to rmarkdown::html_document
 #' @importFrom rmarkdown html_dependency_jquery
 #' @export
 multi_document <- function(theme = NULL, highlight = NULL, pandoc_args = NULL,
-                           fig_format=c('screen', 'print'), fig_download=TRUE, ...){
+                           fig_format=c('screen', 'print'), fig_download=TRUE,
+                           tab_download=TRUE, ...){
   theme <- theme %||% "default"
   highlight <- highlight %||% "default"
   pandoc_args <- pandoc_args %||% c(
     "--variable",
     "mathjax-url:https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"
   )
+  pander::panderOptions("knitr.auto.asis", FALSE)
   results <- rmarkdown::html_document(
     highlight = NULL,
     theme = NULL,
@@ -68,10 +72,11 @@ multi_document <- function(theme = NULL, highlight = NULL, pandoc_args = NULL,
                      loaded_chunks=list(), dependencies=deps, figcap.prefix="Figure",
                      figcap.sep = ":", figcap.prefix.highlight = "**",
                      tabcap.prefix = "Table", tabcap.sep = ":", tabcap.prefix.highlight = "**",
-                     eval.after=c('fig.cap', 'tab.cap')),
-    opts_chunk = list(tidy=FALSE, highlight=FALSE, cache=TRUE, dev=ff, fig_format=fig_format,
-                      hold=TRUE, hide.fig.code=TRUE, fig_download=fig_download_text,
-                      fig.width=8, fig.height=8, dpi=300,
+                     eval.after=c('fig.cap', 'tab.cap'), downloads=list()),
+    opts_chunk = list(tidy=FALSE, highlight=FALSE, cache=TRUE, comment=NA,
+                      dev=ff, fig_format=fig_format, hold=TRUE, hide.fig.code=TRUE,
+                      fig_download=fig_download_text, fig.width=8, fig.height=8, dpi=300,
+                      tab_download=tab_download,
                       reportmd.figure.interactive=list(out.width='700px', out.height='600px'),
                       reportmd.figure.screen=list(fig.width=8, fig.height=8, dpi=300),
                       reportmd.figure.print=list(fig.width=8, fig.height=8, dpi=300)),
@@ -139,8 +144,6 @@ multi_knit_hooks <- function() {
     function(x, options) {
       x <- paste(x, collapse = "\n")
       show <- switch(name,
-                     source = (options[["bootstrap.show.code"]] <- options[["bootstrap.show.code"]] %||% TRUE),
-                     output = (options[["bootstrap.show.output"]] <- options[["bootstrap.show.output"]] %||% TRUE),
                      message = (options[["bootstrap.show.message"]] <- options[["bootstrap.show.message"]] %||% TRUE),
                      warning = (options[["bootstrap.show.warning"]] <- options[["bootstrap.show.warning"]] %||% TRUE),
                      error = (options[["bootstrap.show.error"]] <- options[["bootstrap.show.error"]] %||% TRUE),
@@ -149,11 +152,12 @@ multi_knit_hooks <- function() {
     }
   }
   c(
-    sapply(c("source", "warning", "message", "error", "output"), html_hook),
+    sapply(c("warning", "message", "error"), html_hook),
     plot = bootstrap_plot_hook,
     chunk = bootstrap_chunk_hook,
+    output=output_hook,
+    source=source_hook,
     fig.cap=fig.cap_chunk_hook,
-    tab.cap=tab.cap_chunk_hook,
     document=document_hook,
     inline=inline_hook,
     NULL

@@ -70,7 +70,8 @@ ext_cars$fitted <- fit$fitted.values
 This appears to explain the difference in MPG reasonably well, although
 it is clearly not the only relevant factor:
 
-```{r reg_table}
+```{r reg_table, tab.cap='Linear model fit for *mpg* ~ *wt*'}
+pander::set.caption("")
 printMD(fit)
 ```
 

@@ -111,6 +111,8 @@ figureOptions <- function(..., format){
 #' @param sep Separator to use between printed label and caption.
 #' @param prefix.highlight Markdown code the figure label should be wrapped in.
 #'    Allows the label to be displayed in bold or italics.
+#' @param markup Logical indicating whether the label that is returned when
+#' \code{caption} is missing should be marked up as a link.
 #'
 #' @details Typically \code{figRef} only needs to be called
 #' explicitly to refer to figures in the text. The call to set the label and generate
@@ -148,7 +150,8 @@ figRef <- local({
   used <- logical()
   function(label, caption, target, prefix = knitr::opts_knit$get("figcap.prefix"),
            sep = knitr::opts_knit$get("figcap.sep"),
-           prefix.highlight = knitr::opts_knit$get("figcap.prefix.highlight")) {
+           prefix.highlight = knitr::opts_knit$get("figcap.prefix.highlight"),
+           markup=TRUE) {
     if(!missing(target)){
       if(!missing(caption)){
         stop("Can't set caption for Figure in external file '", target$label, "'.")
@@ -157,7 +160,10 @@ figRef <- local({
       idx <- get_index(target, 'figure')
       idx <- subset(idx, V1 == label & V2 == target$label)
       if(nrow(idx) == 1){
-        result <- paste0("[", target$short_title, ', ', idx[1, 3], "](", basename(target$document), "#", knitr::opts_chunk$get('fig.lp'), label, ")")
+        result <- paste0(target$short_title, ', ', idx[1, 3])
+        if(markup){
+          result <- paste0("[", result, "](", basename(target$document), "#", knitr::opts_chunk$get('fig.lp'), label, ")")
+        }
       } else{
         warning("Unable to locate Figure with label '", label, "' in file '", target$label, "'.")
       }
@@ -181,7 +187,9 @@ figRef <- local({
       } else {
         used[label] <<- TRUE
         result <- paste(prefix, tag[label], sep="&nbsp;")
-        result <- paste0('[', result, '](#', knitr::opts_chunk$get('fig.lp'), label, ')')
+        if(markup){
+          result <- paste0('[', result, '](#', knitr::opts_chunk$get('fig.lp'), label, ')')
+        }
       }
     }
     result
@@ -198,7 +206,8 @@ tabRef <- local({
   used <- logical()
   function(label, caption, target, prefix = knitr::opts_knit$get("tabcap.prefix"),
            sep = knitr::opts_knit$get("tabcap.sep"),
-           prefix.highlight = knitr::opts_knit$get("tabcap.prefix.highlight")) {
+           prefix.highlight = knitr::opts_knit$get("tabcap.prefix.highlight"),
+           markup=TRUE) {
     if(!missing(target)){
       if(!missing(caption)){
         stop("Can't set caption for Table in external file '", target$label, "'.")
@@ -207,7 +216,8 @@ tabRef <- local({
       idx <- get_index(target, 'table')
       idx <- subset(idx, V1 == label & V2 == target$label)
       if(nrow(idx) == 1){
-        result <- paste0("[", target$short_title, ', ', idx[1, 3], "](", basename(target$document), "#tab:", label, ")")
+        result <- paste0(target$short_title, ', ', idx[1, 3])
+        result <- paste0("[", result, "](", basename(target$document), "#tab:", label, ")")
       } else{
         warning("Unable to locate Table with label '", label, "' in file '", target$label, "'.")
       }
@@ -230,7 +240,9 @@ tabRef <- local({
       } else {
         used[label] <<- TRUE
         result <- paste(prefix, tag[label], sep="&nbsp;")
-        result <- paste0('[', result, '](#tab:', label, ')')
+        if(markup){
+          result <- paste0('[', result, '](#tab:', label, ')')
+        }
       }
     }
     result

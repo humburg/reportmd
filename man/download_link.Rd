@@ -4,8 +4,8 @@
 \alias{download_link}
 \title{Create download link}
 \usage{
-download_link(download, text = download$label, format = c("markdown",
-  "html", "table"))
+download_link(download, text = download$label, format = c("html",
+  "markdown", "table"))
 }
 \arguments{
 \item{download}{An object of class \code{Download}.}

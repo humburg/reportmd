@@ -1,6 +1,7 @@
 #' Register a new download
 #'
-#' @param x An object that should be made available for download.
+#' @param x An object that should be made available for download. If this is
+#' a character vector of length one it is interpreted as the name of the object.
 #' @param label A short, descriptive label
 #' @param writer A function used to create the downloadable file from \code{x}.
 #' This function needs to take at least two arguments, the first of which should
@@ -23,10 +24,16 @@
 #' @importFrom stringr str_replace
 add_download <- function(x, label, writer=write.csv, description="", ext='csv',
                          create=TRUE, ...){
-  file_name <- label
+  if(is.character(x) && length(x) == 1){
+    name <- x
+    x <- get(x)
+  } else{
+    name <- deparse(substitute(x))
+  }
+  file_name <- name
   file_name <- stringr::str_replace(file_name, '\\s', '_')
   file_name <- paste(file_name, ext, sep='.')
-  name <- deparse(substitute(x))
+
   downloads <- knitr::opts_knit$get('downloads')
   if(name %in% downloads){
     stop('Download for object ', name, ' already exists.')
@@ -57,8 +64,13 @@ create_download <- function(x, download){
   retrieve <- missing(download)
   if(retrieve){
     downloads <- knitr::opts_knit$get('downloads')
-    name <- deparse(substitute(x))
-    if(name %in% downloads){
+    if(is.character(x) && length(x) == 1){
+      name <- x
+      x <- get(x)
+    } else{
+      name <- deparse(substitute(x))
+    }
+    if(name %in% names(downloads)){
       download <- downloads[[name]]
     } else {
       stop('Unable to locate download for ', name)
@@ -88,7 +100,10 @@ download_link <- function(download, text=download$label,
                           format=c('html', 'markdown', 'table')){
   format <- match.arg(format)
   if(!is(download, 'Download')){
-    download <- knitr::opts_knit$get('downloads')[[deparse(substitute(download))]]
+    if(!(is.character(download) && length(download) == 1)){
+      download <- deparse(substitute(download))
+    }
+    download <- knitr::opts_knit$get('downloads')[[download]]
   }
   switch(format,
          markdown=paste0('[', text, '](', download$target, ')'),

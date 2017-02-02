@@ -47,8 +47,7 @@ We'll use the (outdated and not very exciting) *mtcars* dataset for this analysi
 This consists of `r ncol(mtcars)` variables for `r nrow(mtcars)` car models build
 in 1973 and 1974. The first few rows of the dataset are shown in `r tabRef('mtcarsHead')`.
 
-```{r mtcarsHead, tab.cap=paste0("The *mtcars* dataset (", download_link(mtcars, text='download'), ').')}
-add_download(mtcars, label='mtcars', description='The *mtcars* dataset')
+```{r mtcarsHead, tab.cap="The *mtcars* dataset.", download='mtcars'}
 printMD(head(mtcars))
 ```
 

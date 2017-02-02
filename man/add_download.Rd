@@ -8,7 +8,8 @@ add_download(x, label, writer = write.csv, description = "", ext = "csv",
   create = TRUE, ...)
 }
 \arguments{
-\item{x}{An object that should be made available for download.}
+\item{x}{An object that should be made available for download. If this is
+a character vector of length one it is interpreted as the name of the object.}
 
 \item{label}{A short, descriptive label}
 

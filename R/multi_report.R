@@ -72,7 +72,7 @@ multi_document <- function(theme = NULL, highlight = NULL, pandoc_args = NULL,
                      loaded_chunks=list(), dependencies=deps, figcap.prefix="Figure",
                      figcap.sep = ":", figcap.prefix.highlight = "**",
                      tabcap.prefix = "Table", tabcap.sep = ":", tabcap.prefix.highlight = "**",
-                     eval.after=c('fig.cap', 'tab.cap'), downloads=list()),
+                     eval.after=c('fig.cap', 'tab.cap', 'download'), downloads=list()),
     opts_chunk = list(tidy=FALSE, highlight=FALSE, cache=TRUE, comment=NA,
                       dev=ff, fig_format=fig_format, hold=TRUE, hide.fig.code=TRUE,
                       fig_download=fig_download_text, fig.width=8, fig.height=8, dpi=300,
@@ -168,5 +168,6 @@ multi_opts_hooks <- function() {
   list(fig.cap=fig.cap_opts_hook,
        tab.cap=tab.cap_opts_hook,
        dependson=dependson_opts_hook,
+       download=download_opts_hook,
        fig_format=format_opts_hook)
 }

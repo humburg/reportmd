@@ -35,15 +35,16 @@ add_download <- function(x, label, writer=write.csv, description="", ext='csv',
   file_name <- paste(file_name, ext, sep='.')
 
   downloads <- knitr::opts_knit$get('downloads')
-  if(name %in% downloads){
-    stop('Download for object ', name, ' already exists.')
+  exists <- FALSE
+  if(name %in% names(downloads)){
+    exists <- TRUE
   }
   dwnld <- Download(writer=writer, file_name=file_name,
                     label=label, description=description, ...)
-  if(dwnld$target %in% sapply(downloads, '[[', 'target')){
+  if(!exists && dwnld$target %in% sapply(downloads, '[[', 'target')){
     stop('Download with file name ', file_name, ' already exists.')
   }
-  if(create){
+  if(create && !exists){
     create_download(x, dwnld)
   }
 

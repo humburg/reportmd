@@ -141,6 +141,7 @@ tags <- list(
   a = function(...) tag("a", list(...)),
   b = function(...) tag("b", list(...)),
   button = function(...) tag("button", list(...)),
+  caption = function(...) tag("p", c(class='caption', list(...))),
   code = function(...) tag("code", list(...), add_newline = FALSE),
   div = function(...) tag("div", list(...)),
   img = function(...) tag("img", list(...)),

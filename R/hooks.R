@@ -197,7 +197,7 @@ document_hook <- function(x){
 
 output_hook <- function(x, options){
   if(!is.null(options[['tab.cap']])){
-    caption <- tags$p(class='caption', tabRef(options$label, options$tab.cap))
+    caption <- tags$caption(tabRef(options$label, options$tab.cap))
     x <- tags$div(id=paste0('tab:', options$label), class='table-wrapper',
                      caption, x)
   } else {

@@ -221,6 +221,7 @@ parse_md_link <- function(x){
 #' @importFrom stringr str_match
 parse_html_link <- function(x){
   match <- stringr::str_match(x, '<a.*href\\s*=\\s*(\\S+).*>\\s*(.+)\\s*</a\\s*>')
+  invalid <- is.na(match[,1])
   if(any(invalid)){
     if(sum(invalid) < 0){
       warning("Failed to parse links: ", paste(x[invalid], collapse=', '))

@@ -207,7 +207,7 @@ output_hook <- function(x, options){
                      caption, x)
   } else {
     x <- paste(x, collapse = "\n")
-    options[["bootstrap.show.output"]] <- options[["bootstrap.show.output"]] %||% TRUE
+    options[["bootstrap.show.output"]] <- show <- options[["bootstrap.show.output"]] %||% TRUE
     x <- generate_panel(options$engine, 'output', knitr::opts_current$get("label"), x, !show)
   }
   x
@@ -216,7 +216,7 @@ output_hook <- function(x, options){
 source_hook <- function(x, options){
   if(is.null(options[['tab.cap']])){
     x <- paste(x, collapse = "\n")
-    options[["bootstrap.show.source"]] <- options[["bootstrap.show.source"]] %||% TRUE
+    options[["bootstrap.show.source"]] <- show <- options[["bootstrap.show.source"]] %||% TRUE
     generate_panel(options$engine, 'source', knitr::opts_current$get("label"), x, !show)
   }
 }

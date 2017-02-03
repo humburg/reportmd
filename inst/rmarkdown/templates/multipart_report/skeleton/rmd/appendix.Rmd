@@ -14,7 +14,7 @@ cat(params$version)
 ```
 
 ### Session Info
-```{r sessionInfo, echo=FALSE, results='asis', class='text', warning=FALSE}
+```{r sessionInfo, echo=FALSE, results='asis', class='text', warning=FALSE, cache=FALSE}
 info <- devtools::session_info()
 info$platform <- unclass(info$platform)
 info$packages <- as.data.frame(info$packages)

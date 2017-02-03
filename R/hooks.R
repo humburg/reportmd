@@ -141,7 +141,8 @@ download_opts_hook <- function(options){
             ". Only the first one will be processed.")
     options$download <- options$download[1]
   }
-  if(!options$download %in% names(options$downloads)){
+  downloads <- knitr::opts_knit$get('.downloads')
+  if(!options$download %in% names(downloads)){
     data <- get(options$download)
     label <- options$download
     descr <- ''
@@ -161,7 +162,7 @@ download_opts_hook <- function(options){
     add_download(options$download, label=label, description=descr,
                  writer=writer, ext=format, create=TRUE)
   }
-  else if(!options$downloads$written){
+  if(!downloads[[options$download]]$written){
     create_download(options$download)
   }
   if(!is.null(options$tab.cap)){
@@ -177,12 +178,15 @@ download_opts_hook <- function(options){
 #' @importFrom knitr opts_knit
 document_hook <- function(x){
   if(!knitr::opts_knit$get('child')){
+    ## Add secttion with links to related documents to appendix
     if(!is.null(opts_knit$get('dependencies'))){
       deps <- opts_knit$get('dependencies')
       link_section <- c('##Related Documents',
                         sapply(deps, printMD, format='md reference'), '',
                         sapply(deps, printMD, format='reference'))
       link_section <- paste(link_section, collapse='  \n')
+      ## References will be appended to the document by pandoc, so the
+      ## corresponding header needs to go last
       ref_idx <- which(stringr::str_detect(x, '^\\s*##\\s*[Rr]eferences\\s*$'))
       if(length(ref_idx)){
         x <- c(x[1:(ref_idx[1]-1)], link_section, x[ref_idx:length(x)])
@@ -190,6 +194,7 @@ document_hook <- function(x){
         x <-c(x, link_section)
       }
     }
+    x <- c(x, ref_links())
     mapply(write_index, knitr::opts_knit$get('reportmd.index'), names(knitr::opts_knit$get('reportmd.index')))
   }
   x

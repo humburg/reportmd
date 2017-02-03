@@ -34,7 +34,7 @@ add_download <- function(x, label, writer=write.csv, description="", ext='csv',
   file_name <- stringr::str_replace(file_name, '\\s', '_')
   file_name <- paste(file_name, ext, sep='.')
 
-  downloads <- knitr::opts_knit$get('downloads')
+  downloads <- knitr::opts_knit$get('.downloads')
   exists <- FALSE
   if(name %in% names(downloads)){
     exists <- TRUE
@@ -45,11 +45,11 @@ add_download <- function(x, label, writer=write.csv, description="", ext='csv',
     stop('Download with file name ', file_name, ' already exists.')
   }
   if(create && !exists){
-    create_download(x, dwnld)
+    assign(name, x)
+    create_download(name, dwnld)
   }
 
   downloads[[name]] <- dwnld
-  knitr::opts_knit$set(downloads=downloads)
 }
 
 #' Create a file for download
@@ -62,15 +62,15 @@ add_download <- function(x, label, writer=write.csv, description="", ext='csv',
 #' @export
 #' @author Peter Humburg
 create_download <- function(x, download){
+  downloads <- knitr::opts_knit$get('.downloads')
+  if(is.character(x) && length(x) == 1){
+    name <- x
+    x <- get(x)
+  } else{
+    name <- deparse(substitute(x))
+  }
   retrieve <- missing(download)
   if(retrieve){
-    downloads <- knitr::opts_knit$get('downloads')
-    if(is.character(x) && length(x) == 1){
-      name <- x
-      x <- get(x)
-    } else{
-      name <- deparse(substitute(x))
-    }
     if(name %in% names(downloads)){
       download <- downloads[[name]]
     } else {
@@ -82,10 +82,7 @@ create_download <- function(x, download){
   }
   do.call(download$writer, c(list(x, download$target), download$args))
   download$written <- TRUE
-  if(retrieve){
-    downloads[[name]] <- download
-    knitr::opts_knit$set(downloads=downloads)
-  }
+  downloads[[name]] <- download
 }
 
 #' Create download link
@@ -104,11 +101,11 @@ download_link <- function(download, text=download$label,
     if(!(is.character(download) && length(download) == 1)){
       download <- deparse(substitute(download))
     }
-    download <- knitr::opts_knit$get('downloads')[[download]]
+    download <- knitr::opts_knit$get('.downloads')[[download]]
   }
   switch(format,
          markdown=paste0('[', text, '](', download$target, ')'),
          html=paste0('<a download href=', download$target,'>', text, '</a>'),
-         table=data.frame(File=download_link(download, text, 'html'),
-                          Description=download$description))
+         table=make_ref_links(data.frame(File=download_link(download, text, 'markdown'),
+                          Description=download$description, stringsAsFactors=FALSE)))
 }

@@ -22,6 +22,7 @@
 #' @export
 #' @importFrom knitr opts_knit
 #' @importFrom stringr str_replace
+#' @importFrom utils write.csv
 add_download <- function(x, label, writer=write.csv, description="", ext='csv',
                          create=TRUE, ...){
   if(is.character(x) && length(x) == 1){
@@ -94,6 +95,7 @@ create_download <- function(x, download){
 #' @return Either a string providing the link in the requested format, or, for
 #' \code{format='table'}, a data frame with a single row and two columns.
 #' @export
+#' @importFrom methods is
 download_link <- function(download, text=download$label,
                           format=c('html', 'markdown', 'table')){
   format <- match.arg(format)

@@ -215,7 +215,7 @@ parse_md_link <- function(x){
       warning("Failed to parse ", sum(invalid), " links. First failure was ", x[invalid][1])
     }
   }
-  data.frame(text=match[,2], link=match[,3], label=make_label(match[,2]), stringsAsFactors=FALSE)
+  data.frame(text=match[,2], link=match[,3], label=match[,2], stringsAsFactors=FALSE)
 }
 
 #' @importFrom stringr str_match
@@ -229,7 +229,7 @@ parse_html_link <- function(x){
       warning("Failed to parse ", sum(invalid), " links. First failure was ", x[invalid][1])
     }
   }
-  data.frame(text=match[,3], link=match[,2], label=make_label(match[,3]), stringsAsFactors=FALSE)
+  data.frame(text=match[,3], link=match[,2], label=match[,3], stringsAsFactors=FALSE)
 }
 
 #' @importFrom stringr str_replace
@@ -273,17 +273,23 @@ make_ref_links <- function(data, links=1, format=c('markdown', 'html')){
     for(j in 1:nrow(parsed_links[[i]])){
       label <- parsed_links[[i]][j, 'label']
       link <- parsed_links[[i]][j, 'link']
+      text <- parsed_links[[i]][j, 'text']
       if(!is.na(link)){
         if(label %in% names(refs)){
           if(parsed_links[[i]][j, 'link'] != refs[[label]]){
-            parsed_links[[i]][j, 'label'] <- label <- make.unique(c(names(refs), label))
+            parsed_links[[i]][j, 'label'] <- label <- make.unique(c(names(refs), make_label(label)))[length(refs)+1]
           }
         }
         refs[[label]] <- link
       }
     }
     update <- !is.na(parsed_links[[i]][['link']])
-    data[[update, i]] <- paste0('[', parsed_links[[i]][update, 'text'], '][', parsed_links[[i]][update, 'label'], ']')
+    update_simple <- update & parsed_links[[i]][update, 'text'] == parsed_links[[i]][update, 'label']
+    update_full <- update & !update_simple
+    if(any(update_simple))
+      data[[update_simple, i]] <- paste0('[', parsed_links[[i]][update_simple, 'text'], ']')
+    if(any(update_full))
+      data[[update_full, i]] <- paste0('[', parsed_links[[i]][update_full, 'text'], '][', parsed_links[[i]][update_full, 'label'], ']')
   }
   data
 }

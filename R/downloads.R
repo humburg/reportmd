@@ -94,6 +94,7 @@ create_download <- function(x, download){
 #'
 #' @return Either a string providing the link in the requested format, or, for
 #' \code{format='table'}, a data frame with a single row and two columns.
+#' @author Peter Humburg
 #' @export
 #' @importFrom methods is
 download_link <- function(download, text=download$label,

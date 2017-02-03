@@ -21,4 +21,7 @@ Either a string providing the link in the requested format, or, for
 \description{
 Create download link
 }
+\author{
+Peter Humburg
+}
 

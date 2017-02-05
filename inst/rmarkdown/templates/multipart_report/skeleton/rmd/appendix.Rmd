@@ -21,19 +21,22 @@ info$packages <- as.data.frame(info$packages)
 pander(unclass(info))
 ```
 
-`r if(length(knitr::opts_knit$get('.downloads'))) '## Downloads' else ''`
+`r if(length(knitr::opts_knit$get('.downloads'))) '## Downloads' else ' '`
 
 ```{r downloadList, results='asis', echo=FALSE, cache=FALSE}
 downloads <- knitr::opts_knit$get('.downloads')
-exists <- sapply(downloads, '[[', 'written')
-n <- sum(exists)
-if(n){
-  dwn <- vector(n, mode='list')
-  selected <- mget(names(downloads)[exists], downloads)
-  for(i in 1:n){
-    dwn[[i]] <- download_link(selected[[i]], format='table')
+if(length(downloads)){
+  exists <- sapply(downloads, '[[', 'written')
+  n <- sum(exists)
+  if(n){
+    dwn <- vector(n, mode='list')
+    selected <- mget(names(downloads)[exists], downloads)
+    for(i in 1:n){
+      dwn[[i]] <- download_link(selected[[i]], format='table')
+    }
+    dwn <- do.call(rbind, dwn)
+    idx <- order(dwn[[1]])
+    printMD(dwn[idx,])
   }
-  dwn <- do.call(rbind, dwn)
-  printMD(dwn)
 }
 ```

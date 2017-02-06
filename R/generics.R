@@ -26,8 +26,9 @@ printMD.default <- function(x, ...) pander::pander(x, ...)
 #' @rdname printMD
 printMD.double <- function(x, big.mark=',', digits=pander::panderOptions('digits'), ...){
   pretty <- base::prettyNum(x, big.mark=big.mark, digits=digits, ...)
-  if(stringr::str_detect(pretty, stringr::fixed('e'))){
-    pretty <- fix_exponent(pretty)
+  need_fix <- stringr::str_detect(pretty, stringr::fixed('e'))
+  if(any(need_fix)){
+    pretty[need_fix] <- fix_exponent(pretty[need_fix])
   }
   pretty
 }
@@ -38,8 +39,9 @@ printMD.double <- function(x, big.mark=',', digits=pander::panderOptions('digits
 #' @rdname printMD
 printMD.integer <- function(x, big.mark=',', ...){
   pretty <- base::prettyNum(x, big.mark=big.mark, ...)
-  if(stringr::str_detect(pretty, stringr::fixed('e'))){
-    pretty <- fix_exponent(pretty)
+  need_fix <- stringr::str_detect(pretty, stringr::fixed('e'))
+  if(any(need_fix)){
+    pretty[need_fix] <- fix_exponent(pretty[need_fix])
   }
   pretty
 }

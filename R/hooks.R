@@ -88,6 +88,8 @@ fig.cap_opts_hook <- function(options){
 tab.cap_opts_hook <- function(options){
   options$tab.cap <- tabRef(options$label, options$tab.cap)
   options$echo <- FALSE
+  options$cache <- FALSE
+  options$results <- 'asis'
   options
 }
 
@@ -112,7 +114,14 @@ dependson_opts_hook <- function(options){
     for(ext_dep in external){
       dep <- opts_knit$get('dependencies')[ext_dep[[1]]]
       dep[[1]]$chunks <- ext_dep[[2]]
-      load_dependencies(dep)
+      if(opts_knit$get('use_namespace')){
+        if(!ext_dep[[1]] %in% names(knitr::knit_global())){
+          assign(ext_dep[[1]], new.env(parent=knitr::knit_global()), envir=knitr::knit_global())
+        }
+        load_dependencies(dep, where=get(ext_dep[[1]], envir = knitr::knit_global()))
+      } else{
+        load_dependencies(dep)
+      }
       if(is.null(options$ext.depends)){
         options$ext.depends <- list()
       }
@@ -156,7 +165,13 @@ document_hook <- function(x){
       link_section <- c('##Related Documents',
                         sapply(deps, printMD, format='md reference'), '',
                         sapply(deps, printMD, format='reference'))
-      x <- paste(c(x, link_section), collapse='  \n')
+      link_section <- paste(link_section, collapse='  \n')
+      ref_idx <- which(stringr::str_detect(x, '^\\s*##\\s*[Rr]eferences\\s*$'))
+      if(length(ref_idx)){
+        x <- c(x[1:(ref_idx[1]-1)], link_section, x[ref_idx:length(x)])
+      } else {
+        x <-c(x, link_section)
+      }
     }
     mapply(write_index, knitr::opts_knit$get('reportmd.index'), names(knitr::opts_knit$get('reportmd.index')))
   }

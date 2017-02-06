@@ -52,6 +52,7 @@ update_dependency <- function(dep){
   }
   if(needs_update(dep, knitr::current_input())){
     wrapper <- file.path(tag_dir, paste0("render_", dep$label, '.R'))
+    message("Processing ", dep$source, "...")
     cat("setwd('..')\n", "rmarkdown::render(normalizePath('", dep$source, "'), quiet=TRUE)",
         file=wrapper, sep='')
     callr::r(function(x) source(x), args=list(wrapper))

@@ -12,7 +12,7 @@ printMD <- function(x, ...) UseMethod('printMD')
 #' @export
 #' @method printMD default
 #' @rdname printMD
-printMD.default <- function(x, ...) pander::pander(x, ...)
+printMD.default <- function(x, envir=knitr::knit_global(), ...) pander::pander(x, ...)
 
 #' @param big.mark Separator used to mark intervals before the decimal point.
 #' @param digits Number of sinificant digits to display, passed to \code{format}

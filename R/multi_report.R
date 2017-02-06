@@ -17,11 +17,16 @@ panel_types <- c("source" = "panel-primary",
 #' @param fig_format Default format(s) for figures
 #' @param fig_download Logical indicating whether a download link should be added to
 #'     figure captions.
+#' @param use_namespace Logical indicating whether variables loaded from dependencies
+#' should be encapsulated into their own namespace. If \code{TRUE} these variables
+#' are loaded into a separate environment for each depedency, rather than into
+#' the global environment.
 #' @param ... Additional arguments are passed to rmarkdown::html_document
 #' @importFrom rmarkdown html_dependency_jquery
 #' @export
 multi_document <- function(theme = NULL, highlight = NULL, pandoc_args = NULL,
-                           fig_format=c('screen', 'print'), fig_download=TRUE, ...){
+                           fig_format=c('screen', 'print'), fig_download=TRUE,
+                           use_namespace=FALSE, ...){
   theme <- theme %||% "default"
   highlight <- highlight %||% "default"
   pandoc_args <- pandoc_args %||% c(
@@ -70,7 +75,7 @@ multi_document <- function(theme = NULL, highlight = NULL, pandoc_args = NULL,
                      tabcap.prefix = "Table", tabcap.sep = ":", tabcap.prefix.highlight = "**"),
     opts_chunk = list(tidy=FALSE, highlight=FALSE, cache=TRUE, dev=ff, fig_format=fig_format,
                       hold=TRUE, hide.fig.code=TRUE, fig_download=fig_download_text,
-                      fig.width=8, fig.height=8, dpi=300,
+                      fig.width=8, fig.height=8, dpi=300, use_namespace=use_namespace,
                       reportmd.figure.interactive=list(out.width='700px', out.height='600px'),
                       reportmd.figure.screen=list(fig.width=8, fig.height=8, dpi=300),
                       reportmd.figure.print=list(fig.width=8, fig.height=8, dpi=300)),

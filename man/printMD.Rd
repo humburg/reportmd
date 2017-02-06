@@ -10,7 +10,7 @@
 \usage{
 printMD(x, ...)
 
-\method{printMD}{default}(x, envir = knitr::knit_global(), ...)
+\method{printMD}{default}(x, ...)
 
 \method{printMD}{double}(x, big.mark = ",",
   digits = pander::panderOptions("digits"), ...)

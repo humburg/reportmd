@@ -10,6 +10,7 @@ output:
     depends:
       part1: part1.Rmd
       part2: part2.Rmd
+    use_namespace: true
 params:
   version: !r if(nchar(Sys.which('git'))) system("git describe --long --dirty --abbrev=10 --tags --always", intern=TRUE) else date()
 ---
@@ -96,7 +97,7 @@ is given by `r printMD(pi, digits=10)`.
 
 ## Using R objects from child documents
 Your R chunks may use objects created by a chunk in a different (child) document, provided the generating chunk is cached 
-and the cache is available when this document is knitted. To do this simply list the path to the child document in the
+and the cache is available when this document is knitted. To do this, simply list the path to the child document in the
 YAML header under the output options:
 
 ```yaml
@@ -118,12 +119,41 @@ output:
         part2.Rmd: [regression, prepRegPlot]
 ```
 
-As a result we have direct access to the R objects created in the child documents and can use them in the main
+Sometimes it may be preferable not to load R objects from other documents directly
+into the global environment. To load dependencies into a separate environment
+for each child document, add the `use_namespace` option:
+
+```yaml
+output:
+  reportMD::multi_document:
+    depends:
+      part2: 
+        part2.Rmd: [regression, prepRegPlot]
+    use_namespace: true
+```
+
+Now objects form *part2.Rmd* are accessible as `part2$object_name` 
+(instead of simply `object_name`). This helps to avoid name clashes between 
+objects imported from different documents.
+
+Eiter way, we have direct access to the R objects created in the child documents and can use them in the main
 document in whatever order is most useful to explain the analysis and discuss the results. In *part2.Rmd*
-we constructed a ggplot and cached the resulting object. This can now be used to produce the plot here.
+we constructed a ggplot and cached the resulting object. This can now be used to
+produce the plot here (`r figRef('regression')`).
+
+Note that some care is necessary when reproducing plots from child documents. 
+If the plot is not self contained, i.e. it references local variables from
+the envirnment where it was created, the chunks containing the relevant variables
+have to be specified as dependencies. If *use_namespace* is set it is also 
+necessary to provide the environment corresponding to the child document to
+*plotMD*. 
+
+```{r childPlot, eval=FALSE, cache=FALSE}
+plotMD(part2$reg_fig, envir=part2)
+```
 
 ```{r regression, dependson=c('part2:regression', 'part2:prepRegPlot'), fig.cap="Linear regression result. Car weight is a good predictor for MPG and the US built cars in the dataset tend to be heavier."}
-plotMD(reg_fig)
+plotMD(part2$reg_fig, envir=part2)
 ```
 
 In addition to specifying all chunks to import from a child document it is also possible to specify required

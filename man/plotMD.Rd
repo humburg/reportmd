@@ -4,13 +4,16 @@
 \alias{plotMD}
 \title{Create plots for inclusion in RMarkdown reports}
 \usage{
-plotMD(fig, format = knitr::opts_current$get("fig_format"))
+plotMD(fig, format = knitr::opts_current$get("fig_format"), envir = NULL)
 }
 \arguments{
 \item{fig}{A ggplot2 plot for processing.}
 
 \item{format}{A character vector of length one describing the desired
 output format.}
+
+\item{envir}{Environment to use to look for variables used in the plot. If
+\code{NULL} (the default), the environment embedded in \code{fig} is used.}
 }
 \value{
 Depending on the value of \code{format} either a ggplot2 object
@@ -19,6 +22,13 @@ Depending on the value of \code{format} either a ggplot2 object
 }
 \description{
 Create plots for inclusion in RMarkdown reports
+}
+\details{
+the \code{envir} argument should only be needed if local variables
+that are not part of the \code{data} argument are used in the plot and the
+plot is evaluated in an environment that differs from the environment
+where it was originally created. This happens when plotting figures that were
+created in a child document while \emph{use_namespace: true} is in force.
 }
 \examples{
 \dontrun{

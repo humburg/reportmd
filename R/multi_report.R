@@ -19,12 +19,16 @@ panel_types <- c("source" = "panel-primary",
 #'     figure captions.
 #' @param tab_download Logical indicating whether a download link should be added to
 #'     table captions.
+#' @param use_namespace Logical indicating whether variables loaded from dependencies
+#' should be encapsulated into their own namespace. If \code{TRUE} these variables
+#' are loaded into a separate environment for each depedency, rather than into
+#' the global environment.
 #' @param ... Additional arguments are passed to rmarkdown::html_document
 #' @importFrom rmarkdown html_dependency_jquery
 #' @export
 multi_document <- function(theme = NULL, highlight = NULL, pandoc_args = NULL,
                            fig_format=c('screen', 'print'), fig_download=TRUE,
-                           tab_download=TRUE, ...){
+                           tab_download=TRUE, use_namespace=FALSE, ...){
   theme <- theme %||% "default"
   highlight <- highlight %||% "default"
   pandoc_args <- pandoc_args %||% c(
@@ -70,7 +74,7 @@ multi_document <- function(theme = NULL, highlight = NULL, pandoc_args = NULL,
   results$knitr <- list(
     opts_knit = list(reportmd.index=list(figure=matrix(ncol=4, nrow=0), table=matrix(ncol=4, nrow=0)),
                      loaded_chunks=list(), dependencies=deps, figcap.prefix="Figure",
-                     figcap.sep = ":", figcap.prefix.highlight = "**",
+                     figcap.sep = ":", figcap.prefix.highlight = "**", use_namespace=use_namespace,
                      tabcap.prefix = "Table", tabcap.sep = ":", tabcap.prefix.highlight = "**",
                      eval.after=c('fig.cap', 'tab.cap', 'download'),
                      .downloads=new.env(parent=emptyenv()), .ref_links=new.env(parent=emptyenv())),

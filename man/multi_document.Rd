@@ -6,7 +6,7 @@
 \usage{
 multi_document(theme = NULL, highlight = NULL, pandoc_args = NULL,
   fig_format = c("screen", "print"), fig_download = TRUE,
-  tab_download = TRUE, ...)
+  tab_download = TRUE, use_namespace = FALSE, ...)
 }
 \arguments{
 \item{theme}{Visual theme to use for styling of the html output}
@@ -22,6 +22,11 @@ figure captions.}
 
 \item{tab_download}{Logical indicating whether a download link should be added to
 table captions.}
+
+\item{use_namespace}{Logical indicating whether variables loaded from dependencies
+should be encapsulated into their own namespace. If \code{TRUE} these variables
+are loaded into a separate environment for each depedency, rather than into
+the global environment.}
 
 \item{...}{Additional arguments are passed to rmarkdown::html_document}
 }

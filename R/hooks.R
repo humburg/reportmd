@@ -101,7 +101,14 @@ dependson_opts_hook <- function(options){
     for(ext_dep in external){
       dep <- opts_knit$get('dependencies')[ext_dep[[1]]]
       dep[[1]]$chunks <- ext_dep[[2]]
-      load_dependencies(dep)
+      if(opts_knit$get('use_namespace')){
+        if(!ext_dep[[1]] %in% names(knitr::knit_global())){
+          assign(ext_dep[[1]], new.env(parent=knitr::knit_global()), envir=knitr::knit_global())
+        }
+        load_dependencies(dep, where=get(ext_dep[[1]], envir = knitr::knit_global()))
+      } else{
+        load_dependencies(dep)
+      }
       if(is.null(options$ext.depends)){
         options$ext.depends <- list()
       }

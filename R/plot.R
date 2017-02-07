@@ -5,6 +5,13 @@ plot_formats <- c(screen='png', print='pdf', interactive='png')
 #' @param fig A ggplot2 plot for processing.
 #' @param format A character vector of length one describing the desired
 #'    output format.
+#' @param envir Environment to use to look for variables used in the plot. If
+#' \code{NULL} (the default), the environment embedded in \code{fig} is used.
+#' @details the \code{envir} argument should only be needed if local variables
+#' that are not part of the \code{data} argument are used in the plot and the
+#' plot is evaluated in an environment that differs from the environment
+#' where it was originally created. This happens when plotting figures that were
+#' created in a child document while \emph{use_namespace: true} is in force.
 #' @return Depending on the value of \code{format} either a ggplot2 object
 #'  (possibly the same as \code{fig}) or, if \code{format = 'interactive'}
 #'  a \code{plotly} plot.
@@ -20,8 +27,11 @@ plot_formats <- c(screen='png', print='pdf', interactive='png')
 #' @author Peter Humburg
 #' @importFrom plotly ggplotly
 #' @export
-plotMD <- function(fig, format=knitr::opts_current$get('fig_format')){
+plotMD <- function(fig, format=knitr::opts_current$get('fig_format'), envir=NULL){
   format <- match.arg(format, c('screen', 'print', 'interactive'), several.ok=TRUE)
+  if(!is.null(envir)){
+    fig$plot_env <- envir
+  }
   fig_out <- fig
   if('interactive' %in% format) {
     width <- knitr::opts_current$get('out.width')

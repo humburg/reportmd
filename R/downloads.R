@@ -27,12 +27,12 @@ add_download <- function(x, label, writer=write.csv, description="", ext='csv',
                          create=TRUE, ...){
   if(is.character(x) && length(x) == 1){
     name <- x
-    x <- get(x)
+    x <- eval(parse(text=x))
   } else{
     name <- deparse(substitute(x))
   }
   file_name <- name
-  file_name <- stringr::str_replace(file_name, '\\s', '_')
+  file_name <- make.names(file_name)
   file_name <- paste(file_name, ext, sep='.')
 
   downloads <- knitr::opts_knit$get('.downloads')
@@ -66,7 +66,7 @@ create_download <- function(x, download){
   downloads <- knitr::opts_knit$get('.downloads')
   if(is.character(x) && length(x) == 1){
     name <- x
-    x <- get(x)
+    x <- eval(parse(text=x))
   } else{
     name <- deparse(substitute(x))
   }

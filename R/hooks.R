@@ -150,7 +150,7 @@ download_opts_hook <- function(options){
   }
   downloads <- knitr::opts_knit$get('.downloads')
   if(!options$download %in% names(downloads)){
-    data <- get(options$download)
+    data <- eval(parse(text=options$download))
     label <- options$download
     descr <- ''
     if(!is.null(options$tab.cap)){

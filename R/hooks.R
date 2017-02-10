@@ -185,7 +185,7 @@ download_opts_hook <- function(options){
 #' @importFrom knitr opts_knit
 document_hook <- function(x){
   if(!knitr::opts_knit$get('child')){
-    ## Add secttion with links to related documents to appendix
+    ## Add section with links to related documents to appendix
     if(!is.null(opts_knit$get('dependencies'))){
       deps <- opts_knit$get('dependencies')
       link_section <- c('##Related Documents',

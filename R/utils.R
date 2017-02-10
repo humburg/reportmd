@@ -287,9 +287,9 @@ make_ref_links <- function(data, links=1, format=c('markdown', 'html')){
     update_simple <- update & parsed_links[[i]][update, 'text'] == parsed_links[[i]][update, 'label']
     update_full <- update & !update_simple
     if(any(update_simple))
-      data[[update_simple, i]] <- paste0('[', parsed_links[[i]][update_simple, 'text'], ']')
+      data[update_simple, links[i]] <- paste0('[', parsed_links[[i]][update_simple, 'text'], ']')
     if(any(update_full))
-      data[[update_full, i]] <- paste0('[', parsed_links[[i]][update_full, 'text'], '][', parsed_links[[i]][update_full, 'label'], ']')
+      data[update_full, links[i]] <- paste0('[', parsed_links[[i]][update_full, 'text'], '][', parsed_links[[i]][update_full, 'label'], ']')
   }
   data
 }

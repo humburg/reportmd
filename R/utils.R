@@ -206,30 +206,42 @@ fix_exponent <- function(x){
 
 #' @importFrom stringr str_match
 parse_md_link <- function(x){
-  match <- stringr::str_match(x, '\\[(.+)\\]\\((.+)\\)')
-  invalid <- is.na(match[,1])
-  if(any(invalid)){
-    if(sum(invalid) < 0){
-      warning("Failed to parse links: ", paste(x[invalid], collapse=', '))
-    } else {
-      warning("Failed to parse ", sum(invalid), " links. First failure was ", x[invalid][1])
+  non_empty <- x != ''
+  ans <- data.frame(text=NA, link=NA,
+                    label=character(length(x)), stringsAsFactors=FALSE)
+  if(any(non_empty)){
+    match <- stringr::str_match(x[non_empty], '\\[(.+)\\]\\((.+)\\)')
+    invalid <- is.na(match[,1])
+    if(any(invalid)){
+      if(sum(invalid) < 0){
+        warning("Failed to parse links: ", paste(x[invalid], collapse=', '))
+      } else {
+        warning("Failed to parse ", sum(invalid), " links. First failure was ", x[invalid][1])
+      }
     }
+    ans[non_empty, ] <- cbind(text=match[,2], link=match[,3], label=match[,2])
   }
-  data.frame(text=match[,2], link=match[,3], label=match[,2], stringsAsFactors=FALSE)
+  ans
 }
 
 #' @importFrom stringr str_match
 parse_html_link <- function(x){
-  match <- stringr::str_match(x, '<a.*href\\s*=\\s*(\\S+).*>\\s*(.+)\\s*</a\\s*>')
-  invalid <- is.na(match[,1])
-  if(any(invalid)){
-    if(sum(invalid) < 0){
-      warning("Failed to parse links: ", paste(x[invalid], collapse=', '))
-    } else {
-      warning("Failed to parse ", sum(invalid), " links. First failure was ", x[invalid][1])
+  non_empty <- x != ''
+  ans <- data.frame(text=character(length(x)), link=character(length(x)),
+                    label=character(length(x)), stringsAsFactors=FALSE)
+  if(any(non_empty)){
+    match <- stringr::str_match(x, '<a.*href\\s*=\\s*(\\S+).*>\\s*(.+)\\s*</a\\s*>')
+    invalid <- is.na(match[,1])
+    if(any(invalid)){
+      if(sum(invalid) < 0){
+        warning("Failed to parse links: ", paste(x[invalid], collapse=', '))
+      } else {
+        warning("Failed to parse ", sum(invalid), " links. First failure was ", x[invalid][1])
+      }
     }
+    ans[non_empty, ] <- cbind(text=match[,2], link=match[,3], label=match[,2])
   }
-  data.frame(text=match[,3], link=match[,2], label=match[,3], stringsAsFactors=FALSE)
+  ans
 }
 
 #' @importFrom stringr str_replace
@@ -274,7 +286,7 @@ make_ref_links <- function(data, links=1, format=c('markdown', 'html')){
       label <- parsed_links[[i]][j, 'label']
       link <- parsed_links[[i]][j, 'link']
       text <- parsed_links[[i]][j, 'text']
-      if(!is.na(link)){
+      if(!is.na(link) && nchar(label)){
         if(label %in% names(refs)){
           if(parsed_links[[i]][j, 'link'] != refs[[label]]){
             parsed_links[[i]][j, 'label'] <- label <- make.unique(c(names(refs), make_label(label)))[length(refs)+1]

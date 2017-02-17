@@ -13,11 +13,17 @@ simplicity of authoring [*Markdown*](https://daringfireball.net/projects/markdow
 documents and the ability to convert these into a large variety of output formats
 via [*pandoc*](http://pandoc.org/) combined with the tight integration with 
 [*RStudio*](https://www.rstudio.com/) make this approach easy to use and
-powerful at the same time.
+powerful at the same time. 
 
-While this approach has many strengths, currently available tools used to
-facilitate this literate programming approach to data analysis still
-have some shortcomings. Complex analysis are best split into smaller units
+RStudio's support for RMarkdown templates and custom
+document formats has enabled the community to provide templates that are
+tailored towards specific use cases and integrate well with RStudio. The
+document format provided by *reportMD* was inspired by, and is in part based on, [knitrBootstrap](https://github.com/jimhester/knitrBootstrap).
+
+Unlike currently available tools used to
+facilitate this literate programming approach to data analysis *reportMD* 
+focuses specifically on complex data analyses that may not be well suited to the
+monolithic document format typical of RMarkdown. Complex analysis are best split into smaller units
 but are likely to depend on the results of earlier stages of the analysis.
 This R package aims to provide a number of features to support analyses
 that are split across multiple RMarkdown files with cross-file dependencies

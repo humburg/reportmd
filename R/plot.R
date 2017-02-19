@@ -168,14 +168,15 @@ figRef <- local({
       }
       target <- knitr::opts_knit$get('dependencies')[[target]]
       idx <- get_index(target, 'figure')
-      idx <- subset(idx, V1 == label & V2 == target$label)
+      target_name <- sub('(.*)\\.[^.]+$','\\1', basename(target$source))
+      idx <- subset(idx, V1 == label & V2 == target_name)
       if(nrow(idx) == 1){
         result <- paste0(target$short_title, ', ', idx[1, 3])
         if(markup){
           result <- paste0("[", result, "](", basename(target$document), "#", knitr::opts_chunk$get('fig.lp'), label, ")")
         }
       } else{
-        warning("Unable to locate Figure with label '", label, "' in file '", target$label, "'.")
+        warning("Unable to locate Figure with label '", label, "' in file '", target$source, "'.")
       }
     } else{
       i <- which(names(tag) == label)

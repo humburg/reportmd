@@ -49,6 +49,7 @@ printMD.integer <- function(x, big.mark=',', ...){
 #' @param format Format type to use.
 #' @param target Specify an anchor in the output document for \code{x} that the
 #' link should point to.
+#' @param text Text that should be displayed as part of the link.
 #' @method printMD Dependency
 #' @export
 #' @rdname printMD

@@ -33,6 +33,8 @@ printMD(x, ...)
 link should point to.}
 
 \item{format}{Format type to use.}
+
+\item{text}{Text that should be displayed as part of the link.}
 }
 \value{
 String representation of x formatted for printing.

@@ -47,24 +47,31 @@ printMD.integer <- function(x, big.mark=',', ...){
 }
 
 #' @param format Format type to use.
+#' @param target Specify an anchor in the output document for \code{x} that the
+#' link should point to.
+#' @param text Text that should be displayed as part of the link.
 #' @method printMD Dependency
 #' @export
 #' @rdname printMD
-printMD.Dependency <- function(x, format=c('markdown', 'html', 'reference', 'md reference'), ...){
+printMD.Dependency <- function(x, target, format=c('markdown', 'html', 'reference', 'md reference'),
+                               text=x$title, ...){
   format <- tolower(format)
   format <- match.arg(format)
   rel_path <- basename(x$document)
+  if(!missing(target)){
+    rel_path <- paste(rel_path, target, sep='#')
+  }
   if(format == 'markdown'){
-    link <- paste0('[', x$title, '](', rel_path, ')')
+    link <- paste0('[', text, '](', rel_path, ')')
   } else if(format == 'html'){
-    link <- paste0('<a href=', rel_path, '>', x$title, '</a>')
+    link <- paste0('<a href=', rel_path, '>', text, '</a>')
   } else if(format == 'reference'){
     link <- paste0('[', x$label, ']: ', rel_path)
-    if(x$title != 'Untitled'){
-      link <- paste0(link, ' (', x$title, ')')
+    if(!missing(text) || text != 'Untitled'){
+      link <- paste0(link, ' (', text, ')')
     }
   } else if(format == 'md reference'){
-    link <- paste0('[', x$title, '][', x$label, ']')
+    link <- paste0('[', text, '][', x$label, ']')
   }
   link
 }

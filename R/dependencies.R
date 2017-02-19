@@ -117,7 +117,9 @@ copy_dependencies <- function(deps){
   for(d in deps){
     if(dirname(d$document) != getwd()){
       file.copy(d$document, getwd(), overwrite=TRUE)
-      file.copy(d$files, getwd(), recursive=TRUE, overwrite=TRUE)
+      if(dir.exists(d$files)){
+        file.copy(d$files, getwd(), recursive=TRUE, overwrite=TRUE)
+      }
     }
   }
   invisible(NULL)

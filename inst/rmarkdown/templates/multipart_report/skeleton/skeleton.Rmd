@@ -178,8 +178,8 @@ deps <- knitr::opts_knit$get('dependencies')
 Printing a dependency object (*via* `printMD`) will insert a reference to the
 corresponding output document in the text. The optional `target` argument
 to `printMD` allows to specify any anchor for the link. This can correspond
-to a heading, e.g. see the `r printMD(deps$part1, target='introduction', text='Introduction of Part1')`,
-or a code chunk (details of the `r printMD(deps$part2, target='regression', text='regression model used in Part2')`).
+to a heading, e.g. see the `r printMD(deps$part1, target='introduction', text='Introduction of Part 1')`,
+or a code chunk (details of the `r printMD(deps$part2, target='regression', text='regression model used in Part 2')`).
 
 It is also possible to link to a figure or table in a child document by providing the corresponding label
 from the list of dependencies to indicate the target file: `r figRef('boxplot', target='part2')`.

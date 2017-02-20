@@ -26,7 +26,8 @@ panel_types <- c("source" = "panel-primary",
 #' @export
 multi_document <- function(theme = NULL, highlight = NULL, pandoc_args = NULL,
                            fig_format=c('screen', 'print'), fig_download=TRUE,
-                           use_namespace=FALSE, ...){
+                           use_namespace=FALSE, template = system.file(
+                             package="reportMD", "rmarkdown/rmd/default.html"), ...){
   theme <- theme %||% "default"
   highlight <- highlight %||% "default"
   pandoc_args <- pandoc_args %||% c(
@@ -44,9 +45,6 @@ multi_document <- function(theme = NULL, highlight = NULL, pandoc_args = NULL,
       html_dependency_navigation(),
       html_dependency_multi()
     ),
-    template =
-      system.file(
-        package="reportMD", "rmarkdown/rmd/default.html"),
     pandoc_args = check_pandoc_args(pandoc_args), ...)
   ff <- character()
   for(format in fig_format){
@@ -82,6 +80,11 @@ multi_document <- function(theme = NULL, highlight = NULL, pandoc_args = NULL,
     knit_hooks = multi_knit_hooks(),
     opts_hooks = multi_opts_hooks()
   )
+
+  # first call to 'rmarkdown::html_document' uses the default template to retain MathJax functionality
+  # then the pandoc template setting is modified to use the custom template
+  template_arg <- which(results$pandoc$args == "--template") + 1L
+  results$pandoc$args[template_arg] <- template
 
   results
 }

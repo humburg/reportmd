@@ -83,6 +83,13 @@ reg_fig <- ggplot(ext_cars, aes(x=wt, y=mpg, colour=origin, text=rownames(ext_ca
   theme_bw()
 ```
 
+Just to let you know - MathJax does work with this custom template so you can insert any LaTeX expression you want.  
+Here we just use a random formula to demonstrate that everything is working. Check [this link](http://www.calvin.edu/~rpruim/courses/m343/F12/RStudio/LatexExamples.html) for a briew overview of basic LaTeX commands.
+
+$$
+nri_{B1,B2}=\frac{R_{B1}-R_{B2}}{R_{B1}+R_{B2}}
+$$
+
 ```{r appendix, child='rmd/appendix.Rmd'}
 ```
 

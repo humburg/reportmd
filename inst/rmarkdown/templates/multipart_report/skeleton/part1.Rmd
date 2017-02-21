@@ -62,5 +62,5 @@ ext_cars$origin[international] <- 'international'
 ```
 
 
-```{r appendix, child='rmd/appendix.Rmd'}
+```{r appendix, child='rmd/appendix.Rmd', cache=FALSE}
 ```

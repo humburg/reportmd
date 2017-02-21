@@ -2,8 +2,8 @@
 % Please edit documentation in R/utils.R
 \name{extract_yaml}
 \alias{extract_yaml}
-\alias{rmd_short_title}
 \alias{rmd_title}
+\alias{rmd_short_title}
 \title{Processing YAML metadata}
 \usage{
 extract_yaml(input, ...)
@@ -39,4 +39,3 @@ of the title preceding the first punctuation mark
 \author{
 Peter Humburg
 }
-

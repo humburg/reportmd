@@ -6,7 +6,8 @@
 \usage{
 multi_document(theme = NULL, highlight = NULL, pandoc_args = NULL,
   fig_format = c("screen", "print"), fig_download = TRUE,
-  use_namespace = FALSE, ...)
+  use_namespace = FALSE, template = system.file(package = "reportMD",
+  "rmarkdown/rmd/default.html"), ...)
 }
 \arguments{
 \item{theme}{Visual theme to use for styling of the html output}
@@ -25,6 +26,8 @@ should be encapsulated into their own namespace. If \code{TRUE} these variables
 are loaded into a separate environment for each depedency, rather than into
 the global environment.}
 
+\item{template}{Path to custom template}
+
 \item{...}{Additional arguments are passed to rmarkdown::html_document}
 }
 \description{
@@ -32,4 +35,3 @@ An R Markdown document format for multi-part reports.
 The *Multi-part Report* template included in the package provides a detailed
 example of its use.
 }
-

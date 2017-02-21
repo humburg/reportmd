@@ -21,6 +21,7 @@ panel_types <- c("source" = "panel-primary",
 #' should be encapsulated into their own namespace. If \code{TRUE} these variables
 #' are loaded into a separate environment for each depedency, rather than into
 #' the global environment.
+#' @param template Path to custom template
 #' @param ... Additional arguments are passed to rmarkdown::html_document
 #' @importFrom rmarkdown html_dependency_jquery
 #' @export

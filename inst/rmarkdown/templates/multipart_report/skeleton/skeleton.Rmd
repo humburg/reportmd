@@ -86,6 +86,14 @@ printMD(mtcars[1:5, c('mpg', 'hp', 'cyl')])
 
 Tables can be referenced in the same way as figures, using the *tabRef* function. This is a reference to `r tabRef('carTable')`.
 
+## MathJax
+
+MathJax does work with this custom template so you can insert any LaTeX expression you want.  
+Here we just use a random formula to demonstrate that everything is working. Check [this link](http://www.calvin.edu/~rpruim/courses/m343/F12/RStudio/LatexExamples.html) for a briew overview of basic LaTeX commands.
+
+$$
+nri_{B1,B2}=\frac{R_{B1}-R_{B2}}{R_{B1}+R_{B2}}
+$$
 ## Inline R code
 This document format attempts to format output from inline code to be easily readable and consistent without
 requireing careful formatting at the time of writing.

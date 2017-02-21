@@ -43,13 +43,33 @@ merge_list <- function(x,y){
 #' @author Peter Humburg
 extract_yaml <- function(input, ...){
   contents <- readLines(input, ...)
-  header <- stringr::str_extract_all(paste(contents, collapse="\n"),
-                                     stringr::regex("^---.+?^(---|\\.\\.\\.)",
-                                                    multiline=TRUE, dotall=TRUE))
-  header <- lapply(header, stringr::str_replace_all, c('^---+$'='', '(\\.\\.\\.+$)|---+$'=''))
+  header <- stringr::str_match_all(paste(contents, collapse="\n"),
+                                   stringr::regex("^---+\n(.+?)^(---+|\\.\\.\\.+)\n",
+                                                  multiline=TRUE, dotall=TRUE))[[1]][,2]
+  header <- lapply(header, stringr::str_replace_all, '((^---+$)|((\\.\\.\\.+$)|(---+$)))', '')
   header <- lapply(header, yaml::yaml.load)
   header <- Reduce(merge_list, header)
+  header <- eval_yaml(header)
   header
+}
+
+#' Evaluate R code in YAML fields
+#'
+#' @param x YAML meta data to process.
+#' @param data Data to use when evaluating R expressions.
+#' @param ... Further arguments, currently ignored.
+#'
+#' @return A list of the same shape as \code{x} with all inline R code chunks evaluated.
+eval_yaml <- function(x, data, ...){
+  if(missing(data)) data <- x
+  if(is.list(x)){
+    lapply(x, eval_yaml, data, ...)
+  } else if(stringr::str_detect(x, "`r ([^`]+)`")){
+    code <- stringr::str_match(x, "`r ([^`]+)`")[,2]
+    with(data, eval(parse(text=code)))
+  } else{
+    x
+  }
 }
 
 #' Extract title from a Markdown document's yaml metadata

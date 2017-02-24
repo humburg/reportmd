@@ -81,6 +81,27 @@ fig.cap_opts_hook <- function(options){
   opts
 }
 
+#' @return \code{fig.width_opts_hook} adjusts figure width for print and screen
+#' figures.
+#' @export
+#' @rdname figure-hooks
+fig.width_opts_hook <- function(options){
+  options$reportmd.figure.screen$width <- options$fig.width
+  options$reportmd.figure.print$width <- options$fig.width
+  options
+}
+
+#' @return \code{fig.height_opts_hook} adjusts figure height for print and screen
+#' figures.
+#' @export
+#' @rdname figure-hooks
+fig.height_opts_hook <- function(options){
+  options$reportmd.figure.screen$height <- options$fig.height
+  options$reportmd.figure.print$height <- options$fig.height
+  options
+}
+
+
 #' @return \code{tab.cap_opts_hook} returns a list of chunk options with
 #' the \code{tab.cap} option augmented for automatic table numbering.
 #' @export

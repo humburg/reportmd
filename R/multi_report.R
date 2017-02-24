@@ -61,7 +61,8 @@ multi_document <- function(theme = NULL, highlight = NULL, pandoc_args = NULL,
   results <- rmarkdown::html_document(
     highlight = NULL,
     theme = NULL,
-    fig_height=fig_height, fig_width=fig_width,
+    fig.width=fig_width,
+    fig.height=fig_height,
     extra_dependencies=list(
       rmarkdown::html_dependency_jquery(),
       html_dependency_bootstrap3(theme),
@@ -96,7 +97,8 @@ multi_document <- function(theme = NULL, highlight = NULL, pandoc_args = NULL,
                      use_namespace=use_namespace,
                      tabcap.prefix = tabcap_prefix, tabcap.sep = tabcap_sep,
                      tabcap.prefix.highlight = tabcap_prefix_highlight),
-    opts_chunk = list(tidy=FALSE, highlight=FALSE, cache=TRUE, dev=ff, fig_format=fig_format,
+    opts_chunk = list(tidy=FALSE, highlight=FALSE, cache=TRUE, dev=ff,
+                      fig_format=fig_format,
                       hold=TRUE, hide.fig.code=TRUE, fig_download=fig_download_text,
                       dpi=dpi, bootstrap.thumbnail.size=thumbnail_size,
                       bootstrap.thumbnail=thumbnail,
@@ -197,7 +199,5 @@ multi_opts_hooks <- function() {
   list(fig.cap=fig.cap_opts_hook,
        tab.cap=tab.cap_opts_hook,
        dependson=dependson_opts_hook,
-       fig.width=fig.width_opts_hook,
-       fig.height=fig.height_opts_hook,
        fig_format=format_opts_hook)
 }

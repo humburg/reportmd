@@ -39,6 +39,7 @@ panel_types <- c("source" = "panel-primary",
 #' are loaded into a separate environment for each depedency, rather than into
 #' the global environment.
 #' @param template Path to custom template
+#' @param depends List of dependencies.
 #' @param ... Additional arguments are passed to rmarkdown::html_document
 #' @importFrom rmarkdown html_dependency_jquery
 #' @export

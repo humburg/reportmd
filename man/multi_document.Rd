@@ -60,6 +60,8 @@ the global environment.}
 
 \item{template}{Path to custom template}
 
+\item{depends}{List of dependencies.}
+
 \item{...}{Additional arguments are passed to rmarkdown::html_document}
 }
 \description{

@@ -18,3 +18,4 @@ Manage chunk options for different figure formats
 \author{
 Peter Humburg
 }
+

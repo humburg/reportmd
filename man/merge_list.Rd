@@ -21,3 +21,4 @@ Merge two named lists
 Entries in \code{x} that are also present in \code{y}
 will use the values from \code{y}.
 }
+

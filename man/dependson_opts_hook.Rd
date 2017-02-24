@@ -18,3 +18,4 @@ Hooks for use with knitr to facilitate handling of inter-file dependencies.
 \author{
 Peter Humburg
 }
+

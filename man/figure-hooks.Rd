@@ -2,8 +2,10 @@
 % Please edit documentation in R/hooks.R
 \name{fig.cap_chunk_hook}
 \alias{fig.cap_chunk_hook}
-\alias{tab.cap_chunk_hook}
 \alias{fig.cap_opts_hook}
+\alias{fig.height_opts_hook}
+\alias{fig.width_opts_hook}
+\alias{tab.cap_chunk_hook}
 \alias{tab.cap_opts_hook}
 \title{Special processing for figure and table chunks}
 \usage{
@@ -12,6 +14,10 @@ fig.cap_chunk_hook(before, options, envir)
 tab.cap_chunk_hook(before, options, envir)
 
 fig.cap_opts_hook(options)
+
+fig.width_opts_hook(options)
+
+fig.height_opts_hook(options)
 
 tab.cap_opts_hook(options)
 }
@@ -30,6 +36,12 @@ table or figure and add s the caption where required.
 \code{fig.cap_opts_hook} returns a list of chunk options
 adjusted for the requested figure format.
 
+\code{fig.width_opts_hook} adjusts figure width for print and screen
+figures.
+
+\code{fig.height_opts_hook} adjusts figure height for print and screen
+figures.
+
 \code{tab.cap_opts_hook} returns a list of chunk options with
 the \code{tab.cap} option augmented for automatic table numbering.
 }
@@ -44,3 +56,4 @@ These hooks are intended for chunks with the \code{fig.cap} (for figures) and
 \author{
 Peter Humburg
 }
+

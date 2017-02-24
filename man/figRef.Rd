@@ -65,3 +65,4 @@ figRef('foo')
 \author{
 Peter Humburg
 }
+

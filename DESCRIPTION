@@ -1,7 +1,9 @@
 Package: reportMD
 Title: Scientific reports with RMarkdown
 Version: 0.3.2
-Authors@R: person("Peter", "Humburg", email = "p.humburg@garvan.org.au", role = c("aut", "cre"))
+Authors@R: c(person("Peter", "Humburg", email = "p.humburg@garvan.org.au", role = c("aut", "cre")),
+             person("Patrick"," "Schratz", role="ctb",
+             person("Jim", "Hester", role="ctb"))
 Description: Utilities designed to facilitate the creation of scientific reports
     with RMarkdown. The package was inspired by knitrBootstrap and builds on
     rmarkdown to generate html documents that are well suited to document

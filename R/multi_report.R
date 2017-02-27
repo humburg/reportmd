@@ -91,6 +91,8 @@ multi_document <- function(theme = NULL, highlight = NULL, pandoc_args = NULL,
     copy_dependencies(depends)
   }
 
+  thumbnail_size <- valid_size(thumbnail_size)
+
   results$knitr <- list(
     opts_knit = list(reportmd.index=list(figure=matrix(ncol=4, nrow=0), table=matrix(ncol=4, nrow=0)),
                      loaded_chunks=list(), dependencies=depends, figcap.prefix=figcap_prefix,

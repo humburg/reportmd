@@ -228,6 +228,8 @@ bootstrap_plot_hook <- function(x, options) {
 
 thumbnail_plot_hook <- function(x, options){
   thumbnail_size <- options["bootstrap.thumbnail.size"] <- options[["bootstrap.thumbnail.size"]] %||% "col-md-6"
+  thumbnail_size <- valid_size(thumbnail_size)
+
   src <- opts_knit$get('upload.fun')(x)
   caption <- options$fig.cap %||% ""
   img <- tags$img(src=src, alt=caption)

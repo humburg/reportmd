@@ -3,8 +3,8 @@ Title: Scientific reports with RMarkdown
 Version: 0.3.2
 Authors@R: person("Peter", "Humburg", email = "p.humburg@garvan.org.au", role = c("aut", "cre"))
 Description: Utilities designed to facilitate the creation of scientific reports
-    with RMarkdown. The package was inspired by knitrBootstrap and builds on 
-    rmarkdown to generate html documents that are well suited to document 
+    with RMarkdown. The package was inspired by knitrBootstrap and builds on
+    rmarkdown to generate html documents that are well suited to document
     and present the results of scientific analyses.
 Depends:
     R (>= 3.2.0)
@@ -22,4 +22,4 @@ Suggests:
     ggplot2
 License: MIT + file LICENSE
 LazyData: true
-RoxygenNote: 6.0.1
+RoxygenNote: 5.0.1

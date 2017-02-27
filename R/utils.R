@@ -223,3 +223,18 @@ fix_exponent <- function(x){
   x
 }
 
+#' Create valid bootstrap size class
+#' #' @importFrom stringr str_detect
+valid_size <- function(size, size_class='md'){
+  if(!stringr::str_detect(size,'^col')){
+    if(as.integer(size) < 1 || as.integer(size) > 12){
+      stop(deparse(substitute(size)), ' should be between 1 and 12')
+    }
+    if(!is.null(size_class) && !is.na(size_class) && size_class != ''){
+      size <- paste('col', size_class, size, sep='-')
+    } else{
+      size <- paste('col', size, sep='-')
+    }
+  }
+  size
+}

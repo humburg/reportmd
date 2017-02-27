@@ -24,3 +24,4 @@ Set figure related chunk options for print figures
 \author{
 Peter Humburg
 }
+

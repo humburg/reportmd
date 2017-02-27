@@ -46,3 +46,4 @@ no \code{title} is provided an attempt is made to extract it from the header
 of the source file or, if that is unavailable (or no title was found),
 the output document (but currently only for html output).
 }
+

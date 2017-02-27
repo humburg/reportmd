@@ -24,3 +24,4 @@ Set figure related chunk options for static figures
 \author{
 Peter Humburg
 }
+

@@ -2,8 +2,8 @@
 % Please edit documentation in R/hooks.R
 \name{fig.cap_chunk_hook}
 \alias{fig.cap_chunk_hook}
-\alias{tab.cap_chunk_hook}
 \alias{fig.cap_opts_hook}
+\alias{tab.cap_chunk_hook}
 \alias{tab.cap_opts_hook}
 \title{Special processing for figure and table chunks}
 \usage{
@@ -44,3 +44,4 @@ These hooks are intended for chunks with the \code{fig.cap} (for figures) and
 \author{
 Peter Humburg
 }
+

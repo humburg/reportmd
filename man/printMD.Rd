@@ -17,8 +17,8 @@ printMD(x, ...)
 
 \method{printMD}{integer}(x, big.mark = ",", ...)
 
-\method{printMD}{Dependency}(x, format = c("markdown", "html", "reference",
-  "md reference"), ...)
+\method{printMD}{Dependency}(x, target, format = c("markdown", "html",
+  "reference", "md reference"), text = x$title, ...)
 }
 \arguments{
 \item{x}{Object to be printed}
@@ -29,7 +29,12 @@ printMD(x, ...)
 
 \item{digits}{Number of sinificant digits to display, passed to \code{format}}
 
+\item{target}{Specify an anchor in the output document for \code{x} that the
+link should point to.}
+
 \item{format}{Format type to use.}
+
+\item{text}{Text that should be displayed as part of the link.}
 }
 \value{
 String representation of x formatted for printing.

@@ -5,8 +5,13 @@
 \title{Writing Complex Scientific Reports in R}
 \usage{
 multi_document(theme = NULL, highlight = NULL, pandoc_args = NULL,
-  fig_format = c("screen", "print"), fig_download = TRUE,
-  use_namespace = FALSE, ...)
+  fig_format = c("screen", "print"), fig_download = TRUE, fig_height = 8,
+  fig_width = 8, figcap_prefix = "Figure", figcap_sep = ":",
+  figcap_prefix_highlight = "**", thumbnail = TRUE,
+  thumbnail_size = "col-md-6", tabcap_prefix = "Table", tabcap_sep = ":",
+  tabcap_prefix_highlight = "**", dpi = 300, use_namespace = FALSE,
+  template = system.file(package = "reportMD", "rmarkdown/rmd/default.html"),
+  depends = NULL, ...)
 }
 \arguments{
 \item{theme}{Visual theme to use for styling of the html output}
@@ -20,10 +25,42 @@ multi_document(theme = NULL, highlight = NULL, pandoc_args = NULL,
 \item{fig_download}{Logical indicating whether a download link should be added to
 figure captions.}
 
+\item{fig_height}{Default figure height in inches.}
+
+\item{fig_width}{Default figure width in inches.}
+
+\item{figcap_prefix}{Prefix to use for figure labels. Figure labels will
+consist of this prefix and an automatically generated number.}
+
+\item{figcap_sep}{Separator to use between figure label and caption.}
+
+\item{figcap_prefix_highlight}{Markdown to use for highlighting of figure label.}
+
+\item{thumbnail}{A logical indicating whether thumbnails should be included
+in the output document instead of the full figure.}
+
+\item{thumbnail_size}{The width of the thumbnails, specified as a
+\href{http://getbootstrap.com/css/#grid}{bootstrap column class}. The default
+produces thumbnails that are 50\% of the text width. Use \code{col-md-12} for
+full width thumbnails.}
+
+\item{tabcap_prefix}{Prefix to use for table labels. Table labels will
+consist of this prefix and an automatically generated number.}
+
+\item{tabcap_sep}{Separator to use between table label and caption.}
+
+\item{tabcap_prefix_highlight}{Markdown to use for highlighting of table label.}
+
+\item{dpi}{The resolution to use for figures.}
+
 \item{use_namespace}{Logical indicating whether variables loaded from dependencies
 should be encapsulated into their own namespace. If \code{TRUE} these variables
 are loaded into a separate environment for each depedency, rather than into
 the global environment.}
+
+\item{template}{Path to custom template}
+
+\item{depends}{List of dependencies.}
 
 \item{...}{Additional arguments are passed to rmarkdown::html_document}
 }

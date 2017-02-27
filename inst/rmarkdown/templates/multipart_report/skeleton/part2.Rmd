@@ -83,6 +83,7 @@ reg_fig <- ggplot(ext_cars, aes(x=wt, y=mpg, colour=origin, text=rownames(ext_ca
   theme_bw()
 ```
 
+
 ```{r appendix, child='rmd/appendix.Rmd'}
 ```
 

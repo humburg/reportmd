@@ -76,6 +76,30 @@ carFig <- ggplot(mtcars, aes(x=hp, y=mpg, colour=cyl, text=rownames(mtcars))) + 
 plotMD(carFig)
 ```
 
+### Controlling Figure size
+The size of generated figures can be controlled via the *fig_width* and *fig_height*
+options. These work in the YAML header, where they will set the default size for
+all figures in the document, as well as in the options for an individual figure
+chunk. In either case *fig_width* and *fig_height* should be specified in inches.
+
+By default the output document will display thumbnails of figures on screens that
+are at least 992px wide. The default for these thumbnails is to be half the width
+of the main text. To change the size of the thumbnails set *thumbnail_size*
+in the YAML header to a value between 1 and 12, where 12 corresponds to the width
+of the main text. The size of the thumbnail for an individual figure can be
+changed by setting the *bootstrap.thumbnail.size* chunk option. To disable
+thumbnails entirely, set `thumbnail: false` in the YAML header or
+`bootstrap.thumbnail=FALSE` in the chunk options.
+
+### Appearance of Figure lables
+A number of options are available to modify the appearance of figure lables.
+The default appearance (**Figure N**: Some caption) can be changed by setting
+the *figcap_prefix*, *figcap_sep* and *figcap_prefix_highlight* options
+in the YAML header. These control the prefix ('Figure'), separator (':') and
+highlighting (**bold**) of the figure label respectively. For example, to change figure labels
+to the form '*Fig. N:*', set *figcap_prefix* to 'Fig.' and *figcap_prefix_highlight*
+to '*'.
+
 ## Tables
 Tables can be added to the output document by printing a `data.frame` or `matrix` using *printMD*.
 Use the `tab.cap` chunk option to provide a table caption.
@@ -86,6 +110,14 @@ printMD(mtcars[1:5, c('mpg', 'hp', 'cyl')])
 
 Tables can be referenced in the same way as figures, using the *tabRef* function. This is a reference to `r tabRef('carTable')`.
 
+## MathJax
+
+MathJax does work with this custom template so you can insert any LaTeX expression you want.  
+Here we just use a random formula to demonstrate that everything is working. Check [this link](http://www.calvin.edu/~rpruim/courses/m343/F12/RStudio/LatexExamples.html) for a briew overview of basic LaTeX commands.
+
+$$
+nri_{B1,B2}=\frac{R_{B1}-R_{B2}}{R_{B1}+R_{B2}}
+$$
 ## Inline R code
 This document format attempts to format output from inline code to be easily readable and consistent without
 requireing careful formatting at the time of writing.
@@ -167,6 +199,19 @@ it more explicit where objects in a code chunk come from.
 It may be useful to add links to the child documents in appropriate places throughout the text. This can
 be achieved using *pandoc*'s reference link syntax. For example, to link to [Part 2][part2] simply use `[some text][part2]`.
 Links to all document dependencies listed in the header will be added to the *Related Documents* section of the appendix.
+
+It is possible to link to specific parts of a child document by using the corresponding 
+dependency object directly. 
+
+```{r get_dependencies}
+deps <- knitr::opts_knit$get('dependencies')
+```
+
+Printing a dependency object (*via* `printMD`) will insert a reference to the
+corresponding output document in the text. The optional `target` argument
+to `printMD` allows to specify any anchor for the link. This can correspond
+to a heading, e.g. see the `r printMD(deps$part1, target='introduction', text='Introduction of Part 1')`,
+or a code chunk (details of the `r printMD(deps$part2, target='regression', text='regression model used in Part 2')`).
 
 It is also possible to link to a figure or table in a child document by providing the corresponding label
 from the list of dependencies to indicate the target file: `r figRef('boxplot', target='part2')`.

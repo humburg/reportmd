@@ -57,6 +57,17 @@ fig.cap_opts_hook <- function(options){
   fmt <- options$fig_format %||% list('screen')
   options$reportmd.figure.current=fmt
 
+  if(!is.null(options$fig_width)){
+    for(format in fmt){
+      options[[paste('reportmd', 'figure', format, sep='.')]]$fig.width <- options$fig_width
+    }
+  }
+  if(!is.null(options$fig_height)){
+    for(format in fmt){
+      options[[paste('reportmd', 'figure', format, sep='.')]]$fig.height <- options$fig_height
+    }
+  }
+
   options$fig.cap = figRef(options$label, options$fig.cap)
   if(length(options$fig_download) && ('print' %in% fmt && length(fmt) > 1) || fmt == 'interactive'){
     download <- options$fig_download
@@ -72,13 +83,7 @@ fig.cap_opts_hook <- function(options){
     options$warning <- FALSE
   }
 
-  opts <- knitr::opts_chunk$get(paste('reportmd', 'figure', fmt, sep='.'))
-  if(length(fmt) == 1){
-    opts <- list(opts)
-    names(opts) <- paste('reportmd', 'figure', fmt, sep='.')
-  }
-  opts <- merge_list(opts, options)
-  opts
+  options
 }
 
 #' @return \code{tab.cap_opts_hook} returns a list of chunk options with
@@ -145,7 +150,14 @@ format_opts_hook <- function(options){
   }
   options$dev <- plot_formats[options$fig_format]
   dev_opts <- lapply(options$fig_format, function(x )figureOptions(format=x))
-  opts <- lapply(dev_opts, function(x, general) x[general], general_opts)
+  opts <- options[paste('reportmd', 'figure', options$fig_format, sep='.')]
+  dev_opts <- mapply(`%||%`, opts, dev_opts, SIMPLIFY=FALSE)
+  names(dev_opts) <- options$fig_format
+  opts <- lapply(dev_opts, function(x, general){
+      x <- x[general]
+      names(x) <- general
+      x
+    }, general_opts)
   opts <- Reduce(function(x, y) mapply(`%||%`, x, y, SIMPLIFY=FALSE), opts)
   opts <- opts[!sapply(opts, is.null)]
   options[names(opts)] <- opts
@@ -216,6 +228,8 @@ bootstrap_plot_hook <- function(x, options) {
 
 thumbnail_plot_hook <- function(x, options){
   thumbnail_size <- options["bootstrap.thumbnail.size"] <- options[["bootstrap.thumbnail.size"]] %||% "col-md-6"
+  thumbnail_size <- valid_size(thumbnail_size)
+
   src <- opts_knit$get('upload.fun')(x)
   caption <- options$fig.cap %||% ""
   img <- tags$img(src=src, alt=caption)

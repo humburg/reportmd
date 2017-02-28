@@ -104,9 +104,14 @@ to '*'.
 Tables can be added to the output document by printing a `data.frame` or `matrix` using *printMD*.
 Use the `tab.cap` chunk option to provide a table caption.
 
-```{r carTable, tab.cap="A subset of the *mtcars* dataset."}
+```{r carTable, tab.cap="A subset of the *mtcars* dataset.", download='mtcars'}
 printMD(mtcars[1:5, c('mpg', 'hp', 'cyl')])
 ```
+
+It sometimes is desirable to provide access to the data displayed in the
+table. If a table chunk contains an option of the form `download="variable_name"`,
+a file containing the the data stored in *variable_name* will be created and
+a download link pointing to that file will be added to the table caption.
 
 Tables can be referenced in the same way as figures, using the *tabRef* function. This is a reference to `r tabRef('carTable')`.
 

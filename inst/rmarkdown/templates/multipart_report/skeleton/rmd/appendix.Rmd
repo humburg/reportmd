@@ -23,7 +23,7 @@ pander(unclass(info))
 
 `r if(length(knitr::opts_knit$get('.downloads'))) '## Downloads' else ' '`
 
-```{r downloadList, results='asis', echo=FALSE, cache=FALSE, eval=length(knitr::opts_knit$get('.downloads'))}
+```{r downloadList, results='asis', echo=FALSE, cache=FALSE}
 downloads <- knitr::opts_knit$get('.downloads')
 if(length(downloads)){
   exists <- sapply(downloads, '[[', 'written')

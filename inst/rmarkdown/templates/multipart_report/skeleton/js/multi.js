@@ -13,7 +13,7 @@ $(function() {
   });
 
   /* style tables */
-  $('table').addClass('table table-striped table-bordered table-hover table-condensed');
+  $('table').addClass('table table-striped table-hover table-condensed');
 
   /* Code block toggles */
   $('.code-chunk button').click(function(e){

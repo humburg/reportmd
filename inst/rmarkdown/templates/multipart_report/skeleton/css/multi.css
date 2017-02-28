@@ -196,7 +196,12 @@ pre code {
   }
 }
 
-#downloadList{
+/* Table styles */
+table {
+  margin: auto;
+  margin-bottom: 20px;
+}
+#downloadList {
   margin-top: 20px;
 }
 

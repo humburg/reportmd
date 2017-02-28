@@ -76,6 +76,30 @@ carFig <- ggplot(mtcars, aes(x=hp, y=mpg, colour=cyl, text=rownames(mtcars))) + 
 plotMD(carFig)
 ```
 
+### Controlling Figure size
+The size of generated figures can be controlled via the *fig_width* and *fig_height*
+options. These work in the YAML header, where they will set the default size for
+all figures in the document, as well as in the options for an individual figure
+chunk. In either case *fig_width* and *fig_height* should be specified in inches.
+
+By default the output document will display thumbnails of figures on screens that
+are at least 992px wide. The default for these thumbnails is to be half the width
+of the main text. To change the size of the thumbnails set *thumbnail_size*
+in the YAML header to a value between 1 and 12, where 12 corresponds to the width
+of the main text. The size of the thumbnail for an individual figure can be
+changed by setting the *bootstrap.thumbnail.size* chunk option. To disable
+thumbnails entirely, set `thumbnail: false` in the YAML header or
+`bootstrap.thumbnail=FALSE` in the chunk options.
+
+### Appearance of Figure lables
+A number of options are available to modify the appearance of figure lables.
+The default appearance (**Figure N**: Some caption) can be changed by setting
+the *figcap_prefix*, *figcap_sep* and *figcap_prefix_highlight* options
+in the YAML header. These control the prefix ('Figure'), separator (':') and
+highlighting (**bold**) of the figure label respectively. For example, to change figure labels
+to the form '*Fig. N:*', set *figcap_prefix* to 'Fig.' and *figcap_prefix_highlight*
+to '*'.
+
 ## Tables
 Tables can be added to the output document by printing a `data.frame` or `matrix` using *printMD*.
 Use the `tab.cap` chunk option to provide a table caption.

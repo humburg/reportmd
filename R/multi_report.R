@@ -19,18 +19,43 @@ panel_types <- c("source" = "panel-primary",
 #'     figure captions.
 #' @param tab_download Logical indicating whether a download link should be added to
 #'     table captions.
+#' @param fig_width Default figure width in inches.
+#' @param fig_height Default figure height in inches.
+#' @param figcap_prefix Prefix to use for figure labels. Figure labels will
+#' consist of this prefix and an automatically generated number.
+#' @param figcap_sep Separator to use between figure label and caption.
+#' @param figcap_prefix_highlight Markdown to use for highlighting of figure label.
+#' @param thumbnail A logical indicating whether thumbnails should be included
+#' in the output document instead of the full figure.
+#' @param thumbnail_size The width of the thumbnails, specified as a
+#' \href{http://getbootstrap.com/css/#grid}{bootstrap column class}. The default
+#' produces thumbnails that are 50\% of the text width. Use \code{col-md-12} for
+#' full width thumbnails.
+#' @param tabcap_prefix Prefix to use for table labels. Table labels will
+#' consist of this prefix and an automatically generated number.
+#' @param tabcap_sep Separator to use between table label and caption.
+#' @param tabcap_prefix_highlight Markdown to use for highlighting of table label.
+#' @param dpi The resolution to use for figures.
 #' @param use_namespace Logical indicating whether variables loaded from dependencies
 #' should be encapsulated into their own namespace. If \code{TRUE} these variables
 #' are loaded into a separate environment for each depedency, rather than into
 #' the global environment.
 #' @param template Path to custom template
+#' @param depends List of dependencies.
 #' @param ... Additional arguments are passed to rmarkdown::html_document
 #' @importFrom rmarkdown html_dependency_jquery
 #' @export
 multi_document <- function(theme = NULL, highlight = NULL, pandoc_args = NULL,
                            fig_format=c('screen', 'print'), fig_download=TRUE,
-                           tab_download=TRUE, use_namespace=FALSE,
-                           template = system.file(package="reportMD", "rmarkdown/rmd/default.html"), ...){
+                           tab_download=TRUE,
+                           fig_height=8, fig_width=8, figcap_prefix="Figure",
+                           figcap_sep = ":", figcap_prefix_highlight = "**",
+                           thumbnail=TRUE, thumbnail_size='col-md-6',
+                           tabcap_prefix="Table", tabcap_sep = ":",
+                           tabcap_prefix_highlight = "**", dpi=300,
+                           use_namespace=FALSE, template = system.file(
+                             package="reportMD", "rmarkdown/rmd/default.html"),
+                           depends=NULL, ...){
   theme <- theme %||% "default"
   highlight <- highlight %||% "default"
   pandoc_args <- pandoc_args %||% c(
@@ -41,6 +66,8 @@ multi_document <- function(theme = NULL, highlight = NULL, pandoc_args = NULL,
   results <- rmarkdown::html_document(
     highlight = NULL,
     theme = NULL,
+    fig.width=fig_width,
+    fig.height=fig_height,
     extra_dependencies=list(
       rmarkdown::html_dependency_jquery(),
       html_dependency_bootstrap3(theme),
@@ -60,30 +87,32 @@ multi_document <- function(theme = NULL, highlight = NULL, pandoc_args = NULL,
     fig_download_text <- '(Download as [PDF](%PATH%))'
   }
 
-  args <- list(...)
-  deps <- NULL
-  if('depends' %in% names(args)){
-    deps <- params2deps(args$depends)
-    for(d in deps){
+  if(!is.null(depends)){
+    depends <- params2deps(depends)
+    for(d in depends){
       update_dependency(d)
     }
-    copy_dependencies(deps)
+    copy_dependencies(depends)
   }
+
+  thumbnail_size <- valid_size(thumbnail_size)
 
   results$knitr <- list(
     opts_knit = list(reportmd.index=list(figure=matrix(ncol=4, nrow=0), table=matrix(ncol=4, nrow=0)),
-                     loaded_chunks=list(), dependencies=deps, figcap.prefix="Figure",
-                     figcap.sep = ":", figcap.prefix.highlight = "**", use_namespace=use_namespace,
-                     tabcap.prefix = "Table", tabcap.sep = ":", tabcap.prefix.highlight = "**",
-                     eval.after=c('fig.cap', 'tab.cap', 'download'),
-                     .downloads=new.env(parent=emptyenv()), .ref_links=new.env(parent=emptyenv())),
-    opts_chunk = list(tidy=FALSE, highlight=FALSE, cache=TRUE, comment=NA,
-                      dev=ff, fig_format=fig_format, hold=TRUE, hide.fig.code=TRUE,
-                      fig_download=fig_download_text, fig.width=8, fig.height=8, dpi=300,
-                      tab_download=tab_download,
+                     loaded_chunks=list(), dependencies=depends, figcap.prefix=figcap_prefix,
+                     figcap.sep = figcap_sep, figcap.prefix.highlight = figcap_prefix_highlight,
+                     use_namespace=use_namespace, eval.after=c('fig.cap', 'tab.cap', 'download'),
+                     .downloads=new.env(parent=emptyenv()), .ref_links=new.env(parent=emptyenv()),
+                     tabcap.prefix = tabcap_prefix, tabcap.sep = tabcap_sep,
+                     tabcap.prefix.highlight = tabcap_prefix_highlight),
+    opts_chunk = list(tidy=FALSE, highlight=FALSE, cache=TRUE, dev=ff,
+                      fig_format=fig_format,
+                      hold=TRUE, hide.fig.code=TRUE, fig_download=fig_download_text,
+                      dpi=dpi, bootstrap.thumbnail.size=thumbnail_size,
+                      bootstrap.thumbnail=thumbnail,
                       reportmd.figure.interactive=list(out.width='700px', out.height='600px'),
-                      reportmd.figure.screen=list(fig.width=8, fig.height=8, dpi=300),
-                      reportmd.figure.print=list(fig.width=8, fig.height=8, dpi=300)),
+                      reportmd.figure.screen=list(fig.width=fig_width, fig.height=fig_height, dpi=dpi),
+                      reportmd.figure.print=list(fig.width=fig_width, fig.height=fig_height, dpi=dpi)),
     knit_hooks = multi_knit_hooks(),
     opts_hooks = multi_opts_hooks()
   )

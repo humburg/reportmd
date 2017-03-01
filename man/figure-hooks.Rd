@@ -3,13 +3,10 @@
 \name{fig.cap_chunk_hook}
 \alias{fig.cap_chunk_hook}
 \alias{fig.cap_opts_hook}
-\alias{tab.cap_chunk_hook}
 \alias{tab.cap_opts_hook}
 \title{Special processing for figure and table chunks}
 \usage{
 fig.cap_chunk_hook(before, options, envir)
-
-tab.cap_chunk_hook(before, options, envir)
 
 fig.cap_opts_hook(options)
 

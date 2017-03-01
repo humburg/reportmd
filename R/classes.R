@@ -91,3 +91,45 @@ Dependency <- function(label, document, source, chunks, title, cache, index, ...
   class(dep) <- 'Dependency'
   dep
 }
+
+#' Create objects of class \code{Download}
+#'
+#' Objects of this class hold the information necessary to create output files
+#' containing data and results from the analysis as well as the links necessary
+#' to access them from the HTML output.
+#'
+#' @param writer A function to write the downloadable content to a file. Its first
+#' argument should be the R object to be written and the second argument the file name.
+#' @param file_name Name of output file, not including any path information.
+#' @param label A short, descriptive label to identify the download.
+#' @param description A longer description of the downloadable content.
+#' @param ... Additional arguments are passed to \code{writer}.
+#'
+#' @return An object of class \code{Download}
+#' @note This class stores all the information necessary to create downloadable
+#' files, but creating an instance of this class will not create the file.
+#' Use \code{add_download} to add Instances of this class to the global list
+#' of downloads. All downloads registered in this way will be created automatically
+#' after the rest of the document has been processed and a section with download
+#' links is added to the appendix. Download links can be created manually through
+#' calls to \code{create_download}.
+#'
+#' @author Peter Humburg
+#' @export
+#'
+#' @importFrom knitr opts_chunk
+#' @importFrom stringr str_replace
+Download <- function(writer, file_name, label, description, ...){
+  download_dir <- knitr::opts_chunk$get('fig.path')
+  download_dir <- stringr::str_replace(download_dir, 'figure-', 'download-')
+
+  args <- list(...)
+  dwnld <- list(target=paste0(download_dir, file_name),
+                label=label,
+                description=description,
+                writer=writer,
+                args=args,
+                written=FALSE)
+  class(dwnld) <- 'Download'
+  dwnld
+}

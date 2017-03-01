@@ -7,11 +7,13 @@
 \usage{
 figRef(label, caption, target, prefix = knitr::opts_knit$get("figcap.prefix"),
   sep = knitr::opts_knit$get("figcap.sep"),
-  prefix.highlight = knitr::opts_knit$get("figcap.prefix.highlight"))
+  prefix.highlight = knitr::opts_knit$get("figcap.prefix.highlight"),
+  markup = TRUE)
 
 tabRef(label, caption, target, prefix = knitr::opts_knit$get("tabcap.prefix"),
   sep = knitr::opts_knit$get("tabcap.sep"),
-  prefix.highlight = knitr::opts_knit$get("tabcap.prefix.highlight"))
+  prefix.highlight = knitr::opts_knit$get("tabcap.prefix.highlight"),
+  markup = TRUE)
 }
 \arguments{
 \item{label}{Identifying label.}
@@ -27,6 +29,9 @@ tabRef(label, caption, target, prefix = knitr::opts_knit$get("tabcap.prefix"),
 
 \item{prefix.highlight}{Markdown code the figure label should be wrapped in.
 Allows the label to be displayed in bold or italics.}
+
+\item{markup}{Logical indicating whether the label that is returned when
+\code{caption} is missing should be marked up as a link.}
 }
 \value{
 If the \code{caption} argument is present a string combining the (computed)

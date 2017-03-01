@@ -196,6 +196,15 @@ pre code {
   }
 }
 
+/* Table styles */
+table {
+  margin: auto;
+  margin-bottom: 20px;
+}
+#downloadList {
+  margin-top: 20px;
+}
+
 .source::-webkit-scrollbar, .scrollbar::-webkit-scrollbar {
   width: 3px;
   height: 3px;

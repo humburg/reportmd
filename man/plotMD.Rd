@@ -40,10 +40,9 @@ created in a child document while \emph{use_namespace: true} is in force.
 
 }
 }
-\author{
-Peter Humburg
-}
 \seealso{
 \code{\link[plotly]{ggplotly}}
 }
-
+\author{
+Peter Humburg
+}

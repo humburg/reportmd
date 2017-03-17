@@ -22,4 +22,3 @@ Set figure related chunk options for interactive figures
 \author{
 Peter Humburg
 }
-

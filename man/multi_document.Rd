@@ -73,4 +73,3 @@ An R Markdown document format for multi-part reports.
 The *Multi-part Report* template included in the package provides a detailed
 example of its use.
 }
-

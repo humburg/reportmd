@@ -17,4 +17,3 @@ Extract title from an HTML document
 \author{
 Peter Humburg
 }
-

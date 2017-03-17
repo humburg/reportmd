@@ -19,4 +19,3 @@ A list of the same shape as \code{x} with all inline R code chunks evaluated.
 \description{
 Evaluate R code in YAML fields
 }
-

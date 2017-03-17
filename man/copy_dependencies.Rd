@@ -19,4 +19,3 @@ a \code{dependencies} package option.
 \author{
 Peter Humburg
 }
-

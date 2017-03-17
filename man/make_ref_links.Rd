@@ -32,4 +32,3 @@ have markdown reference links.
 \author{
 Peter Humburg
 }
-

@@ -2,10 +2,10 @@
 % Please edit documentation in R/generics.R
 \name{printMD}
 \alias{printMD}
-\alias{printMD.Dependency}
 \alias{printMD.default}
 \alias{printMD.double}
 \alias{printMD.integer}
+\alias{printMD.Dependency}
 \title{Pretty printing of R objects for Markdown output}
 \usage{
 printMD(x, ...)
@@ -51,4 +51,3 @@ printMD(10000L)
 \author{
 Peter Humburg
 }
-

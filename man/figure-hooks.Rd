@@ -41,4 +41,3 @@ These hooks are intended for chunks with the \code{fig.cap} (for figures) and
 \author{
 Peter Humburg
 }
-

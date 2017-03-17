@@ -161,6 +161,7 @@ tags <- list(
   a = function(...) tag("a", list(...)),
   b = function(...) tag("b", list(...)),
   button = function(...) tag("button", list(...)),
+  caption = function(...) tag("p", c(class='caption', list(...))),
   code = function(...) tag("code", list(...), add_newline = FALSE),
   div = function(...) tag("div", list(...)),
   img = function(...) tag("img", list(...)),
@@ -221,6 +222,119 @@ fix_exponent <- function(x){
   x <- stringr::str_replace(x, '\\{\\+?(-?)0*(\\d+)', '{\\1\\2')
   x <- stringr::str_replace(x, stringr::fixed('$1\\times '), '$')
   x
+}
+
+#' @importFrom stringr str_match
+parse_md_link <- function(x){
+  non_empty <- x != ''
+  ans <- data.frame(text=NA, link=NA,
+                    label=character(length(x)), stringsAsFactors=FALSE)
+  if(any(non_empty)){
+    match <- stringr::str_match(x[non_empty], '\\[(.+)\\]\\((.+)\\)')
+    invalid <- is.na(match[,1])
+    if(any(invalid)){
+      if(sum(invalid) < 0){
+        warning("Failed to parse links: ", paste(x[invalid], collapse=', '))
+      } else {
+        warning("Failed to parse ", sum(invalid), " links. First failure was ", x[invalid][1])
+      }
+    }
+    ans[non_empty, ] <- cbind(text=match[,2], link=match[,3], label=match[,2])
+  }
+  ans
+}
+
+#' @importFrom stringr str_match
+parse_html_link <- function(x){
+  non_empty <- x != ''
+  ans <- data.frame(text=character(length(x)), link=character(length(x)),
+                    label=character(length(x)), stringsAsFactors=FALSE)
+  if(any(non_empty)){
+    match <- stringr::str_match(x, '<a.*href\\s*=\\s*(\\S+).*>\\s*(.+)\\s*</a\\s*>')
+    invalid <- is.na(match[,1])
+    if(any(invalid)){
+      if(sum(invalid) < 0){
+        warning("Failed to parse links: ", paste(x[invalid], collapse=', '))
+      } else {
+        warning("Failed to parse ", sum(invalid), " links. First failure was ", x[invalid][1])
+      }
+    }
+    ans[non_empty, ] <- cbind(text=match[,2], link=match[,3], label=match[,2])
+  }
+  ans
+}
+
+#' @importFrom stringr str_replace
+make_label <- function(x){
+  x <- stringr::str_replace(x, '&[^;]*;', '')
+  make.names(x)
+}
+
+#' Convert links in a table column to reference links
+#'
+#' @param data A \code{data.frame} or an object that can be coerced to one.
+#' @param links Numerical vector of column indices indicating columns that
+#' contain links in need of conversion.
+#' @param format Format used to specify links in the input.
+#'
+#' @details It is assumed that each entry consists either of a single link
+#' or doesn't contain any link. If a link is identified the resulting reference
+#' link will replace the entire entry. Entries without links will be left unchanged.
+#'
+#' Regardles of the input format of the links, the output will always
+#' have markdown reference links.
+#'
+#' @return A \code{data.frame} with links in the indicated columns replaced
+#' with reference links.
+#' @export
+#' @author Peter Humburg
+make_ref_links <- function(data, links=1, format=c('markdown', 'html')){
+  format <- match.arg(format)
+  if(!is.data.frame(data)){
+    data <- as.data.frame(data)
+  }
+  parsed_links <- lapply(links, function(i){
+    switch(format,
+           markdown=parse_md_link(data[[i]]),
+           html=parse_html_link(data[[i]]))
+  })
+  refs <- knitr::opts_knit$get('.ref_links')
+
+  ## ensure labels are unique
+  for(i in 1:length(parsed_links)){
+    for(j in 1:nrow(parsed_links[[i]])){
+      label <- parsed_links[[i]][j, 'label']
+      link <- parsed_links[[i]][j, 'link']
+      text <- parsed_links[[i]][j, 'text']
+      if(!is.na(link) && nchar(label)){
+        if(label %in% names(refs)){
+          if(parsed_links[[i]][j, 'link'] != refs[[label]]){
+            parsed_links[[i]][j, 'label'] <- label <- make.unique(c(names(refs), make_label(label)))[length(refs)+1]
+          }
+        }
+        refs[[label]] <- link
+      }
+    }
+    update <- !is.na(parsed_links[[i]][['link']])
+    update_simple <- update & parsed_links[[i]][update, 'text'] == parsed_links[[i]][update, 'label']
+    update_full <- update & !update_simple
+    if(any(update_simple))
+      data[update_simple, links[i]] <- paste0('[', parsed_links[[i]][update_simple, 'text'], ']')
+    if(any(update_full))
+      data[update_full, links[i]] <- paste0('[', parsed_links[[i]][update_full, 'text'], '][', parsed_links[[i]][update_full, 'label'], ']')
+  }
+  data
+}
+
+ref_links <- function(){
+  refs <- knitr::opts_knit$get('.ref_links')
+  ans <- character(length(refs))
+  if(!length(ans)) return(ans)
+  for(i in 1:length(refs)){
+    label <- names(refs)[i]
+    ans[i] <- paste0('[', label, ']: ', refs[[label]])
+  }
+  paste('\n', paste(ans, collapse='\n'), '\n')
 }
 
 #' @importFrom stringr str_detect

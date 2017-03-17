@@ -17,6 +17,8 @@ panel_types <- c("source" = "panel-primary",
 #' @param fig_format Default format(s) for figures
 #' @param fig_download Logical indicating whether a download link should be added to
 #'     figure captions.
+#' @param tab_download Logical indicating whether a download link should be added to
+#'     table captions.
 #' @param fig_width Default figure width in inches.
 #' @param fig_height Default figure height in inches.
 #' @param figcap_prefix Prefix to use for figure labels. Figure labels will
@@ -45,6 +47,7 @@ panel_types <- c("source" = "panel-primary",
 #' @export
 multi_document <- function(theme = NULL, highlight = NULL, pandoc_args = NULL,
                            fig_format=c('screen', 'print'), fig_download=TRUE,
+                           tab_download=TRUE,
                            fig_height=8, fig_width=8, figcap_prefix="Figure",
                            figcap_sep = ":", figcap_prefix_highlight = "**",
                            thumbnail=TRUE, thumbnail_size='col-md-6',
@@ -59,6 +62,7 @@ multi_document <- function(theme = NULL, highlight = NULL, pandoc_args = NULL,
     "--variable",
     "mathjax-url:https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"
   )
+  pander::panderOptions("knitr.auto.asis", FALSE)
   results <- rmarkdown::html_document(
     highlight = NULL,
     theme = NULL,
@@ -97,14 +101,15 @@ multi_document <- function(theme = NULL, highlight = NULL, pandoc_args = NULL,
     opts_knit = list(reportmd.index=list(figure=matrix(ncol=4, nrow=0), table=matrix(ncol=4, nrow=0)),
                      loaded_chunks=list(), dependencies=depends, figcap.prefix=figcap_prefix,
                      figcap.sep = figcap_sep, figcap.prefix.highlight = figcap_prefix_highlight,
-                     use_namespace=use_namespace,
+                     use_namespace=use_namespace, eval.after=c('fig.cap', 'tab.cap', 'download'),
+                     .downloads=new.env(parent=emptyenv()), .ref_links=new.env(parent=emptyenv()),
                      tabcap.prefix = tabcap_prefix, tabcap.sep = tabcap_sep,
                      tabcap.prefix.highlight = tabcap_prefix_highlight),
     opts_chunk = list(tidy=FALSE, highlight=FALSE, cache=TRUE, dev=ff,
-                      fig_format=fig_format,
+                      fig_format=fig_format, comment=NA,
                       hold=TRUE, hide.fig.code=TRUE, fig_download=fig_download_text,
                       dpi=dpi, bootstrap.thumbnail.size=thumbnail_size,
-                      bootstrap.thumbnail=thumbnail,
+                      bootstrap.thumbnail=thumbnail, tab_download=tab_download,
                       reportmd.figure.interactive=list(out.width='700px', out.height='600px'),
                       reportmd.figure.screen=list(fig.width=fig_width, fig.height=fig_height, dpi=dpi),
                       reportmd.figure.print=list(fig.width=fig_width, fig.height=fig_height, dpi=dpi)),
@@ -177,8 +182,6 @@ multi_knit_hooks <- function() {
     function(x, options) {
       x <- paste(x, collapse = "\n")
       show <- switch(name,
-                     source = (options[["bootstrap.show.code"]] <- options[["bootstrap.show.code"]] %||% TRUE),
-                     output = (options[["bootstrap.show.output"]] <- options[["bootstrap.show.output"]] %||% TRUE),
                      message = (options[["bootstrap.show.message"]] <- options[["bootstrap.show.message"]] %||% TRUE),
                      warning = (options[["bootstrap.show.warning"]] <- options[["bootstrap.show.warning"]] %||% TRUE),
                      error = (options[["bootstrap.show.error"]] <- options[["bootstrap.show.error"]] %||% TRUE),
@@ -187,11 +190,12 @@ multi_knit_hooks <- function() {
     }
   }
   c(
-    sapply(c("source", "warning", "message", "error", "output"), html_hook),
+    sapply(c("warning", "message", "error"), html_hook),
     plot = bootstrap_plot_hook,
     chunk = bootstrap_chunk_hook,
+    output=output_hook,
+    source=source_hook,
     fig.cap=fig.cap_chunk_hook,
-    tab.cap=tab.cap_chunk_hook,
     document=document_hook,
     inline=inline_hook,
     NULL
@@ -202,5 +206,6 @@ multi_opts_hooks <- function() {
   list(fig.cap=fig.cap_opts_hook,
        tab.cap=tab.cap_opts_hook,
        dependson=dependson_opts_hook,
+       download=download_opts_hook,
        fig_format=format_opts_hook)
 }

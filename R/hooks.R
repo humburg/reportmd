@@ -35,18 +35,6 @@ fig.cap_chunk_hook <- function(before, options, envir) {
   }
 }
 
-#' @export
-#' @rdname figure-hooks
-tab.cap_chunk_hook <- function(before, options, envir) {
-  if(before){
-    paste0('<div id="tab:', options$label, '" class="table-wrapper">',
-           '<p class="caption">', options$tab.cap, "</p>")
-  } else{
-    "</div>"
-  }
-}
-
-
 ## Option hooks
 
 #' @return \code{fig.cap_opts_hook} returns a list of chunk options
@@ -91,10 +79,9 @@ fig.cap_opts_hook <- function(options){
 #' @export
 #' @rdname figure-hooks
 tab.cap_opts_hook <- function(options){
-  options$tab.cap <- tabRef(options$label, options$tab.cap)
   options$echo <- FALSE
   options$cache <- FALSE
-  options$results <- 'asis'
+  options$results <- 'markup'
   options
 }
 
@@ -167,17 +154,58 @@ format_opts_hook <- function(options){
   options
 }
 
+download_opts_hook <- function(options){
+  if(length(options$download) > 1){
+    warning("More than one download requested for chunk ", options$label,
+            ". Only the first one will be processed.")
+    options$download <- options$download[1]
+  }
+  downloads <- knitr::opts_knit$get('.downloads')
+  if(!options$download %in% names(downloads)){
+    data <- eval(parse(text=options$download))
+    label <- options$download
+    descr <- ''
+    if(!is.null(options$tab.cap)){
+      label <- tabRef(options$label, markup=FALSE)
+      descr <- options$tab.cap
+    }
+
+    if(!is.data.frame(data)){
+      data <- tryCatch(as.data.frame(data), error=function(e) data)
+      assign(options$download, data)
+    }
+    format <- if(is.data.frame(data)) 'csv' else 'rda'
+    writer <- switch(format,
+                     csv=write.csv,
+                     rda=function(x, file, ...) save(x, file=file, ...))
+    add_download(options$download, label=label, description=descr,
+                 writer=writer, ext=format, create=TRUE)
+  }
+  if(!downloads[[options$download]]$written){
+    create_download(options$download)
+  }
+  if(!is.null(options$tab.cap)){
+    options$tab.cap <- stringr::str_replace(options$tab.cap, '\\.$', '')
+    options$tab.cap <- paste0(options$tab.cap, ' (', download_link(options$download, text='download'), ').')
+  }
+  options
+}
+
+
 ## Output hooks
 
 #' @importFrom knitr opts_knit
 document_hook <- function(x){
   if(!knitr::opts_knit$get('child')){
+    ## Add section with links to related documents to appendix
     if(!is.null(opts_knit$get('dependencies'))){
       deps <- opts_knit$get('dependencies')
       link_section <- c('##Related Documents',
                         sapply(deps, printMD, format='md reference'), '',
                         sapply(deps, printMD, format='reference'))
       link_section <- paste(link_section, collapse='  \n')
+      ## References will be appended to the document by pandoc, so the
+      ## corresponding header needs to go last
       ref_idx <- which(stringr::str_detect(x, '^\\s*##\\s*[Rr]eferences\\s*$'))
       if(length(ref_idx)){
         x <- c(x[1:(ref_idx[1]-1)], link_section, x[ref_idx:length(x)])
@@ -185,12 +213,38 @@ document_hook <- function(x){
         x <-c(x, link_section)
       }
     }
+    x <- c(x, ref_links())
     mapply(write_index, knitr::opts_knit$get('reportmd.index'), names(knitr::opts_knit$get('reportmd.index')))
   }
   x
 }
 
+output_hook <- function(x, options){
+  if(!is.null(options[['tab.cap']])){
+    caption <- tags$caption(tabRef(options$label, options$tab.cap))
+    x <- tags$div(id=paste0('tab:', options$label), class='table-wrapper',
+                     caption, x)
+  } else {
+    x <- paste(x, collapse = "\n")
+    options[["bootstrap.show.output"]] <- show <- options[["bootstrap.show.output"]] %||% TRUE
+    x <- generate_panel(options$engine, 'output', knitr::opts_current$get("label"), x, !show)
+  }
+  x
+}
+
+source_hook <- function(x, options){
+  if(is.null(options[['tab.cap']])){
+    x <- paste(x, collapse = "\n")
+    options[["bootstrap.show.source"]] <- show <- options[["bootstrap.show.source"]] %||% TRUE
+    generate_panel(options$engine, 'source', knitr::opts_current$get("label"), x, !show)
+  }
+}
+
+
 inline_hook <- function(x){
+  asis <- pander::panderOptions("knitr.auto.asis")
+  pander::panderOptions("knitr.auto.asis", TRUE)
+  on.exit(pander::panderOptions("knitr.auto.asis", asis))
   printMD(x)
 }
 

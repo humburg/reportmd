@@ -5,8 +5,9 @@
 \title{Writing Complex Scientific Reports in R}
 \usage{
 multi_document(theme = NULL, highlight = NULL, pandoc_args = NULL,
-  fig_format = c("screen", "print"), fig_download = TRUE, fig_height = 8,
-  fig_width = 8, figcap_prefix = "Figure", figcap_sep = ":",
+  fig_format = c("screen", "print"), fig_download = TRUE,
+  tab_download = TRUE, fig_height = 8, fig_width = 8,
+  figcap_prefix = "Figure", figcap_sep = ":",
   figcap_prefix_highlight = "**", thumbnail = TRUE,
   thumbnail_size = "col-md-6", tabcap_prefix = "Table", tabcap_sep = ":",
   tabcap_prefix_highlight = "**", dpi = 300, use_namespace = FALSE,
@@ -24,6 +25,9 @@ multi_document(theme = NULL, highlight = NULL, pandoc_args = NULL,
 
 \item{fig_download}{Logical indicating whether a download link should be added to
 figure captions.}
+
+\item{tab_download}{Logical indicating whether a download link should be added to
+table captions.}
 
 \item{fig_height}{Default figure height in inches.}
 

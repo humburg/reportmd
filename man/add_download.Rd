@@ -42,4 +42,3 @@ a file until any possible changes to their data have occured.
 \author{
 Peter Humburg
 }
-

@@ -1,6 +1,6 @@
 Package: reportMD
 Title: Scientific reports with RMarkdown
-Version: 0.4.0
+Version: 0.5.0
 Authors@R: c(person("Peter", "Humburg", email = "p.humburg@garvan.org.au", role = c("aut", "cre")),
              person("Patrick", "Schratz", role="ctb"),
              person("Jim", "Hester", role="ctb"))
@@ -25,4 +25,4 @@ Suggests:
     ggplot2
 License: MIT + file LICENSE
 LazyData: true
-RoxygenNote: 5.0.1
+RoxygenNote: 6.0.1

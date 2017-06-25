@@ -316,7 +316,7 @@ make_ref_links <- function(data, links=1, format=c('markdown', 'html')){
       }
     }
     update <- !is.na(parsed_links[[i]][['link']])
-    update_simple <- update & parsed_links[[i]][update, 'text'] == parsed_links[[i]][update, 'label']
+    update_simple <- update & parsed_links[[i]][, 'text'] == parsed_links[[i]][, 'label']
     update_full <- update & !update_simple
     if(any(update_simple))
       data[update_simple, links[i]] <- paste0('[', parsed_links[[i]][update_simple, 'text'], ']')
